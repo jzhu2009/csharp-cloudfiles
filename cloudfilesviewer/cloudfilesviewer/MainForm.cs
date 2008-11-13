@@ -11,8 +11,9 @@ namespace CloudFSViewer
 {
     public partial class MainForm : Form
     {
-        private string username, password, account, authurl;
+        private string username, api_access_key;
         private Connection connection;
+        private const string AUTH_URL = "https://api.mosso.com/auth";
 
         public MainForm()
         {
@@ -23,9 +24,7 @@ namespace CloudFSViewer
         private void Form1_Load(object sender, EventArgs e)
         {
             username = "";
-            password = "";
-            account = "";
-            authurl = "";
+            api_access_key = "";
         }
 
         private void PopulateTree(List<string> folders)
@@ -40,16 +39,13 @@ namespace CloudFSViewer
 
         private void CheckAuthentication()
         {
-            if (username.Length == 0 || password.Length == 0 || account.Length == 0)
+            if (username.Length == 0 || api_access_key.Length == 0)
             {
                 CredentialsDialog credentialsDialog = new CredentialsDialog();
                 if (credentialsDialog.ShowDialog(this) == DialogResult.OK)
                 {
                     username = credentialsDialog.Username;
-                    password = credentialsDialog.Password;
-                    account = credentialsDialog.Account;
-                    authurl = credentialsDialog.Authurl;
-
+                    api_access_key = credentialsDialog.ApiAccessKey;
                     deleteAllContainersButton.Enabled = true;
                 }
             }
@@ -62,8 +58,7 @@ namespace CloudFSViewer
 
             try
             {
-                connection =
-                    new Connection(new UserCredentials(new Uri(authurl), username, password, "v1", account));
+                connection = new Connection(new UserCredentials(username, api_access_key));
                 RetrieveContainers();
             }
             catch
