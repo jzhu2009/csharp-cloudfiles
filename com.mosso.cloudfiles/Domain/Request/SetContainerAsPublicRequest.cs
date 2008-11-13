@@ -13,6 +13,9 @@ namespace com.mosso.cloudfiles.domain.request
         private readonly string userAgentAcl;
         private readonly string referrerAcl;
 
+        public SetContainerAsPublicRequest(string cdnManagementUrl, string authToken, string containerName) 
+            : this(cdnManagementUrl, authToken, containerName, "", "", ""){}
+
         public SetContainerAsPublicRequest(string cdnManagementUrl, string authToken, string containerName, string ttl, string userAgentAcl, string referrerAcl)
         {
             if (string.IsNullOrEmpty(cdnManagementUrl)

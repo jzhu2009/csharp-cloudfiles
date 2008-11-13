@@ -63,7 +63,7 @@ namespace com.mosso.cloudfiles.services
                 return;
             }
 
-            if(getAuthenticationResponse.Status == HttpStatusCode.Unauthorized)
+            if(!retry && getAuthenticationResponse.Status == HttpStatusCode.Unauthorized)
             {
                 retry = true;
                 Authenticate();
@@ -92,6 +92,9 @@ namespace com.mosso.cloudfiles.services
         /// <param name="containerName">The desired name of the container</param>
         public void CreateContainer(string containerName)
         {
+            if (string.IsNullOrEmpty(containerName))
+                throw new ArgumentNullException();
+
             CreateContainer createContainer = new CreateContainer(storageUrl, storageToken, containerName);
             CreateContainerResponse createContainerResponse = new ResponseFactory<CreateContainerResponse>().Create(new CloudFilesRequest(createContainer, userCredentials.ProxyCredentials));
             if (createContainerResponse.Status == HttpStatusCode.Accepted)
@@ -104,6 +107,9 @@ namespace com.mosso.cloudfiles.services
         /// <param name="containerName">The name of the container to delete</param>
         public void DeleteContainer(string containerName)
         {
+            if (string.IsNullOrEmpty(containerName))
+                throw new ArgumentNullException();
+
             DeleteContainer deleteContainer = new DeleteContainer(storageUrl, containerName, storageToken);
             try
             {
@@ -145,6 +151,9 @@ namespace com.mosso.cloudfiles.services
         /// <returns>An instance of List, containing the names of the storage objects in the give container</returns>
         public List<string> GetContainerItemList(string containerName)
         {
+            if (string.IsNullOrEmpty(containerName))
+                throw new ArgumentNullException();
+
             return GetContainerItemList(containerName, null);
         }
 
@@ -156,6 +165,9 @@ namespace com.mosso.cloudfiles.services
         /// <returns>An instance of List, containing the names of the storage objects in the give container</returns>
         public List<string> GetContainerItemList(string containerName, Dictionary<GetItemListParameters, string> parameters)
          {
+             if (string.IsNullOrEmpty(containerName))
+                 throw new ArgumentNullException();
+
              List<string> containerItemList = new List<string>();
              try
              {
@@ -187,6 +199,9 @@ namespace com.mosso.cloudfiles.services
         /// <returns>An instance of container, with the number of storage objects contained and total byte allocation</returns>
         public Container GetContainerInformation(string containerName)
         {
+            if (string.IsNullOrEmpty(containerName))
+                throw new ArgumentNullException();
+
             Container container = null;
             GetContainerInformation getContainerInformation = new GetContainerInformation(storageUrl, containerName, storageToken);
 
@@ -216,6 +231,10 @@ namespace com.mosso.cloudfiles.services
         /// <param name="metaTags">An optional parameter containing a dictionary of meta tags to associate with the storage object</param>
         public void PutStorageItem(string containerName, string storageItemName, Dictionary<string, string> metaTags)
         {
+            if(string.IsNullOrEmpty(containerName) ||
+                string.IsNullOrEmpty(storageItemName))
+                throw new ArgumentNullException();
+
             string remoteName = Path.GetFileName(storageItemName);
             string localName = storageItemName.Replace("/", "\\");
             try
@@ -239,6 +258,10 @@ namespace com.mosso.cloudfiles.services
         /// <param name="storageItemName">The complete file uri of the storage object to be uploaded</param>
         public void PutStorageItem(string containerName, string storageItemName)
         {
+            if (string.IsNullOrEmpty(containerName) ||
+                string.IsNullOrEmpty(storageItemName))
+                throw new ArgumentNullException();
+
             PutStorageItem(containerName, storageItemName, new Dictionary<string, string>());
         }
 
@@ -250,6 +273,10 @@ namespace com.mosso.cloudfiles.services
         /// <param name="storageStream">The stream representing the storage item to upload</param>
         public void PutStorageItem(string containerName, FileStream storageStream, string remoteStorageItemName)
         {
+            if (string.IsNullOrEmpty(containerName) ||
+                string.IsNullOrEmpty(remoteStorageItemName))
+                throw new ArgumentNullException();
+
             PutStorageItem(containerName, storageStream, remoteStorageItemName, new Dictionary<string, string>());
         }
 
@@ -262,6 +289,11 @@ namespace com.mosso.cloudfiles.services
         /// <param name="remoteStorageItemName">The name of the storage object as it will be called on cloudfiles</param>
         public void PutStorageItem(string containerName, FileStream storageStream, string remoteStorageItemName, Dictionary<string, string> metaTags)
         {
+            if (string.IsNullOrEmpty(containerName) ||
+                string.IsNullOrEmpty(remoteStorageItemName))
+                throw new ArgumentNullException();
+
+
             string remoteName = Path.GetFileName(remoteStorageItemName);
             try
             {
@@ -284,6 +316,10 @@ namespace com.mosso.cloudfiles.services
         /// <param name="storageItemName">The name of the storage object to delete</param>
         public void DeleteStorageItem(string containerName, string storageItemName)
         {
+            if (string.IsNullOrEmpty(containerName) ||
+                string.IsNullOrEmpty(storageItemName))
+                throw new ArgumentNullException();
+
             DeleteStorageItem deleteStorageItem = new DeleteStorageItem(storageUrl, containerName, storageItemName, storageToken);
             try
             {
@@ -307,6 +343,10 @@ namespace com.mosso.cloudfiles.services
         /// <returns>An instance of StorageItem with the stream containing the bytes representing the desired storage object</returns>
         public StorageItem GetStorageItem(string containerName, string storageItemName)
         {
+            if (string.IsNullOrEmpty(containerName) ||
+               string.IsNullOrEmpty(storageItemName))
+                throw new ArgumentNullException();
+
             return GetStorageItem(containerName, storageItemName, new Dictionary<RequestHeaderFields, string>());
         }
 
@@ -319,6 +359,10 @@ namespace com.mosso.cloudfiles.services
         /// <returns>An instance of StorageItem with the stream containing the bytes representing the desired storage object</returns>
         public StorageItem GetStorageItem(string containerName, string storageItemName, Dictionary<RequestHeaderFields, string> requestHeaderFields)
         {
+            if (string.IsNullOrEmpty(containerName) ||
+               string.IsNullOrEmpty(storageItemName))
+                throw new ArgumentNullException();
+
             StorageItem storageItem = null;
             GetStorageItem getStorageItem = new GetStorageItem(storageUrl, containerName, storageItemName, storageToken, requestHeaderFields);
             try
@@ -349,6 +393,11 @@ namespace com.mosso.cloudfiles.services
         /// <param name="localFileName">The file name to save the storage object into on disk</param>
         public void GetStorageItem(string containerName, string storageItemName, string localFileName)
         {
+            if (string.IsNullOrEmpty(containerName) ||
+               string.IsNullOrEmpty(storageItemName) ||
+                string.IsNullOrEmpty(localFileName))
+                throw new ArgumentNullException();
+
             GetStorageItem(containerName, storageItemName, localFileName, new Dictionary<RequestHeaderFields, string>());
         }
 
@@ -361,6 +410,11 @@ namespace com.mosso.cloudfiles.services
         /// <param name="requestHeaderFields">A dictionary containing the special headers and their values</param>
         public void GetStorageItem(string containerName, string storageItemName, string localFileName, Dictionary<RequestHeaderFields, string> requestHeaderFields)
         {
+            if (string.IsNullOrEmpty(containerName) ||
+               string.IsNullOrEmpty(storageItemName) ||
+                string.IsNullOrEmpty(localFileName))
+                throw new ArgumentNullException();
+
             GetStorageItem getStorageItem = new GetStorageItem(storageUrl, containerName, storageItemName, storageToken, requestHeaderFields);
             try
             {
@@ -386,6 +440,10 @@ namespace com.mosso.cloudfiles.services
         /// <param name="metaTags">A dictionary containiner key/value pairs representing the meta data for this storage object</param>
         public void SetStorageItemMetaInformation(string containerName, string storageItemName, Dictionary<string, string> metaTags)
         {
+            if (string.IsNullOrEmpty(containerName) ||
+               string.IsNullOrEmpty(storageItemName))
+                throw new ArgumentNullException();
+
             SetStorageItemMetaInformation setStorageItemInformation = new SetStorageItemMetaInformation(storageUrl, containerName, storageItemName, metaTags, storageToken);
             try
             {
@@ -409,6 +467,10 @@ namespace com.mosso.cloudfiles.services
         /// <returns>An instance of StorageItem containing the byte size and meta information associated with the container</returns>
         public StorageItem GetStorageItemInformation(string containerName, string storageItemName)
         {
+            if (string.IsNullOrEmpty(containerName) ||
+               string.IsNullOrEmpty(storageItemName))
+                throw new ArgumentNullException();
+
             StorageItem storageItem = null;
             GetStorageItemInformation getStorageItemInformation = new GetStorageItemInformation(storageUrl, containerName, storageItemName, storageToken);
             try
@@ -451,7 +513,11 @@ namespace com.mosso.cloudfiles.services
         /// <returns>A string representing the URL of the public container</returns>
         public string MarkContainerAsPublic(string containerName)
         {
-            return MarkContainerAsPublic(containerName, "", "", "");
+            if (string.IsNullOrEmpty(containerName))
+                throw new ArgumentNullException();
+
+            SetContainerAsPublicRequest request = new SetContainerAsPublicRequest(cdnManagementUrl, authToken, containerName);
+            return MarkContainerAsPublic(request);
         }
 
         /// <summary>
@@ -460,33 +526,20 @@ namespace com.mosso.cloudfiles.services
         /// <param name="containerName">The name of the container to mark public</param>
         /// <param name="cdnTtl">The TTL of the container on the CDN</param>
         /// <param name="userAgentAcl">Access List information for the user agent</param>
-        /// <param name="referralAcl">Access List information for the referrer</param>
+        /// <param name="referrerAcl">Access List information for the referrer</param>
         /// <returns>A string representing the URL of the public container</returns>
-        public string MarkContainerAsPublic(string containerName, string cdnTtl, string userAgentAcl, string referralAcl)
+        public string MarkContainerAsPublic(string containerName, string cdnTtl, string userAgentAcl, string referrerAcl)
         {
-            SetContainerAsPublicRequest request = new SetContainerAsPublicRequest(cdnManagementUrl, authToken, containerName, cdnTtl, userAgentAcl, referralAcl);
-            SetContainerAsPublicResponse response = null;
-            try
-            {
-                response = new ResponseFactory<SetContainerAsPublicResponse>().Create(new CloudFilesRequest(request));
-            }
-            catch (WebException we)
-            {
-                //It's a protocol error that is usually a result of a 401 (Unauthorized)
-                //Still trying to figure way to get specific httpstatuscode
-                HttpWebResponse webResponse = (HttpWebResponse)we.Response;
-                if (webResponse.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    throw new InvalidCredentialException("You do not have permission to mark this container as public.");
-                }
-                if (webResponse.StatusCode == HttpStatusCode.Conflict)
-                {
-                    throw new ContainerAlreadyPublicException("The specified container is already marked as public.");
-                }
-            }
+            if (string.IsNullOrEmpty(containerName) ||
+               string.IsNullOrEmpty(cdnTtl) ||
+               string.IsNullOrEmpty(userAgentAcl) ||
+               string.IsNullOrEmpty(referrerAcl))
+                throw new ArgumentNullException();
 
-            return response == null ? null : response.Headers[Constants.X_CDN_URI];
+            SetContainerAsPublicRequest request = new SetContainerAsPublicRequest(cdnManagementUrl, authToken, containerName, cdnTtl, userAgentAcl, referrerAcl);
+            return MarkContainerAsPublic(request);
         }
+
 
         /// <summary>
         /// Updates the details associated with the container on the cdn
@@ -496,6 +549,9 @@ namespace com.mosso.cloudfiles.services
         /// <returns>A string containing the CDN URI for this container</returns>
         public string SetPublicContainerDetails(string containerName, bool isCdnEnabled)
         {
+            if (string.IsNullOrEmpty(containerName))
+                throw new ArgumentNullException();
+
             SetPublicContainerDetailsRequest request = 
                 new SetPublicContainerDetailsRequest(cdnManagementUrl, authToken, containerName, isCdnEnabled, "", "", "");
             return SetPublicContainerDetails(request);
@@ -511,6 +567,12 @@ namespace com.mosso.cloudfiles.services
         /// <returns>A string containing the CDN URI for this container</returns>
         public string SetPublicContainerDetails(string containerName, string cdnTtl, string userAgentAcl, string referrerAcl)
         {
+            if (string.IsNullOrEmpty(containerName) ||
+               string.IsNullOrEmpty(cdnTtl) ||
+               string.IsNullOrEmpty(userAgentAcl) ||
+               string.IsNullOrEmpty(referrerAcl))
+                throw new ArgumentNullException();
+
             SetPublicContainerDetailsRequest request = 
                 new SetPublicContainerDetailsRequest(cdnManagementUrl, authToken, containerName, cdnTtl, userAgentAcl, referrerAcl);
             return SetPublicContainerDetails(request);
@@ -527,6 +589,12 @@ namespace com.mosso.cloudfiles.services
         /// <returns>A string containing the CDN URI for this container</returns>
         public string SetPublicContainerDetails(string containerName, bool isCdnEnabled, string cdnTtl, string userAgentAcl, string referrerAcl)
         {
+            if (string.IsNullOrEmpty(containerName) ||
+              string.IsNullOrEmpty(cdnTtl) ||
+              string.IsNullOrEmpty(userAgentAcl) ||
+              string.IsNullOrEmpty(referrerAcl))
+                throw new ArgumentNullException();
+
             SetPublicContainerDetailsRequest request =
                  new SetPublicContainerDetailsRequest(cdnManagementUrl, authToken, containerName, isCdnEnabled, cdnTtl, userAgentAcl, referrerAcl);
             return SetPublicContainerDetails(request);
@@ -539,6 +607,9 @@ namespace com.mosso.cloudfiles.services
         /// <returns>An instance of Container with appropriate CDN information</returns>
         public Container RetrievePublicContainerInformation(string containerName)
         {
+            if (string.IsNullOrEmpty(containerName))
+                throw new ArgumentNullException();
+
             GetPublicContainerInformationRequest request = new GetPublicContainerInformationRequest(cdnManagementUrl, authToken, containerName);
             GetPublicContainerInformationResponse response = null;
             try
@@ -580,6 +651,32 @@ namespace com.mosso.cloudfiles.services
                     throw new UnauthorizedAccessException("Your access credentials are invalid or have expired. ");
                 if (webResponse.StatusCode == HttpStatusCode.NotFound)
                     throw new ContainerNotFoundException("The specified container does not exist.");
+            }
+
+            return response == null ? null : response.Headers[Constants.X_CDN_URI];
+        }
+
+
+        private string MarkContainerAsPublic(SetContainerAsPublicRequest request)
+        {
+            SetContainerAsPublicResponse response = null;
+            try
+            {
+                response = new ResponseFactory<SetContainerAsPublicResponse>().Create(new CloudFilesRequest(request));
+            }
+            catch (WebException we)
+            {
+                //It's a protocol error that is usually a result of a 401 (Unauthorized)
+                //Still trying to figure way to get specific httpstatuscode
+                HttpWebResponse webResponse = (HttpWebResponse)we.Response;
+                if (webResponse.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new InvalidCredentialException("You do not have permission to mark this container as public.");
+                }
+                if (webResponse.StatusCode == HttpStatusCode.Conflict)
+                {
+                    throw new ContainerAlreadyPublicException("The specified container is already marked as public.");
+                }
             }
 
             return response == null ? null : response.Headers[Constants.X_CDN_URI];

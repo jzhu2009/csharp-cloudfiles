@@ -205,7 +205,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
         {
             using (TestHelper testHelper = new TestHelper(connection, true, true))
             {
-                string cdnUrl = connection.SetPublicContainerDetails(testHelper.ContainerName, true, Constants.PublicContainerTTL, "", "");
+                string cdnUrl = connection.SetPublicContainerDetails(testHelper.ContainerName, true, Constants.PublicContainerTTL, "x", "x");
                 Assert.That(cdnUrl, Is.Not.Null);
                 Assert.That(cdnUrl.Length, Is.GreaterThan(0));
             }
@@ -217,7 +217,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
         {
             using (TestHelper testHelper = new TestHelper(connection, false, false))
             {
-                connection.SetPublicContainerDetails(testHelper.ContainerName, true, Constants.PublicContainerTTL, "", "");
+                connection.SetPublicContainerDetails(testHelper.ContainerName, true, Constants.PublicContainerTTL, "x", "x");
             }
         }
 
