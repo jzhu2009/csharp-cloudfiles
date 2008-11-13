@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="cloudfilesdotnet" default="compile" xmlns="http://nant.sf.net/schemas/nant.xsd">
+  <property name="config" value="Debug" />
+  <property name="core.project.original.dll.dir" value="com.mosso.cloudfiles\bin\${config}"/>
+  <property name="msbuild" value="${environment::get-variable('SYSTEMROOT')}/Microsoft.NET/Framework/v3.5/MSBuild.exe" />
+
+  <target name="compile" description="Compiles debug solution">
+    <exec program="${msbuild}">
+      <arg value="com.mosso.cloudfiles.sln" />
+      <arg value="/verbosity:minimal" />
+      <arg value="/p:Configuration=Debug" />
+      <arg value="/p:WarningLevel=0" />
+    </exec>
+
+    <copy todir="cloudfilesviewer\lib" overwrite="true">
+      <fileset basedir="${core.project.original.dll.dir}">
+        <include name="com.mosso.cloudfiles.dll" />
+        <include name="com.mosso.cloudfiles.pdb" />
+        <include name="Log4Net.config" />
+        <include name="log4net.dll" />
+      </fileset>
+    </copy>
+
+    <copy todir="docs\lib" overwrite="true" >
+      <fileset basedir="${core.project.original.dll.dir}">
+        <include name="com.mosso.cloudfiles.XML" />
+      </fileset>
+    </copy>
+  </target>
+</project>

@@ -1,0 +1,195 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A4EC4FAB-EE91-4DE7-B21D-CBABFA05B363}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>com.mosso.cloudfiles</RootNamespace>
+    <AssemblyName>com.mosso.cloudfiles</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <PublishUrl>http://localhost/com.mosso.cloudfiles/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <AssemblyName>com.mosso.cloudfiles</AssemblyName>
+    <RootNamespace>com.mosso.cloudfiles</RootNamespace>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <DocumentationFile>bin\Debug\com.mosso.cloudfiles.xml</DocumentationFile>
+    <NoWarn>1587, 1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <AssemblyName>com.mosso.cloudfiles</AssemblyName>
+    <DebugSymbols>true</DebugSymbols>
+    <RootNamespace>com.mosso.cloudfiles</RootNamespace>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <NoWarn>1587, 1591</NoWarn>
+    <DocumentationFile>bin\Release\com.mosso.cloudfiles.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\log4net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Domain\AccountInformation.cs" />
+    <Compile Include="Domain\Request\BaseRequest.cs" />
+    <Compile Include="Domain\Request\GetAccountInformation.cs" />
+    <Compile Include="Domain\Request\GetPublicContainerInformationRequest.cs" />
+    <Compile Include="Domain\Request\GetPublicContainersRequest.cs" />
+    <Compile Include="Domain\Request\SetContainerAsPublicRequest.cs" />
+    <Compile Include="Domain\Request\SetPublicContainerDetailsRequest.cs" />
+    <Compile Include="Domain\Response\GetAccountInformationResponse.cs" />
+    <Compile Include="Domain\Response\GetPublicContainerInformationResponse.cs" />
+    <Compile Include="Domain\Response\GetPublicContainersResponse.cs" />
+    <Compile Include="Domain\Response\SetContainerAsPublicResponse.cs" />
+    <Compile Include="Domain\Response\SetPublicContainerDetailsResponse.cs" />
+    <Compile Include="Domain\StorageItemInformation.cs" />
+    <Compile Include="EnumHelper.cs" />
+    <Compile Include="Exceptions\ContainerAlreadyPublicException.cs" />
+    <Compile Include="Exceptions\ContainerNotEmptyException.cs" />
+    <Compile Include="Exceptions\InvalidRangeHeaderException.cs" />
+    <Compile Include="Exceptions\DateTimeHttpHeaderFormatException.cs" />
+    <Compile Include="Exceptions\NoContainersFoundException.cs" />
+    <Compile Include="Services\BaseCommand.cs" />
+    <Compile Include="Domain\Container.cs" />
+    <Compile Include="Domain\Request\DeleteContainer.cs" />
+    <Compile Include="Domain\Response\DeleteContainerResponse.cs" />
+    <Compile Include="Domain\Request\DeleteStorageItem.cs" />
+    <Compile Include="Domain\Response\DeleteStorageItemResponse.cs" />
+    <Compile Include="Domain\Request\GetAuthentication.cs" />
+    <Compile Include="Domain\Response\GetAuthenticationResponse.cs" />
+    <Compile Include="Domain\Request\GetContainerItemList.cs" />
+    <Compile Include="Domain\Response\GetContainerItemListResponse.cs" />
+    <Compile Include="Domain\Response\GetContainersResponse.cs" />
+    <Compile Include="Domain\Request\GetStorageItem.cs" />
+    <Compile Include="Domain\Response\GetStorageItemResponse.cs" />
+    <Compile Include="Domain\Request\GetContainerInformation.cs" />
+    <Compile Include="Domain\Response\GetContainerInformationResponse.cs" />
+    <Compile Include="Domain\Request\GetStorageItemInformation.cs" />
+    <Compile Include="Domain\Response\GetStorageItemInformationResponse.cs" />
+    <Compile Include="Domain\Request\IRequestWithContentBody.cs" />
+    <Compile Include="Domain\Response\IResponse.cs" />
+    <Compile Include="Domain\Request\GetContainers.cs" />
+    <Compile Include="Domain\Response\IResponseWithContentBody.cs" />
+    <Compile Include="Domain\Request\CloudFilesRequest.cs" />
+    <Compile Include="Domain\Request\SetStorageItemMetaInformation.cs" />
+    <Compile Include="Domain\Response\SetStorageItemMetaInformationResponse.cs" />
+    <Compile Include="Domain\ProxyCredentials.cs" />
+    <Compile Include="Domain\Request\CreateContainer.cs" />
+    <Compile Include="Domain\Response\CreateContainerResponse.cs" />
+    <Compile Include="Domain\Request\PutStorageItem.cs" />
+    <Compile Include="Domain\Response\PutStorageItemResponse.cs" />
+    <Compile Include="Domain\ResponseFactory.cs" />
+    <Compile Include="Domain\ResponseFactoryWithContentBody.cs" />
+    <Compile Include="Exceptions\ContainerAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\ContainerNotFoundException.cs" />
+    <Compile Include="Exceptions\InvalidETagException.cs" />
+    <Compile Include="Exceptions\StorageItemNotFoundException.cs" />
+    <Compile Include="Services\CreateContainerCommand.cs" />
+    <Compile Include="Services\DeleteContainerCommand.cs" />
+    <Compile Include="Services\DeleteStorageItemCommand.cs" />
+    <Compile Include="Services\GetStorageItemCommand.cs" />
+    <Compile Include="Services\IConnection.cs" />
+    <Compile Include="Services\GetAccountInformationCommand.cs" />
+    <Compile Include="Services\GetContainerInformationCommand.cs" />
+    <Compile Include="Services\GetContainerItemsListCommand.cs" />
+    <Compile Include="Services\GetContainerListCommand.cs" />
+    <Compile Include="Services\MarkContainerAsPublicCommand.cs" />
+    <Compile Include="Services\RetrievePublicContainerInformationCommand.cs" />
+    <Compile Include="Services\RetrievePublicContainersCommand.cs" />
+    <Compile Include="Services\RetrieveStorageItemInformationCommand.cs" />
+    <Compile Include="Services\SetPublicContainerDetailsCommand.cs" />
+    <Compile Include="Services\SetStorageItemMetaInformationCommand.cs" />
+    <Compile Include="Services\Connection.cs" />
+    <Compile Include="Domain\StorageItem.cs" />
+    <Compile Include="Domain\UserCredentials.cs" />
+    <Compile Include="Exceptions\ContainerNameLengthException.cs" />
+    <Compile Include="Exceptions\InvalidResponseTypeException.cs" />
+    <Compile Include="Exceptions\MetaKeyLengthException.cs" />
+    <Compile Include="Exceptions\MetaValueLengthException.cs" />
+    <Compile Include="Exceptions\StorageItemNameLengthException.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Domain\Request\IRequest.cs" />
+    <Compile Include="Exceptions\AuthenticationFailedException.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Services\PutStorageItemCommand.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Log4Net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="COPYING" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

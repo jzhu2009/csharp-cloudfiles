@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.mosso.cloudfiles.integration.tests", "com.mosso.cloudfiles.integration.tests\com.mosso.cloudfiles.integration.tests.csproj", "{E9F72C28-155A-476F-B533-BAEC0228CA1E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{1820EC64-F253-4FD1-A92C-F6747D239024}"
+	ProjectSection(SolutionItems) = preProject
+		build.bat = build.bat
+		com.mosso.cloudfiles.build = com.mosso.cloudfiles.build
+		com.mosso.cloudfiles.dev.build = com.mosso.cloudfiles.dev.build
+		Documentation.proj = Documentation.proj
+		properties.include = properties.include
+		README.txt = README.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.mosso.cloudfiles", "com.mosso.cloudfiles\com.mosso.cloudfiles.csproj", "{A4EC4FAB-EE91-4DE7-B21D-CBABFA05B363}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.mosso.cloudfiles.unit.tests", "com.mosso.cloudfiles.unit.tests\com.mosso.cloudfiles.unit.tests.csproj", "{8720F9D5-59B8-49DC-A05A-DAEE3611DA00}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E9F72C28-155A-476F-B533-BAEC0228CA1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9F72C28-155A-476F-B533-BAEC0228CA1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9F72C28-155A-476F-B533-BAEC0228CA1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9F72C28-155A-476F-B533-BAEC0228CA1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4EC4FAB-EE91-4DE7-B21D-CBABFA05B363}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4EC4FAB-EE91-4DE7-B21D-CBABFA05B363}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4EC4FAB-EE91-4DE7-B21D-CBABFA05B363}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4EC4FAB-EE91-4DE7-B21D-CBABFA05B363}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8720F9D5-59B8-49DC-A05A-DAEE3611DA00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8720F9D5-59B8-49DC-A05A-DAEE3611DA00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8720F9D5-59B8-49DC-A05A-DAEE3611DA00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8720F9D5-59B8-49DC-A05A-DAEE3611DA00}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
+		DPCodeReviewSolutionGUID = {CBB3BA87-A2FC-4D50-ADF4-93B09B928744}
+	EndGlobalSection
+EndGlobal

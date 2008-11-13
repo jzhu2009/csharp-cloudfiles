@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E9F72C28-155A-476F-B533-BAEC0228CA1E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>com.mosso.cloudfiles.integration.tests</RootNamespace>
+    <AssemblyName>com.mosso.cloudfiles.integration.tests</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <AssemblyName>com.mosso.cloudfiles.integration.tests</AssemblyName>
+    <RootNamespace>com.mosso.cloudfiles.integration.tests</RootNamespace>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <AssemblyName>com.mosso.cloudfiles.integration.tests</AssemblyName>
+    <DebugSymbols>true</DebugSymbols>
+    <RootNamespace>Racklabs.cloudfiles.Integraiton.Tests</RootNamespace>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\nunit\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.5.0.1, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\rhinomocks\Rhino.Mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Constants.cs" />
+    <Compile Include="Domain\DeleteContainerItemSpecs.cs" />
+    <Compile Include="Domain\DeleteContainerSpecs.cs" />
+    <Compile Include="Domain\GetAccountInformationSpecs.cs" />
+    <Compile Include="Domain\GetAuthenticationSpecs.cs" />
+    <Compile Include="Domain\GetContainerItemListSpecs.cs" />
+    <Compile Include="Domain\GetStorageItemSpecs.cs" />
+    <Compile Include="Domain\HeadContainerSpecs.cs" />
+    <Compile Include="Domain\HeadStorageItemSpecs.cs" />
+    <Compile Include="Domain\PostStorageItemSpecs.cs" />
+    <Compile Include="Domain\PutContainerSpecs.cs" />
+    <Compile Include="Domain\PutStorageItemSpecs.cs" />
+    <Compile Include="Domain\GetContainersSpecs.cs" />
+    <Compile Include="Services\CreateNewContainerCommandSpecs.cs" />
+    <Compile Include="Services\DeleteContainerCommandSpecs.cs" />
+    <Compile Include="Services\DeleteFileCommandSpecs.cs" />
+    <Compile Include="Services\DownloadFileSpecs.cs" />
+    <Compile Include="Services\RetrieveAccountInformationCommandSpecs.cs" />
+    <Compile Include="Services\RetrieveContainerInformationSpecs.cs" />
+    <Compile Include="Services\RetrieveContainerItemsListCommandSpecs.cs" />
+    <Compile Include="Services\RetrieveContainerListCommandSpecs.cs" />
+    <Compile Include="Services\RetrieveStorageObjectInformationCommandSpecs.cs" />
+    <Compile Include="Services\SetStorageObjectMetaInformationCommandSpecs.cs" />
+    <Compile Include="Services\ConnectionSpecs.cs" />
+    <Compile Include="Services\TestBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\UploadFileCommandSpecs.cs" />
+    <Compile Include="TestHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="HeadStorageItem.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestStorageItem.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\com.mosso.cloudfiles\com.mosso.cloudfiles.csproj">
+      <Project>{A4EC4FAB-EE91-4DE7-B21D-CBABFA05B363}</Project>
+      <Name>com.mosso.cloudfiles</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

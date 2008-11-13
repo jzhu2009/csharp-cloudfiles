@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project name="com.mosso.cloudfiles" default="complete" xmlns="http://nant.sf.net/schemas/nant.xsd">
+  <include buildfile="properties.include" />
+
+  <target name="complete" depends="clean, compile, setup, test, deploy" description="Compile and Run Tests" />
+
+  <target name="clean" description="Deletes all generated folders and files to start with clean folder structure">
+    <delete dir="${help.dir}" />
+    <delete dir="${cloudfiles.builds.dir}" />
+    <call target="clean.generated.doc.helper.files" />
+  </target>
+
+  <target name="compile" description="Compiles debug solution">
+    <call target="create.assemblyinfo" />
+
+    <exec program="${msbuild}">
+      <arg value="${sln.file}" />
+      <arg value="/verbosity:minimal" />
+      <arg value="/p:Configuration=${config}" />
+      <arg value="/p:WarningLevel=0" />
+    </exec>
+
+    <move file="com.mosso.cloudfiles/Properties/AssemblyInfo_old.cs" tofile="com.mosso.cloudfiles/Properties/AssemblyInfo.cs" overwrite="true" />
+
+    <copy todir="cloudfilesviewer\lib" overwrite="true">
+      <fileset basedir="${core.project.original.dll.dir}">
+        <include name="com.mosso.cloudfiles.dll" />
+        <include name="com.mosso.cloudfiles.pdb" />
+        <include name="Log4Net.config" />
+        <include name="log4net.dll" />
+      </fileset>
+    </copy>
+
+    <copy todir="docs\lib" overwrite="true" >
+      <fileset basedir="${core.project.original.dll.dir}">
+        <include name="com.mosso.cloudfiles.XML" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="setup" depends="compile">
+    <mkdir dir="${build.dir}" if="${not directory::exists(build.dir)}"/>
+    <mkdir dir="${deploy.dir}" if="${not directory::exists(deploy.dir)}"/>
+    <mkdir dir="${deploy.src.dir}" if="${not directory::exists(deploy.src.dir)}"/>
+    <mkdir dir="${deploy.bin.dir}" if="${not directory::exists(deploy.bin.dir)}"/>
+    <mkdir dir="${deploy.example.dir}" if="${not directory::exists(deploy.example.dir)}"/>
+    <mkdir dir="${deploy.docs.dir}" if="${not directory::exists(deploy.docs.dir)}"/>
+    <mkdir dir="${test.reports.dir}" if="${not directory::exists(test.reports.dir)}"/>
+    <mkdir dir="${config.dir}" if="${not directory::exists(config.dir)}" />
+    <mkdir dir="${unit.tests.dir}" if="${not directory::exists(unit.tests.dir)}" />
+    <copy todir="${config.dir}">
+      <fileset basedir="${core.project.original.dll.dir}">
+        <include name="**/*" />
+      </fileset>
+    </copy>
+    <copy todir="${unit.tests.dir}">
+      <fileset basedir="${unit.tests.original.dll.dir}">
+        <include name="**/*" />
+      </fileset>
+    </copy>
+    <copy todir="${integration.tests.dir}">
+      <fileset basedir="${integration.tests.original.dll.dir}">
+        <include name="**/*" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="test">
+    <exec program="nunit-console.exe" basedir="lib\nunit">
+      <arg value="${unit.tests.dir}\com.mosso.cloudfiles.unit.tests.dll" />
+      <arg value="/xml:${test.reports.dir}\UnitTests.xml" />
+    </exec>
+    <exec program="nunit-console.exe" basedir="lib\nunit">
+      <arg value="${integration.tests.dir}\com.mosso.cloudfiles.integration.tests.dll" />
+      <arg value="/xml:${test.reports.dir}\IntegrationTests.xml" />
+    </exec>
+  </target>
+
+
+  <target name="deploy">
+    <call target="deploy.bin" />
+    <call target="deploy.example" />
+    <call target="deploy.docs" />
+    <call target="deploy.src" />
+  </target>
+
+  <target name="deploy.src">
+    <echo>${help.dir}/${chm.file.name}.chm</echo>
+    <call target="remove.tests.for.deployment" />
+    <move file="com.mosso.cloudfiles.sln" tofile="temp/com.mosso.cloudfiles.sln" overwrite="true" />
+    <move file="${sln.file.without.tests}" tofile="com.mosso.cloudfiles.sln" overwrite="true" />
+    <zip zipfile="${deploy.src.dir}\${zip.file.prefix}.src_${build.number}.zip">
+      <fileset basedir="${directory::get-current-directory()}">
+        <include name="${help.dir}/*.chm" />
+        <exclude name="temp/**" />
+        <exclude name="temp/**" />
+        <exclude name="TempConstants.cs" />
+        <exclude name="cloudfilesviewer/**" />
+        <exclude name="obfuscateconstants/**" />
+        <exclude name="docs/**" />
+        <exclude name="${help.dir}/**" />
+        <exclude name="${build.dir}/**" />
+        <exclude name="${deploy.dir}/**" />
+        <exclude name=".svn/" />
+        <exclude name="*resharper*" />
+        <exclude name="*ReSharper*/**" />
+        <exclude name="*suo*" />
+        <exclude name="*.cache*" />
+        <exclude name="com.mosso.cloudfiles.integration.tests/**" />
+        <exclude name="com.mosso.cloudfiles.unit.tests/**" />
+        <exclude name="com.mosso.cloudfiles.dev.build" />
+        <exclude name="Documentation.proj" />
+        <exclude name="dev.bat" />
+        <exclude name="properties.include" />
+        <include name="**" />
+      </fileset>
+      <fileset basedir="${help.dir}">
+        <include name="${chm.file.name}.chm" />
+      </fileset>
+    </zip>
+    <move file="temp/com.mosso.cloudfiles.sln" tofile="com.mosso.cloudfiles.sln" overwrite="true" />
+    <delete dir="temp"/>
+  </target>
+
+  <target name="deploy.bin">
+    <zip zipfile="${deploy.bin.dir}\${zip.file.prefix}.bin_${build.number}.zip">
+      <fileset basedir="${config.dir}">
+        <exclude name ="*.pdb" />
+        <exclude name ="*.xml" />
+        <exclude name ="UnitTests/**" />
+        <exclude name ="IntegrationTests/**" />
+        <include name="**" />
+      </fileset>
+    </zip>
+  </target>
+
+  <target name="deploy.example">
+    <zip zipfile="${deploy.example.dir}\${zip.file.prefix}.example_${build.number}.zip">
+      <fileset basedir="${directory::get-current-directory()}\cloudfilesviewer">
+        <exclude name=".svn/" />
+        <exclude name="*.*resharper*" />
+        <include name="**" />
+      </fileset>
+    </zip>
+  </target>
+
+  <target name="remove.tests.for.deployment">
+    <script language="C#" prefix="test" >
+      <code>
+        <![CDATA[
+                  [TaskName("removetests")]
+                  public class ReplaceTask : Task {
+                    private string solutionfilename;
+
+                    [TaskAttribute("solutionfilename", Required=true)]
+                    public string FilePath {
+                        get { return solutionfilename; }
+                        set { solutionfilename = value; }
+                    }
+
+                    protected override void ExecuteTask() {
+                        string file = String.Empty;
+                        using (StreamReader reader = File.OpenText(solutionfilename))
+                        {
+                            file = reader.ReadToEnd();
+							
+							              file = file.Replace("\r\n\t\tcom.mosso.cloudfiles.dev.build = com.mosso.cloudfiles.dev.build", "");
+							              file = file.Replace("\r\nMicrosoft Visual Studio Solution File, Format Version 10.00", "Microsoft Visual Studio Solution File, Format Version 10.00");
+                            file = file.Replace("Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"com.mosso.cloudfiles.integration.tests\", \"com.mosso.cloudfiles.integration.tests\\com.mosso.cloudfiles.integration.tests.csproj\", \"{E9F72C28-155A-476F-B533-BAEC0228CA1E}\"\r\nEndProject\r\n", "");
+                            file = file.Replace("Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"com.mosso.cloudfiles.unit.tests\", \"com.mosso.cloudfiles.unit.tests\\com.mosso.cloudfiles.unit.tests.csproj\", \"{8720F9D5-59B8-49DC-A05A-DAEE3611DA00}\"\r\nEndProject\r\n", "");
+
+                            //Console.WriteLine(file);
+                            using (TextWriter tw = new StreamWriter("com.mosso.cloudfiles.sln.withouttests"))
+                            {
+                                tw.WriteLine(file);
+                            }
+
+                            Console.WriteLine("Removal of tests from solution complete");
+                        }
+                    }
+                  }
+                ]]>
+      </code>
+    </script>
+    <removetests solutionfilename="com.mosso.cloudfiles.sln"/>
+  </target>
+
+  <target name="deploy.docs">
+    <property name="sandcastle.is.installed" value="true" />
+    <if test="${not directory::exists(sandcastle.exe.dir)}">
+      <property name="sandcastle.is.installed" value="false" />
+      <fail message="Sandcastle needs to be installed at ${sandcastle.exe.dir} to generate documentation, please download from http://www.microsoft.com/downloads/details.aspx?FamilyID=E82EA71D-DA89-42EE-A715-696E3A4873B2." />
+    </if>
+    <if test="${sandcastle.is.installed=='true'}">
+      <call target="deploy.docs.all" />
+    </if>
+  </target>
+
+  <target name="deploy.docs.all" description="creates chm file and packages into zip file">
+    <call target="create.docs" />
+    <call target="package.docs" />
+  </target>
+
+  <!-- if this target fails, just change /verbosity:quiet to /verbosity:minimal or /verbosity:verbose -->
+  <target name="create.docs" depends="compile, setup">
+    <exec program="${msbuild}">
+      <arg value="Documentation.proj" />
+      <arg value="/verbosity:quiet" />
+      <arg value="/target:Documentation" />
+      <arg value="/p:Configuration=${config}" />
+      <arg value="/p:HelpName=${chm.file.name}" />
+    </exec>
+    <call target="clean.generated.doc.helper.files" />
+  </target>
+
+  <target name="clean.generated.doc.helper.files">
+    <delete>
+      <fileset>
+        <include name="sandcastle.config" />
+        <include name="reflection.org" />
+        <include name="reflection.xml" />
+        <include name="manifest.xml" />
+        <include name="toc.xml" />
+      </fileset>
+    </delete>
+  </target>
+
+  <target name="package.docs">
+    <zip zipfile="${deploy.docs.dir}\${zip.file.prefix}.doc_${build.number}.zip">
+      <fileset basedir="${help.dir}">
+        <include name="**" />
+      </fileset>
+    </zip>
+  </target>
+
+  <target name="create.assemblyinfo">
+    <asminfo output="AssemblyInfo.cs" language="CSharp">
+      <imports>
+        <import namespace="System" />
+        <import namespace="System.Reflection" />
+        <import namespace="System.Runtime.InteropServices" />
+      </imports>
+      <attributes>
+        <attribute type="ComVisibleAttribute" value="false" />
+        <attribute type="CLSCompliantAttribute" value="true" />
+        <attribute type="AssemblyVersionAttribute" value="${build.number}" />
+        <attribute type="AssemblyFileVersionAttribute" value="${build.number}" />
+        <attribute type="AssemblyTitleAttribute" value="com.mosso.cloudfiles" />
+        <attribute type="AssemblyDescriptionAttribute" value="C#.NET API for Rackspace Cloud Files Cloud Storage" />
+        <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2008, Rackspace Managed Hosting" />
+        <attribute type="AssemblyCompanyAttribute" value="Rackspace Managed Hosting" />
+      </attributes>
+    </asminfo>
+    <copy file="com.mosso.cloudfiles/Properties/AssemblyInfo.cs" tofile="com.mosso.cloudfiles/Properties/AssemblyInfo_old.cs" overwrite="true" />
+    <copy file="AssemblyInfo.cs" tofile="com.mosso.cloudfiles/Properties/AssemblyInfo.cs" overwrite="true" />
+    <delete file="AssemblyInfo.cs" />
+  </target>
+</project>
