@@ -82,7 +82,7 @@ namespace com.mosso.cloudfiles.integration.tests
 
         private void CreateContainer()
         {
-            cloudfiles.domain.request.CreateContainer createContainer = new CreateContainer(storageUrl, storageToken, containerName);
+            CreateContainer createContainer = new CreateContainer(storageUrl, storageToken, containerName);
 
             IResponse putContainerResponse =
                 new ResponseFactory<CreateContainerResponse>().Create(new CloudFilesRequest(createContainer));

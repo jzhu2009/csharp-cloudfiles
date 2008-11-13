@@ -2,7 +2,6 @@
 /// See COPYING file for licensing information
 ///
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -78,14 +77,6 @@ namespace com.mosso.cloudfiles.services
                 throw new InvalidETagException("The ETag supplied in the request does not match the ETag calculated by the server");
             }
             return null;
-        }
-
-        private string ExtractFileNameFromPath(string fileName)
-        {
-
-            int lastSlash = fileName.LastIndexOf(@"\");
-            if (lastSlash > -1) return fileName.Substring(lastSlash + 1);
-            return fileName;
         }
     }
 }

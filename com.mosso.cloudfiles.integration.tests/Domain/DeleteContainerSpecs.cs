@@ -50,9 +50,17 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteContainerSpecs
                 }
                 Assert.Fail("409 conflict expected");
             }
-            catch (Exception ex)
+            catch (WebException we)
             {
-                Assert.That(ex, Is.TypeOf(typeof (WebException)));
+                HttpWebResponse response = (HttpWebResponse)we.Response;
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Conflict));
+            }
+            finally
+            {
+                new ResponseFactory<DeleteContainerResponse>().Create(new CloudFilesRequest(
+                    new DeleteStorageItem(storageUrl, containerName, Constants.StorageItemName, storageToken)));
+                new ResponseFactory<DeleteContainerResponse>().Create(new CloudFilesRequest(
+                    new DeleteContainer(storageUrl, containerName, storageToken)));
             }
         }
 
