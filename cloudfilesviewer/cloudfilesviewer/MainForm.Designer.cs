@@ -41,6 +41,7 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.operationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.getAccountInformationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createContainerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uploadFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uploadFileAsStreamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,7 +56,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.deleteAllContainersButton = new System.Windows.Forms.Button();
-            this.getAccountInformationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.readOnlyContainerInformationGroup.SuspendLayout();
             this.readOnlyFileInformationGroup.SuspendLayout();
             this.containerInformationGroup.SuspendLayout();
@@ -214,6 +214,13 @@
             this.operationsToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
             this.operationsToolStripMenuItem.Text = "Operations";
             // 
+            // getAccountInformationToolStripMenuItem
+            // 
+            this.getAccountInformationToolStripMenuItem.Name = "getAccountInformationToolStripMenuItem";
+            this.getAccountInformationToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
+            this.getAccountInformationToolStripMenuItem.Text = "Get Account Information";
+            this.getAccountInformationToolStripMenuItem.Click += new System.EventHandler(this.getAccountInformationToolStripMenuItem_Click);
+            // 
             // createContainerToolStripMenuItem
             // 
             this.createContainerToolStripMenuItem.Name = "createContainerToolStripMenuItem";
@@ -340,13 +347,6 @@
             this.deleteAllContainersButton.UseVisualStyleBackColor = true;
             this.deleteAllContainersButton.Click += new System.EventHandler(this.deleteAllContainersButton_Click);
             // 
-            // getAccountInformationToolStripMenuItem
-            // 
-            this.getAccountInformationToolStripMenuItem.Name = "getAccountInformationToolStripMenuItem";
-            this.getAccountInformationToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
-            this.getAccountInformationToolStripMenuItem.Text = "Get Account Information";
-            this.getAccountInformationToolStripMenuItem.Click += new System.EventHandler(this.getAccountInformationToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -360,7 +360,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
-            this.Text = "       ";
+            this.Text = "com.mosso.cloudfiles C# Example";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.readOnlyContainerInformationGroup.ResumeLayout(false);
             this.readOnlyContainerInformationGroup.PerformLayout();
