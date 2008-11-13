@@ -144,7 +144,7 @@ namespace com.mosso.cloudfiles.domain.request
                 ETag = StringifyMD5(new MD5CryptoServiceProvider().ComputeHash(file));
             }
 
-            if (metaTags != null)
+            if (metaTags != null && metaTags.Count > 0)
             {
                 foreach (string s in metaTags.Keys)
                 {

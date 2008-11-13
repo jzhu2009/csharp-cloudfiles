@@ -68,11 +68,12 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
             connection.CreateContainer(containerName);
             try
             {
-                string cdnUrl = connection.MarkContainerAsPublic(Constants.EmptyContainerName);
+                string cdnUrl = connection.MarkContainerAsPublic(containerName);
                 Assert.That(cdnUrl, Is.Not.Null);
                 Assert.That(cdnUrl.Length, Is.GreaterThan(0));
             } catch (Exception ex)
-            {   
+            {
+                Assert.Fail(ex.Message);
             } finally
             {
                 connection.DeleteContainer(containerName);
@@ -81,21 +82,18 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
 
         private void MarkContainerPublic(Connection connection, string containerName)
         {
-            bool failed = false;
             try
             {
                 connection.MarkContainerAsPublic(containerName);
             }
             catch (Exception ex)
             {
-                failed = true;
+                Assert.Fail(ex.Message);
             }
             finally
             {
                 connection.DeleteContainer(containerName);
             }
-            if (failed)
-                Assert.Fail();
         }
 
         [Test]
@@ -181,7 +179,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
                 try
                 {
                     Container container = connection.RetrievePublicContainerInformation(testHelper.ContainerName);
-                } catch (ContainerNotFoundException ex)
+                } catch
                 {
                     excepted = true;
                 }
@@ -233,7 +231,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
                 {
                     connection.SetPublicContainerDetails(testHelper.ContainerName, true, Constants.PublicContainerTTL,
                                                          "", "");
-                } catch (ContainerNotFoundException ex)
+                } catch
                 {
                     excepted = true;
                 }

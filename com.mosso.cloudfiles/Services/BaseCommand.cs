@@ -10,7 +10,7 @@ namespace com.mosso.cloudfiles.services
     {
         protected string storageToken;
         protected string storageUrl;
-        protected domain.UserCredentials userCredentials;
+        protected UserCredentials userCredentials;
         protected abstract object ExecuteCommand();
         protected string cdnManagementUrl;
         protected string authToken;

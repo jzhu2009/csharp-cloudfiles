@@ -55,6 +55,7 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="cdnManagementUrl">The CDN URL</param>
         /// <param name="authToken">The authorization token returned from the authorization server</param>
         /// <param name="containerName">The name of the container to update the details for</param>
+        /// <param name="cdnTtl">The TTL of the container on the CDN</param>
         /// <param name="userAgentAcl">Specifies ACL information for user agents.</param>
         /// <param name="referrerAcl">Specifies ACL information for referrers</param>
         public SetPublicContainerDetailsRequest(string cdnManagementUrl, string authToken, string containerName, string cdnTtl, string userAgentAcl, string referrerAcl)

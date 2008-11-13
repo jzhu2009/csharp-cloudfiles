@@ -11,19 +11,12 @@ using com.mosso.cloudfiles.domain.response;
 namespace com.mosso.cloudfiles.services
 {
    
-    internal class GetContainerListCommand : BaseCommand
-    {
-        
-        protected override object ExecuteCommand()
-        {
-            List<string> containerList = null;
-            GetContainers getContainers = new GetContainers(storageUrl, storageToken);
-            GetContainersResponse getContainersResponse = new ResponseFactoryWithContentBody<GetContainersResponse>().Create(new CloudFilesRequest(getContainers, userCredentials.ProxyCredentials));
-            if (getContainersResponse.Status == HttpStatusCode.OK)
-            {
-                containerList = getContainersResponse.ContentBody;
-            }
-            return containerList;
-        }
-    }
+//    internal class GetContainerListCommand : BaseCommand
+//    {
+//        
+//        protected override object ExecuteCommand()
+//        {
+//            
+//        }
+//    }
 }

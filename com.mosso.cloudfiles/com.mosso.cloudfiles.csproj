@@ -94,7 +94,6 @@
     <Compile Include="Exceptions\InvalidRangeHeaderException.cs" />
     <Compile Include="Exceptions\DateTimeHttpHeaderFormatException.cs" />
     <Compile Include="Exceptions\NoContainersFoundException.cs" />
-    <Compile Include="Services\BaseCommand.cs" />
     <Compile Include="Domain\Container.cs" />
     <Compile Include="Domain\Request\DeleteContainer.cs" />
     <Compile Include="Domain\Response\DeleteContainerResponse.cs" />
@@ -129,21 +128,7 @@
     <Compile Include="Exceptions\ContainerNotFoundException.cs" />
     <Compile Include="Exceptions\InvalidETagException.cs" />
     <Compile Include="Exceptions\StorageItemNotFoundException.cs" />
-    <Compile Include="Services\CreateContainerCommand.cs" />
-    <Compile Include="Services\DeleteContainerCommand.cs" />
-    <Compile Include="Services\DeleteStorageItemCommand.cs" />
-    <Compile Include="Services\GetStorageItemCommand.cs" />
     <Compile Include="Services\IConnection.cs" />
-    <Compile Include="Services\GetAccountInformationCommand.cs" />
-    <Compile Include="Services\GetContainerInformationCommand.cs" />
-    <Compile Include="Services\GetContainerItemsListCommand.cs" />
-    <Compile Include="Services\GetContainerListCommand.cs" />
-    <Compile Include="Services\MarkContainerAsPublicCommand.cs" />
-    <Compile Include="Services\RetrievePublicContainerInformationCommand.cs" />
-    <Compile Include="Services\RetrievePublicContainersCommand.cs" />
-    <Compile Include="Services\RetrieveStorageItemInformationCommand.cs" />
-    <Compile Include="Services\SetPublicContainerDetailsCommand.cs" />
-    <Compile Include="Services\SetStorageItemMetaInformationCommand.cs" />
     <Compile Include="Services\Connection.cs" />
     <Compile Include="Domain\StorageItem.cs" />
     <Compile Include="Domain\UserCredentials.cs" />
@@ -156,7 +141,6 @@
     <Compile Include="Domain\Request\IRequest.cs" />
     <Compile Include="Exceptions\AuthenticationFailedException.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="Services\PutStorageItemCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

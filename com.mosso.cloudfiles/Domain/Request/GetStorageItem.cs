@@ -97,7 +97,7 @@ namespace com.mosso.cloudfiles.domain.request
 
         private void AddRequestFieldHeadersToRequestHeaders(Dictionary<RequestHeaderFields, string> requestHeaderFields)
         {
-            if (requestHeaderFields == null) return;
+            if (requestHeaderFields == null || requestHeaderFields.Count == 0) return;
 
             foreach(KeyValuePair<RequestHeaderFields, string> item in requestHeaderFields)
             {
