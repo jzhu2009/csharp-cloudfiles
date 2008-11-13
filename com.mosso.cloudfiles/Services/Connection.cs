@@ -271,7 +271,7 @@ namespace com.mosso.cloudfiles.services
         /// <param name="containerName">The name of the container to put the storage object in</param>
         /// <param name="remoteStorageItemName">The alternate name as it will be called on cloudfiles</param>
         /// <param name="storageStream">The stream representing the storage item to upload</param>
-        public void PutStorageItem(string containerName, FileStream storageStream, string remoteStorageItemName)
+        public void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName)
         {
             if (string.IsNullOrEmpty(containerName) ||
                 string.IsNullOrEmpty(remoteStorageItemName))
@@ -287,7 +287,7 @@ namespace com.mosso.cloudfiles.services
         /// <param name="storageStream">The file stream to upload</param>
         /// <param name="metaTags">An optional parameter containing a dictionary of meta tags to associate with the storage object</param>
         /// <param name="remoteStorageItemName">The name of the storage object as it will be called on cloudfiles</param>
-        public void PutStorageItem(string containerName, FileStream storageStream, string remoteStorageItemName, Dictionary<string, string> metaTags)
+        public void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName, Dictionary<string, string> metaTags)
         {
             if (string.IsNullOrEmpty(containerName) ||
                 string.IsNullOrEmpty(remoteStorageItemName))

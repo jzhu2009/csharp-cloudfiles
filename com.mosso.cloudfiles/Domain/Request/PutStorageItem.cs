@@ -19,7 +19,7 @@ namespace com.mosso.cloudfiles.domain.request
     public class PutStorageItem : IRequestWithContentBody
     {
         private string fileUri;
-        private Stream filestream;
+        private Stream stream;
         private const int MAXIMUM_FILE_NAME_LENGTH = 128;
         private const string MIME_TYPES_XML_FILE = "mime-types.xml";
 
@@ -57,18 +57,18 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="storageUrl">the customer unique url to interact with cloudfiles</param>
         /// <param name="containerName">the name of the container where the storage item is located</param>
         /// <param name="storageItemName">the name of the storage item to add meta information too</param>
-        /// <param name="filestream">the fiel stream of the file to put into cloudfiles</param>
+        /// <param name="stream">the fiel stream of the file to put into cloudfiles</param>
         /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
         /// <param name="metaTags">dictionary of meta tags to apply to the storage item</param>
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         /// <exception cref="ContainerNameLengthException">Thrown when the container name length exceeds the maximum container length allowed</exception>
-        public PutStorageItem(string storageUrl, string containerName, string storageItemName, Stream filestream,
+        public PutStorageItem(string storageUrl, string containerName, string storageItemName, Stream stream,
                               string storageToken, Dictionary<string, string> metaTags)
         {
             if (string.IsNullOrEmpty(storageUrl)
                 || string.IsNullOrEmpty(storageToken)
                 || string.IsNullOrEmpty(containerName)
-                || filestream == null
+                || stream == null
                 || string.IsNullOrEmpty(storageItemName))
                 throw new ArgumentNullException();
 
@@ -77,13 +77,13 @@ namespace com.mosso.cloudfiles.domain.request
                 throw new ContainerNameLengthException("The container name length exceeds " + Constants.MAXIMUM_CONTAINER_NAME_LENGTH + " characters.s");
 
 
-            this.filestream = filestream;
+            this.stream = stream;
             Headers = new NameValueCollection();
-            ContentLength = this.filestream.Length;
+            ContentLength = this.stream.Length;
 
-            ETag = StringifyMD5(new MD5CryptoServiceProvider().ComputeHash(this.filestream));
+            ETag = StringifyMD5(new MD5CryptoServiceProvider().ComputeHash(this.stream));
 
-            this.filestream.Seek(0, 0);
+            this.stream.Seek(0, 0);
 
             if (metaTags != null)
             {
@@ -93,8 +93,8 @@ namespace com.mosso.cloudfiles.domain.request
                 }
             }
 
-            if (filestream.Position == filestream.Length)
-                filestream.Seek(0, 0);
+            if (stream.Position == stream.Length)
+                stream.Seek(0, 0);
 
             Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(storageToken));
             Uri =
@@ -169,12 +169,12 @@ namespace com.mosso.cloudfiles.domain.request
             byte[] buffer = new byte[Constants.CHUNK_SIZE];
 
             int amt = 0;
-            while ((amt = filestream.Read(buffer, 0, buffer.Length)) != 0)
+            while ((amt = stream.Read(buffer, 0, buffer.Length)) != 0)
             {
                 httpWebRequestFileStream.Write(buffer, 0, amt);
             }
 
-            filestream.Close();
+            stream.Close();
             httpWebRequestFileStream.Flush();
             httpWebRequestFileStream.Close();
         }
@@ -185,11 +185,11 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="httpWebRequestFileStream">the file stream to input into the http request</param>
         public void ReadFileIntoRequest(Stream httpWebRequestFileStream)
         {
-            if (filestream == null)
-                filestream = new FileStream(fileUri, FileMode.Open);
+            if (stream == null)
+                stream = new FileStream(fileUri, FileMode.Open);
 
             ReadStreamIntoRequest(httpWebRequestFileStream);
-            filestream.Close();
+            stream.Close();
         }
 
         /// <summary>

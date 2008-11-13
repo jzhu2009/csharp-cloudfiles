@@ -24,8 +24,8 @@ namespace com.mosso.cloudfiles.services
 
         void PutStorageItem(string containerName, string storageItemName, Dictionary<string, string> metaTags);
         void PutStorageItem(string containerName, string storageItemName);
-        void PutStorageItem(string containerName, FileStream storageStream, string remoteStorageItemName);
-        void PutStorageItem(string containerName, FileStream storageStream, string remoteStorageItemName, Dictionary<string, string> metaTags);
+        void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName);
+        void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName, Dictionary<string, string> metaTags);
         void DeleteStorageItem(string containerName, string storageItemname);
         StorageItem GetStorageItem(string containerName, string storageItemName);
         StorageItem GetStorageItem(string containerName, string storageItemName, Dictionary<RequestHeaderFields, string> requestHeaderFields);
