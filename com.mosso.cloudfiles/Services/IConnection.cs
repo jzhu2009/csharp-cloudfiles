@@ -17,20 +17,41 @@ namespace com.mosso.cloudfiles.services
         AccountInformation GetAccountInformation();
 
         void CreateContainer(string containerName);
+        
         void DeleteContainer(string continerName);
+        
         List<string> GetContainers();
+        
         List<string> GetContainerItemList(string containerName);
+        
         Container GetContainerInformation(string containerName);
-
+        
         void PutStorageItem(string containerName, string storageItemName, Dictionary<string, string> metaTags);
         void PutStorageItem(string containerName, string storageItemName);
         void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName);
         void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName, Dictionary<string, string> metaTags);
+        
         void DeleteStorageItem(string containerName, string storageItemname);
+
         StorageItem GetStorageItem(string containerName, string storageItemName);
+        void GetStorageItem(string containerName, string storageItemName, string localFileName);
         StorageItem GetStorageItem(string containerName, string storageItemName, Dictionary<RequestHeaderFields, string> requestHeaderFields);
-        void SetStorageItemMetaInformation(string containerName, string storageItemName, Dictionary<string, string> metaTags);
+        void GetStorageItem(string containerName, string storageItemName, string localFileName, Dictionary<RequestHeaderFields, string> requestHeaderFields);
+        
+        
         StorageItem GetStorageItemInformation(string containerName, string storageItemName);
+        
+        void SetStorageItemMetaInformation(string containerName, string storageItemName, Dictionary<string, string> metaTags);
+        
         List<string> GetPublicContainers();
+        
+        string MarkContainerAsPublic(string containerName);
+        string MarkContainerAsPublic(string containerName, string cdnTtl, string userAgentAcl, string referrerAcl);
+        
+        string SetPublicContainerDetails(string containerName, bool isCdnEnabled);
+        string SetPublicContainerDetails(string containerName, string cdnTtl, string userAgentAcl, string referrerAcl);
+        string SetPublicContainerDetails(string containerName, bool isCdnEnabled, string cdnTtl, string userAgentAcl, string referrerAcl);
+        
+        Container RetrievePublicContainerInformation(string containerName);
     }
 }

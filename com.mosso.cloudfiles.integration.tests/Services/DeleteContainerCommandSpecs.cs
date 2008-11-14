@@ -1,23 +1,14 @@
 using System;
-using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.exceptions;
-using com.mosso.cloudfiles.services;
+using com.mosso.cloudfiles.integration.tests.domain;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
 namespace com.mosso.cloudfiles.integration.tests.services.DeleteContainerCommandSpecs
 {
     [TestFixture]
-    public class When_deleting_a_container_using_connection
+    public class When_deleting_a_container_using_connection : TestBase
     {
-        private Connection connection;
-
-        [SetUp]
-        public void SetUp()
-        {
-            connection = new Connection(new UserCredentials(Constants.MOSSO_ACCOUNT, Constants.MOSSO_PASSWORD));
-        }
-
         [Test]
         public void Should_return_nothing_when_delete_is_successful()
         {

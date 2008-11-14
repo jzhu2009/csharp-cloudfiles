@@ -11,7 +11,7 @@ namespace com.mosso.cloudfiles.integration.tests.services
     [TestFixture]
     public class RetrieveStorageObjectInformationCommandSpecs
     {
-        private Connection connection;
+        private IConnection connection;
 
         [SetUp]
         public void SetUp()

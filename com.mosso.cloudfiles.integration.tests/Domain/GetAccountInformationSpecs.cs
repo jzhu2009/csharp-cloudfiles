@@ -3,7 +3,6 @@ using System.Net;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.domain.response;
-using com.mosso.cloudfiles.services;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
@@ -12,13 +11,6 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
     [TestFixture]
     public class When_querying_for_account : TestBase
     {
-        private Connection connection;
-
-        protected override void SetUp()
-        {
-            connection = new Connection(new UserCredentials(Constants.MOSSO_ACCOUNT, Constants.MOSSO_PASSWORD));
-        }
-
         [Test]
         public void should_return_number_of_containers_and_bytes_used()
         {

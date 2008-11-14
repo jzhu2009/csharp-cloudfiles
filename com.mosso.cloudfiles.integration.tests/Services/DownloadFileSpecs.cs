@@ -1,25 +1,17 @@
 using System;
+using System.Collections.Generic;
 using com.mosso.cloudfiles.domain;
+using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.exceptions;
-using com.mosso.cloudfiles.services;
+using com.mosso.cloudfiles.integration.tests.domain;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using System.Collections.Generic;
-using RequestHeaderFields=com.mosso.cloudfiles.domain.request.RequestHeaderFields;
 
 namespace com.mosso.cloudfiles.integration.tests.services.GetFileSpecs
 {
     [TestFixture]
-    public class When_downloading_a_file_using_connection
+    public class When_downloading_a_file_using_connection : TestBase
     {
-        private Connection connection;
-
-        [SetUp]
-        public void SetUp()
-        {
-            connection = new Connection(new UserCredentials(Constants.MOSSO_ACCOUNT, Constants.MOSSO_PASSWORD));
-        }
-
         [Test]
         public void Should_return_nothing_if_a_local_file_name_is_supplied_and_the_download_is_successful()
         {
@@ -90,7 +82,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.GetFileSpecs
             StorageItem si = null;
             try
             {
-                Dictionary<RequestHeaderFields,string> requestHeaders = new Dictionary<RequestHeaderFields, string>();
+                Dictionary<RequestHeaderFields, string> requestHeaders = new Dictionary<RequestHeaderFields, string>();
                 requestHeaders.Add(RequestHeaderFields.Range, "0-5");
                 connection.CreateContainer(containerName);
                 connection.PutStorageItem(containerName, Constants.StorageItemName);

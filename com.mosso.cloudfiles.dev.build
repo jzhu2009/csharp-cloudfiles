@@ -85,7 +85,6 @@
   </target>
 
   <target name="deploy.src">
-    <echo>${help.dir}/${chm.file.name}.chm</echo>
     <call target="remove.tests.for.deployment" />
     <move file="com.mosso.cloudfiles.sln" tofile="temp/com.mosso.cloudfiles.sln" overwrite="true" />
     <move file="${sln.file.without.tests}" tofile="com.mosso.cloudfiles.sln" overwrite="true" />

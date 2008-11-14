@@ -17,21 +17,21 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_argument_null_exception_with_null_authentication()
         {
-            Connection engine = new Connection(null);
+            IConnection engine = new Connection(null);
         }
 
         [Test]
         public void Should_instantiate_engine_without_throwing_exception_when_authentication_passes()
         {
 
-            Connection engine = new Connection(new UserCredentials(Constants.MOSSO_ACCOUNT, Constants.MOSSO_PASSWORD));
+            IConnection engine = new Connection(new UserCredentials(Constants.MOSSO_ACCOUNT, Constants.MOSSO_PASSWORD));
         }
     }
 
     [TestFixture]
     public class When_requesting_a_list_of_public_containers
     {
-        private Connection connection;
+        private IConnection connection;
         
         [SetUp]
         public void SetUp()
@@ -52,7 +52,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
     [TestFixture]
     public class When_marking_a_container_as_public
     {
-        private Connection connection;
+        private IConnection connection;
 
         [SetUp]
         public void SetUp()
@@ -80,7 +80,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
             }
         }
 
-        private void MarkContainerPublic(Connection connection, string containerName)
+        private void MarkContainerPublic(IConnection connection, string containerName)
         {
             try
             {
@@ -110,12 +110,12 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
 
     public class TestHelper : IDisposable
     {
-        private readonly Connection connection;
+        private readonly IConnection connection;
         private readonly bool createContainer;
         private string containerName;
 
 
-        public TestHelper(Connection connection, bool createContainer, bool markPublic)
+        public TestHelper(IConnection connection, bool createContainer, bool markPublic)
         {
             this.connection = connection;
             this.createContainer = createContainer;
@@ -141,7 +141,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
     [TestFixture]
     public class When_retrieve_public_container_information
     {
-        private Connection connection;
+        private IConnection connection;
 
         [SetUp]
         public void SetUp()
@@ -191,7 +191,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
     [TestFixture]
     public class When_updating_a_public_containers_information
     {
-        private Connection connection;
+        private IConnection connection;
 
         [SetUp]
         public void SetUp()
