@@ -491,7 +491,6 @@ namespace com.mosso.cloudfiles.services
         /// <returns>A list of the public containers</returns>
         public List<string> GetPublicContainers()
         {
-            //TODO: Try/Catch
             GetPublicContainersRequest request = new GetPublicContainersRequest(cdnManagementUrl, authToken);
             GetPublicContainersResponse response =
                 new ResponseFactoryWithContentBody<GetPublicContainersResponse>().Create(new CloudFilesRequest(request));
@@ -503,7 +502,7 @@ namespace com.mosso.cloudfiles.services
             response.Dispose();
 
 
-            return response.ContentBody;
+            return containerList;
         }
 
         /// <summary>
@@ -521,27 +520,6 @@ namespace com.mosso.cloudfiles.services
         }
 
         /// <summary>
-        /// This method sets a container as public on the CDN
-        /// </summary>
-        /// <param name="containerName">The name of the container to mark public</param>
-        /// <param name="cdnTtl">The TTL of the container on the CDN</param>
-        /// <param name="userAgentAcl">Access List information for the user agent</param>
-        /// <param name="referrerAcl">Access List information for the referrer</param>
-        /// <returns>A string representing the URL of the public container</returns>
-        public string MarkContainerAsPublic(string containerName, string cdnTtl, string userAgentAcl, string referrerAcl)
-        {
-            if (string.IsNullOrEmpty(containerName) ||
-               string.IsNullOrEmpty(cdnTtl) ||
-               string.IsNullOrEmpty(userAgentAcl) ||
-               string.IsNullOrEmpty(referrerAcl))
-                throw new ArgumentNullException();
-
-            SetContainerAsPublicRequest request = new SetContainerAsPublicRequest(cdnManagementUrl, authToken, containerName, cdnTtl, userAgentAcl, referrerAcl);
-            return MarkContainerAsPublic(request);
-        }
-
-
-        /// <summary>
         /// Updates the details associated with the container on the cdn
         /// </summary>
         /// <param name="containerName">The name of the container to update</param>
@@ -554,49 +532,6 @@ namespace com.mosso.cloudfiles.services
 
             SetPublicContainerDetailsRequest request = 
                 new SetPublicContainerDetailsRequest(cdnManagementUrl, authToken, containerName, isCdnEnabled, "", "", "");
-            return SetPublicContainerDetails(request);
-        }
-
-        /// <summary>
-        /// Updates the details associated with the container on the cdn
-        /// </summary>
-        /// <param name="containerName">The name of the container to update</param>
-        /// <param name="cdnTtl">The TTL of the container on the CDN</param>
-        /// <param name="userAgentAcl">Associates ACL information for specific user agents</param>
-        /// <param name="referrerAcl">Associates ACL information for specific referrers</param>
-        /// <returns>A string containing the CDN URI for this container</returns>
-        public string SetPublicContainerDetails(string containerName, string cdnTtl, string userAgentAcl, string referrerAcl)
-        {
-            if (string.IsNullOrEmpty(containerName) ||
-               string.IsNullOrEmpty(cdnTtl) ||
-               string.IsNullOrEmpty(userAgentAcl) ||
-               string.IsNullOrEmpty(referrerAcl))
-                throw new ArgumentNullException();
-
-            SetPublicContainerDetailsRequest request = 
-                new SetPublicContainerDetailsRequest(cdnManagementUrl, authToken, containerName, cdnTtl, userAgentAcl, referrerAcl);
-            return SetPublicContainerDetails(request);
-        }
-
-        /// <summary>
-        /// Updates the details associated with the container on the cdn
-        /// </summary>
-        /// <param name="containerName">The name of the container to update</param>
-        /// <param name="isCdnEnabled">Enables/Disables the public status of the container</param>
-        /// <param name="cdnTtl">The TTL of the container on the CDN</param>
-        /// <param name="userAgentAcl">Associates ACL information for specific user agents</param>
-        /// <param name="referrerAcl">Associates ACL information for specific referrers</param>
-        /// <returns>A string containing the CDN URI for this container</returns>
-        public string SetPublicContainerDetails(string containerName, bool isCdnEnabled, string cdnTtl, string userAgentAcl, string referrerAcl)
-        {
-            if (string.IsNullOrEmpty(containerName) ||
-              string.IsNullOrEmpty(cdnTtl) ||
-              string.IsNullOrEmpty(userAgentAcl) ||
-              string.IsNullOrEmpty(referrerAcl))
-                throw new ArgumentNullException();
-
-            SetPublicContainerDetailsRequest request =
-                 new SetPublicContainerDetailsRequest(cdnManagementUrl, authToken, containerName, isCdnEnabled, cdnTtl, userAgentAcl, referrerAcl);
             return SetPublicContainerDetails(request);
         }
 

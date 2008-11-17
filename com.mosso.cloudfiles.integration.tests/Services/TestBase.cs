@@ -17,14 +17,14 @@ namespace com.mosso.cloudfiles.integration.tests.domain
         public void SetUpBase()
         {
             GetAuthentication request =
-                new GetAuthentication(new UserCredentials(Constants.MOSSO_ACCOUNT, Constants.MOSSO_PASSWORD));
+                new GetAuthentication(new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY));
 
             IResponse response = new ResponseFactory<GetAuthenticationResponse>().Create(new CloudFilesRequest(request));
 
             storageUrl = response.Headers[Constants.XStorageUrl];
             storageToken = response.Headers[Constants.XStorageToken];
             Assert.That(storageToken.Length, Is.EqualTo(36));
-            connection = new Connection(new UserCredentials(Constants.MOSSO_ACCOUNT, Constants.MOSSO_PASSWORD));
+            connection = new Connection(new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY));
             SetUp();
         }
 

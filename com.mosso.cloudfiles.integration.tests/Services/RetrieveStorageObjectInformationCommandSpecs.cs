@@ -16,7 +16,7 @@ namespace com.mosso.cloudfiles.integration.tests.services
         [SetUp]
         public void SetUp()
         {
-            connection = new Connection(new UserCredentials(Constants.MOSSO_ACCOUNT, Constants.MOSSO_PASSWORD));
+            connection = new Connection(new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY));
         }
 
         [Test, Ignore]

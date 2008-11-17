@@ -20,7 +20,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.AuthenticationRequestSpe
         {
             uri = new Uri(Constants.MOSSO_AUTH_URL);
             request =
-                new GetAuthentication(new UserCredentials(Constants.MOSSO_ACCOUNT, Constants.MOSSO_PASSWORD));
+                new GetAuthentication(new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY));
         }
 
         [Test]

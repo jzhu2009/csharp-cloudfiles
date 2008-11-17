@@ -24,7 +24,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
         public void Should_instantiate_engine_without_throwing_exception_when_authentication_passes()
         {
 
-            IConnection engine = new Connection(new UserCredentials(Constants.MOSSO_ACCOUNT, Constants.MOSSO_PASSWORD));
+            IConnection engine = new Connection(new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY));
         }
     }
 
@@ -36,16 +36,32 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
         [SetUp]
         public void SetUp()
         {
-            UserCredentials userCredentials = new UserCredentials(Constants.MOSSO_ACCOUNT, Constants.MOSSO_PASSWORD);
+            UserCredentials userCredentials = new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY);
             connection = new Connection(userCredentials);
         }
 
         [Test]
         public void Should_retrieve_a_list_of_public_containers_on_the_cdn_when_there_are_shared_containers()
         {
-            List<string> connectionList = connection.GetPublicContainers();
-            Assert.That(connectionList, Is.Not.Null);
-            Assert.That(connectionList.Count, Is.GreaterThan(0));
+            string containerName = Guid.NewGuid().ToString();
+            connection.CreateContainer(containerName);
+
+            try
+            {
+                string cdnUrl = connection.MarkContainerAsPublic(containerName);
+                Assert.That(cdnUrl, Is.Not.Null);
+                Assert.That(cdnUrl.Length, Is.GreaterThan(0));
+
+                List<string> containerList = connection.GetPublicContainers();
+                Assert.That(containerList, Is.Not.Null);
+                Assert.That(containerList.Count, Is.GreaterThan(0));
+                Assert.That(containerList.Contains(containerName));
+     
+            }
+            finally
+            {
+                connection.DeleteContainer(containerName);
+            }           
         }
     }
    
@@ -57,7 +73,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
         [SetUp]
         public void SetUp()
         {
-            UserCredentials userCredentials = new UserCredentials(Constants.MOSSO_ACCOUNT, Constants.MOSSO_PASSWORD);
+            UserCredentials userCredentials = new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY);
             connection = new Connection(userCredentials);
         }
 
@@ -146,7 +162,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
         [SetUp]
         public void SetUp()
         {
-            UserCredentials userCredentials = new UserCredentials(Constants.MOSSO_ACCOUNT, Constants.MOSSO_PASSWORD);
+            UserCredentials userCredentials = new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY);
             connection = new Connection(userCredentials);
         }
 
@@ -196,7 +212,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
         [SetUp]
         public void SetUp()
         {
-            UserCredentials userCredentials = new UserCredentials(Constants.MOSSO_ACCOUNT, Constants.MOSSO_PASSWORD);
+            UserCredentials userCredentials = new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY);
             connection = new Connection(userCredentials);
         }
 
@@ -205,7 +221,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
         {
             using (TestHelper testHelper = new TestHelper(connection, true, true))
             {
-                string cdnUrl = connection.SetPublicContainerDetails(testHelper.ContainerName, true, Constants.PublicContainerTTL, "x", "x");
+                string cdnUrl = connection.SetPublicContainerDetails(testHelper.ContainerName, true);
                 Assert.That(cdnUrl, Is.Not.Null);
                 Assert.That(cdnUrl.Length, Is.GreaterThan(0));
             }
@@ -217,7 +233,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
         {
             using (TestHelper testHelper = new TestHelper(connection, false, false))
             {
-                connection.SetPublicContainerDetails(testHelper.ContainerName, true, Constants.PublicContainerTTL, "x", "x");
+                connection.SetPublicContainerDetails(testHelper.ContainerName, true);
             }
         }
 
@@ -229,8 +245,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
             {
                 try
                 {
-                    connection.SetPublicContainerDetails(testHelper.ContainerName, true, Constants.PublicContainerTTL,
-                                                         "", "");
+                    connection.SetPublicContainerDetails(testHelper.ContainerName, true);
                 } catch
                 {
                     excepted = true;

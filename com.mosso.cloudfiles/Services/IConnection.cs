@@ -23,6 +23,7 @@ namespace com.mosso.cloudfiles.services
         List<string> GetContainers();
         
         List<string> GetContainerItemList(string containerName);
+        List<string> GetContainerItemList(string containerName, Dictionary<GetItemListParameters, string> parameters);
         
         Container GetContainerInformation(string containerName);
         
@@ -46,11 +47,7 @@ namespace com.mosso.cloudfiles.services
         List<string> GetPublicContainers();
         
         string MarkContainerAsPublic(string containerName);
-        string MarkContainerAsPublic(string containerName, string cdnTtl, string userAgentAcl, string referrerAcl);
-        
         string SetPublicContainerDetails(string containerName, bool isCdnEnabled);
-        string SetPublicContainerDetails(string containerName, string cdnTtl, string userAgentAcl, string referrerAcl);
-        string SetPublicContainerDetails(string containerName, bool isCdnEnabled, string cdnTtl, string userAgentAcl, string referrerAcl);
         
         Container RetrievePublicContainerInformation(string containerName);
     }
