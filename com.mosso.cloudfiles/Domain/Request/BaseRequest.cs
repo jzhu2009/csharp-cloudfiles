@@ -12,7 +12,20 @@ namespace com.mosso.cloudfiles.domain.request
     /// </summary>
     public abstract class BaseRequest : IRequest
     {
-        public NameValueCollection Headers { get; protected set; }
+        protected NameValueCollection headers = new NameValueCollection();
+
+        public NameValueCollection Headers
+        {
+            get
+            {
+                return headers;
+            }
+            protected set
+            {
+                headers = value;
+            }
+        }
+
         public string ContentType { get; set; }
         public Uri Uri { get; protected set; }
         public string UserAgent { get; set; }

@@ -35,7 +35,7 @@ namespace com.mosso.cloudfiles.domain.request
 
             Uri = new Uri(storageUrl + "/" + HttpUtility.UrlEncode(containerName).Replace("+", "%20"));
             Method = "DELETE";
-            Headers = new NameValueCollection();
+
             Headers.Add("X-Storage-Token", HttpUtility.UrlEncode(storageToken));
         }
     }

@@ -562,12 +562,6 @@ namespace com.mosso.cloudfiles.services
 
             Container container = new Container(containerName);
             if (response == null) return null;
-            if (response.Headers[Constants.X_CDN_TTL] != null)
-                container.TTL = response.Headers[Constants.X_CDN_TTL];
-            if (response.Headers[Constants.X_USER_AGENT_ACL] != null)
-                container.UserAgentAcl = response.Headers[Constants.X_USER_AGENT_ACL];
-            if (response.Headers[Constants.X_REFERRER_ACL] != null)
-                container.ReferrerAcl = response.Headers[Constants.X_REFERRER_ACL];
             container.CdnUri = response.Headers[Constants.X_CDN_URI];
             return container;
         }
@@ -608,7 +602,7 @@ namespace com.mosso.cloudfiles.services
                 {
                     throw new InvalidCredentialException("You do not have permission to mark this container as public.");
                 }
-                if (webResponse.StatusCode == HttpStatusCode.Conflict)
+                if (webResponse.StatusCode == HttpStatusCode.Accepted)
                 {
                     throw new ContainerAlreadyPublicException("The specified container is already marked as public.");
                 }

@@ -12,14 +12,6 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
     [TestFixture]
     public class When_creating_a_container : TestBase
     {
-        private void DeleteContainer(string storageUrl, string containerName)
-        {
-            cloudfiles.domain.request.DeleteContainer deleteContainer = new DeleteContainer(storageUrl, containerName, storageToken);
-
-            IResponse response = new ResponseFactory<DeleteContainerResponse>().Create(new CloudFilesRequest(deleteContainer));
-            Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));
-        }
-
         [Test]
         [ExpectedException(typeof (ContainerNameLengthException))]
         public void Should_throw_exception_if_container_name_greater_than_64_characters()
@@ -77,6 +69,14 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.Accepted));
 
             DeleteContainer(storageUrl, containerName);
+        }
+
+        private void DeleteContainer(string storageUrl, string containerName)
+        {
+            cloudfiles.domain.request.DeleteContainer deleteContainer = new DeleteContainer(storageUrl, containerName, storageToken);
+
+            IResponse response = new ResponseFactory<DeleteContainerResponse>().Create(new CloudFilesRequest(deleteContainer));
+            Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));
         }
     }
 }

@@ -18,7 +18,6 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="referrerAcl">Specifies ACL information for referrers</param>
         public SetPublicContainerDetailsRequest(string cdnManagementUrl, string authToken, string containerName, bool isCdnEnabled, string cdnTtl, string userAgentAcl, string referrerAcl)
         {
-            Headers = new NameValueCollection();
             AssignCommonDetails(cdnManagementUrl,authToken,containerName, cdnTtl, userAgentAcl, referrerAcl);
             
             string isCdnEnabledString = isCdnEnabled.ToString();

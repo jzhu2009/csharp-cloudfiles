@@ -26,7 +26,6 @@ namespace com.mosso.cloudfiles.domain.request
                 throw new ArgumentNullException();
 
             Uri = new Uri(storageUrl);
-            Headers = new NameValueCollection();
             Method = "GET";
             Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(storageToken));
         }

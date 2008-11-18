@@ -32,8 +32,6 @@ namespace com.mosso.cloudfiles.domain.request
                             EncodeStringProperlyAccordingToCloudFiles(userCredentials.AccountName) + "/auth");
             }
             Method = "GET";
-            Headers = new NameValueCollection();
-
             Headers.Add(Constants.X_AUTH_USER, EncodeStringProperlyAccordingToCloudFiles(userCredentials.Username));
             Headers.Add(Constants.X_AUTH_KEY, EncodeStringProperlyAccordingToCloudFiles(userCredentials.Api_access_key));
         }

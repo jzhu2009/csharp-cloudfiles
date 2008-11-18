@@ -41,7 +41,6 @@ namespace com.mosso.cloudfiles.domain.request
 
 
             this.metaTags = metaTags;
-            Headers = new NameValueCollection();
 
             Uri =
                 new Uri(storageUrl + "/" + HttpUtility.UrlEncode(containerName).Replace("+", "%20") + "/" +

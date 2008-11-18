@@ -15,7 +15,7 @@ namespace com.mosso.cloudfiles.domain.request
             if (string.IsNullOrEmpty(cdnManagementUrl)
                || string.IsNullOrEmpty(authToken))
                 throw new ArgumentNullException();
-            Headers = new NameValueCollection();
+
             this.cdnManagementUrl = cdnManagementUrl;
             this.authToken = authToken;
             Method = "GET";
