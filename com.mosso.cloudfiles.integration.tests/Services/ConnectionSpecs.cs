@@ -114,6 +114,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
 
         [Test]
         [ExpectedException(typeof(ContainerAlreadyPublicException))]
+        [Ignore("Currently not able to test this")]
         public void Should_fail_when_the_container_is_already_marked_public()
         {
             string containerName = Guid.NewGuid().ToString();
