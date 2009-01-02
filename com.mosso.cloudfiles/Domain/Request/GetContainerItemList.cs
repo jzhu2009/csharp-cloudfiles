@@ -79,5 +79,30 @@ namespace com.mosso.cloudfiles.domain.request
             : this(storageUrl, containerName, storageToken, null)
         {
         }
+
+        /// <summary>
+        /// GetContainerItemList constructor
+        /// </summary>
+        /// <param name="storageUrl">the customer unique url to interact with cloudfiles</param>
+        /// <param name="containerName">the name of the container where the storage item is located</param>
+        /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
+        /// <param name="format">desired serialized format</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
+        /// <exception cref="ContainerNameLengthException">Thrown when the container name length exceeds the maximum container length allowed</exception>
+        public GetContainerItemList(string storageUrl, string containerName, string storageToken, Format format)
+        {
+            if (string.IsNullOrEmpty(storageUrl)
+                || string.IsNullOrEmpty(storageToken)
+                || string.IsNullOrEmpty(containerName))
+                throw new ArgumentNullException();
+
+            if (containerName.Length > Constants.MAXIMUM_CONTAINER_NAME_LENGTH)
+                throw new ContainerNameLengthException("Container name " + containerName + " exceeds " +
+                                                       Constants.MAXIMUM_CONTAINER_NAME_LENGTH + " character limit");
+
+            Uri = new Uri(storageUrl + "/" + HttpUtility.UrlEncode(containerName).Replace("+", "%20") + "?format=" + EnumHelper.GetDescription(format));
+            Method = "GET";
+            Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(storageToken));
+        }
     }
 }

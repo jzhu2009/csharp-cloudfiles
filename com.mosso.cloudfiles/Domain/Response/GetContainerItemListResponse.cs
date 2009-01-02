@@ -13,7 +13,6 @@ namespace com.mosso.cloudfiles.domain.response
     /// </summary>
     public class GetContainerItemListResponse : IResponseWithContentBody
     {
-        private int numEntities;
         private readonly List<string> contentBody;
         private Stream contentStream;
 
@@ -84,11 +83,8 @@ namespace com.mosso.cloudfiles.domain.response
         private void ReadStream()
         {
             string[] streamLines = new StreamReader(contentStream).ReadToEnd().Split('\n');
-            numEntities = 0;
             if (Status == HttpStatusCode.OK)
             {
-                numEntities = streamLines.Length;
-
                 //Because all HTTP requests end with \n\n the split at the end was appending an additional empty string container to the list
                 //which of course doesn't exist
                 foreach (string s in streamLines)

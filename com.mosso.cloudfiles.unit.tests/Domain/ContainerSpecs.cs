@@ -24,6 +24,7 @@ namespace com.mosso.cloudfiles.unit.tests.domain.StorageObjectSpecs.ContainerSpe
         [Test]
         public void Should_have_byte_count_when_byte_count_is_set()
         {
+            Assert.That(container.ByteCount, Is.EqualTo(0));
             container.ByteCount = Constants.CONTAINER_BYTES_COUNT;
             Assert.AreEqual(container.ByteCount, Constants.CONTAINER_BYTES_COUNT);
         }

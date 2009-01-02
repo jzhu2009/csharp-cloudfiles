@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using System.Xml;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.domain.response;
@@ -301,5 +302,103 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetContainerItemListSpec
                 Console.WriteLine(s);
             Assert.That(true);
         }
+    }
+
+    [TestFixture]
+    public class When_requesting_a_list_of_items_in_a_container_in_a_json_serialized_format : TestBase
+    {
+        [Test]
+        public void should_get_json_serialized_list_of_items()
+        {
+            string containerName = Guid.NewGuid().ToString();
+            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            {
+                
+                testHelper.PutItemInContainer(Constants.StorageItemName, Constants.StorageItemName);
+
+                GetContainerItemList getContainerItemsRequest = new GetContainerItemList(storageUrl, containerName, storageToken, Format.JSON);
+                getContainerItemsRequest.UserAgent = "NASTTestUserAgent";
+
+                GetContainerItemListResponse response =
+                        new ResponseFactoryWithContentBody<GetContainerItemListResponse>().Create(
+                        new CloudFilesRequest(getContainerItemsRequest));
+
+                try
+                {
+                    List<string> contentBody = response.ContentBody;
+                    string expectedItem = "{\"name\":\"TestStorageItem.txt\",\"hash\":\"5c66108b7543c6f16145e25df9849f7f\",\"size\":34,\"type\":\"application\\/octet-stream\"}]";
+                    bool expectedItemFound = false;
+                    foreach(string s in contentBody)
+                    {
+                        expectedItemFound = (s == expectedItem);
+                    }
+                    testHelper.DeleteItemFromContainer(Constants.StorageItemName);
+
+                    Assert.That(response.Status, Is.EqualTo(HttpStatusCode.OK));
+                    Assert.That(response.ContentType, Is.Not.Null);
+                    Assert.That(expectedItemFound, Is.True, "Expected text " + expectedItem + " was not found");
+                }
+                finally
+                {
+                   response.Dispose();
+                }
+                
+            }
+        }
+
+
+    }
+
+    [TestFixture]
+    public class When_requesting_a_list_of_items_in_a_container_in_a_xml_serialized_format : TestBase
+    {
+        [Test]
+        public void should_get_json_serialized_list_of_items()
+        {
+            string containerName = Guid.NewGuid().ToString();
+            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            {
+
+                testHelper.PutItemInContainer(Constants.StorageItemName, Constants.StorageItemName);
+
+                GetContainerItemList getContainerItemsRequest = new GetContainerItemList(storageUrl, containerName, storageToken, Format.XML);
+                getContainerItemsRequest.UserAgent = "NASTTestUserAgent";
+
+                GetContainerItemListResponse response =
+                        new ResponseFactoryWithContentBody<GetContainerItemListResponse>().Create(
+                        new CloudFilesRequest(getContainerItemsRequest));
+
+
+                if(response.ContentBody.Count == 0)
+                    Assert.Fail("There was nothing in the content body in the response");
+
+                string contentBody = "";
+                foreach(string s in response.ContentBody)
+                {
+                    contentBody += s;
+                }
+                
+                response.Dispose();
+                XmlDocument xmlDocument = new XmlDocument();
+                try
+                {
+                    xmlDocument.LoadXml(contentBody);
+                }
+                catch (XmlException e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+
+                string expectedItem = "<container name=\"" +  containerName + "\"><object><name>TestStorageItem.txt</name><hash>5c66108b7543c6f16145e25df9849f7f</hash><size>34</size><type>application/octet-stream</type></object></container>";
+                testHelper.DeleteItemFromContainer(Constants.StorageItemName);
+
+                Assert.That(response.Status, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(response.ContentType, Is.Not.Null);
+                Assert.That(contentBody.IndexOf(expectedItem) > 1, Is.True, "Expected text " + expectedItem + " was not found");
+
+            }
+        }
+
+
     }
 }

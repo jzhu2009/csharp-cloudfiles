@@ -64,6 +64,26 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
             }           
         }
     }
+
+    [TestFixture]
+    public class When_requesting_a_json_serialized_version_of_the_account_information
+    {
+//        private Connection connection;
+//
+//        [SetUp]
+//        public void SetUp()
+//        {
+//            UserCredentials userCredentials = new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY);
+//            connection = new Connection(userCredentials);
+//        }
+//
+//        [Test]
+//        public void should_return_with_container_names()
+//        {
+//            string jsonResult = connection.GetAccountInformation(new JsonFormatter());
+//            Assert.That(jsonResult.IndexOf("[{\"name:") > -1 , Is.True);
+//        }
+    }
    
     [TestFixture]
     public class When_marking_a_container_as_public

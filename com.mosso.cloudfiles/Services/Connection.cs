@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Security.Authentication;
+using System.Xml;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.domain.response;
@@ -84,6 +85,26 @@ namespace com.mosso.cloudfiles.services
                 new ResponseFactory<GetAccountInformationResponse>().Create(new CloudFilesRequest(getAccountInformation));
             return new AccountInformation(getAccountInformationResponse.Headers[Constants.X_ACCOUNT_CONTAINER_COUNT],
                                           getAccountInformationResponse.Headers[Constants.X_ACCOUNT_BYTES_USED]);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetAccountInformationJson()
+        {
+//            string result = formatter.Format();
+//            return result;
+            return "";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public XmlDocument GetAccountInformationXml()
+        {
+            return new XmlDocument();
         }
 
         /// <summary>
