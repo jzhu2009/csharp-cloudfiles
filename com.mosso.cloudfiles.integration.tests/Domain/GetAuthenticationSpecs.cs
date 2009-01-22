@@ -13,7 +13,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.AuthenticationRequestSpe
     {
         private Uri uri;
         private GetAuthentication request;
-        private const string STORAGE_TOKEN = "fdc4273d-fa3f-40b1-9b88-2f215532646a";
+        private const string STORAGE_TOKEN = "5d8f3dca-7eb9-4453-aa79-2eea1b980353";
 
         [SetUp]
         public void Setup()

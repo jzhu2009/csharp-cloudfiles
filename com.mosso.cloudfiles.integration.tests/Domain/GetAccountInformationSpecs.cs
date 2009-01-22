@@ -90,12 +90,12 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
 //                    }
 
                     
-                    string expectedSubString = "{\"name\":\"" + containerName + "\",\"count\":1,\"size\":34},";
+                    string expectedSubString = "{\"name\":\"" + containerName + "\",\"count\":1,\"size\":34}";
                     System.Collections.Generic.List<string> contentBody = getAccountInformationJsonResponse.ContentBody;
                     getAccountInformationJsonResponse.Dispose();
                     foreach (string s in contentBody)
                     {
-                        if (s == expectedSubString) return;  
+                        if (s.IndexOf(expectedSubString) > -1) return;  
                     }
 
                     Assert.Fail("Expected value: " + expectedSubString + " not found");

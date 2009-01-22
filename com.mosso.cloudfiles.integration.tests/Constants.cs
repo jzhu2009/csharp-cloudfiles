@@ -33,8 +33,8 @@ namespace com.mosso.cloudfiles.integration.tests
 //        public const string PasswordStaging2 = "testing";
 
         //Mosso accounts for authentication
-        public const string MOSSO_USERNAME = "jmeridth";
-        public const string MOSSO_API_KEY = "8df4519c0daca92d23bdb8a27b07123a";
+        public const string MOSSO_USERNAME = "cloudfilestester";
+        public const string MOSSO_API_KEY = "c8252a62b96288a4a4e5c81faf4f90c0";
         public const string MOSSO_AUTH_URL = "https://api.mosso.com/auth";
 
         //HTTPS authentication testing constants

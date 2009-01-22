@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using com.mosso.cloudfiles.exceptions;
 using com.mosso.cloudfiles.integration.tests.domain;
@@ -12,8 +13,12 @@ namespace com.mosso.cloudfiles.integration.tests.services.StorageEngineSpecs.Ret
         [Test]
         public void Should_return_a_list_of_containers()
         {
-            List<string> containerList = connection.GetContainers();
-            Assert.That(containerList.Count, Is.GreaterThan(0));
+            string containerName = Guid.NewGuid().ToString();
+            using (new TestHelper(storageToken, storageUrl, containerName))
+            {
+                List<string> containerList = connection.GetContainers();
+                Assert.That(containerList.Count, Is.GreaterThan(0));
+            }
         }
     }
 

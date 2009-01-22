@@ -9,33 +9,60 @@ using NUnit.Framework.SyntaxHelpers;
 namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequestSpecs
 {
     [TestFixture]
-    public class When_requesting_a_list_of_containers : TestBase
+    public class When_requesting_a_list_of_containers_and_containers_are_present : TestBase
     {
+
         [Test]
         public void Should_return_OK_status()
         {
-            GetContainers request = new GetContainers(storageUrl, storageToken);
-            request.UserAgent = "NASTTestUserAgent";
+            string containerName = Guid.NewGuid().ToString();
+            using(new TestHelper(storageToken, storageUrl, containerName))
+            {
+                GetContainersResponse response = null;
+                try
+                {
+                    GetContainers request = new GetContainers(storageUrl, storageToken);
+                    request.UserAgent = "NASTTestUserAgent";
 
-            GetContainersResponse response = new ResponseFactoryWithContentBody<GetContainersResponse>().Create(new CloudFilesRequest(request));
+                    response = new ResponseFactoryWithContentBody<GetContainersResponse>().Create(new CloudFilesRequest(request));
 
-            Assert.That(response.Status, Is.EqualTo(HttpStatusCode.OK));
-            Assert.That(response.ContentBody, Is.Not.Null);
-            response.Dispose();
+                    Assert.That(response.Status, Is.EqualTo(HttpStatusCode.OK));
+                    Assert.That(response.ContentBody, Is.Not.Null);
+                }
+                finally
+                {
+                    if(response != null)
+                        response.Dispose();
+                }
+            }
+            
         }
 
         [Test]
         public void Should_return_the_list_of_containers()
         {
             Console.WriteLine("Begin listing containers");
-            GetContainers request = new GetContainers(storageUrl, storageToken);
 
-            IResponseWithContentBody response = new ResponseFactoryWithContentBody<GetContainersResponse>().Create(new CloudFilesRequest(request));
-            Assert.That(response.ContentBody.Count, Is.GreaterThan(0));
-//            foreach (string s in response.ContentBody)
-//                Console.WriteLine(s);
-            Console.WriteLine("End of listing containers");
-            response.Dispose();
+            string containerName = Guid.NewGuid().ToString();
+            using (new TestHelper(storageToken, storageUrl, containerName))
+            {
+                IResponseWithContentBody response = null;
+                try
+                {
+                    GetContainers request = new GetContainers(storageUrl, storageToken);
+                    response = new ResponseFactoryWithContentBody<GetContainersResponse>().Create(new CloudFilesRequest(request));
+                    Assert.That(response.ContentBody.Count, Is.GreaterThan(0));
+//                    foreach (string s in response.ContentBody)
+//                        Console.WriteLine(s);
+                    Console.WriteLine("End of listing containers");
+                }
+                finally
+                {
+                    if (response != null)
+                        response.Dispose();
+                }
+            }
+            
         }
 
         [Test]
@@ -51,5 +78,23 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
         {
             GetContainers request = new GetContainers("a", null);
         }
+    }
+
+    [TestFixture]
+    public class When_requesting_a_list_of_containers_and_no_containers_are_present : TestBase
+    {
+        [Test]
+        public void Should_return_No_Content_status()
+        {
+            GetContainers request = new GetContainers(storageUrl, storageToken);
+            request.UserAgent = "NASTTestUserAgent";
+
+            GetContainersResponse response = new ResponseFactoryWithContentBody<GetContainersResponse>().Create(new CloudFilesRequest(request));
+
+            Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));
+            Assert.That(response.ContentBody, Is.Null);
+            response.Dispose();
+        }
+
     }
 }
