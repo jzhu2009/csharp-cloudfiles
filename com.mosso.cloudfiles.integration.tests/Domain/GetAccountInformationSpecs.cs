@@ -90,7 +90,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
 //                    }
 
                     
-                    string expectedSubString = "{\"name\":\"" + containerName + "\",\"count\":1,\"size\":34}";
+                    string expectedSubString = "{\"name\": \"" + containerName + "\", \"count\": 1, \"bytes\": 34}";
                     System.Collections.Generic.List<string> contentBody = getAccountInformationJsonResponse.ContentBody;
                     getAccountInformationJsonResponse.Dispose();
                     foreach (string s in contentBody)
@@ -147,7 +147,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
                     }
 
 //                    Console.WriteLine(xmlDocument.InnerXml);
-                    string expectedSubString = "<container><name>"+ containerName +"</name><count>1</count><size>34</size></container>";
+                    string expectedSubString = "<container><name>"+ containerName +"</name><count>1</count><bytes>34</bytes></container>";
                     Assert.That(contentBody.IndexOf(expectedSubString) > 0, Is.True);
                 }
                 finally

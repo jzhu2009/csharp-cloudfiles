@@ -15,7 +15,6 @@ namespace com.mosso.cloudfiles.services
     public interface IConnection
     {
         AccountInformation GetAccountInformation();
-        //AccountInformation GetAccountInformationSerialized();
 
         void CreateContainer(string containerName);
         

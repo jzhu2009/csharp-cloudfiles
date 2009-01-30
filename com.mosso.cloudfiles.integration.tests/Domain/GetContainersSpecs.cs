@@ -92,7 +92,8 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
             GetContainersResponse response = new ResponseFactoryWithContentBody<GetContainersResponse>().Create(new CloudFilesRequest(request));
 
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));
-            Assert.That(response.ContentBody, Is.Null);
+            if(response.ContentBody != null)
+                Assert.That(response.ContentBody.Count, Is.EqualTo(0));
             response.Dispose();
         }
 

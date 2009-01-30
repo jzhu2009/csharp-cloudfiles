@@ -21,7 +21,6 @@ namespace com.mosso.cloudfiles.domain.request
         private string fileUri;
         private Stream stream;
         private const int MAXIMUM_FILE_NAME_LENGTH = 128;
-        private const string MIME_TYPES_XML_FILE = "mime-types.xml";
 
         /// <summary>
         /// PutStorageItem constructor
@@ -208,8 +207,22 @@ namespace com.mosso.cloudfiles.domain.request
         /// <returns>string representation of the storage item's content type</returns>
         public string ContentType
         {
-            get { return "application/octet-stream"; }
+            get
+            {
+                if (String.IsNullOrEmpty(fileUri)) return "application/octet-stream";
+                return MimeType(fileUri);
+            }
         }
+
+        private string MimeType(string Filename)
+        {
+            string mime = "application/octetstream";
+            string ext = Path.GetExtension(Filename).ToLower();
+            Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(ext);
+            if (rk != null && rk.GetValue("Content Type") != null)
+                mime = rk.GetValue("Content Type").ToString();
+            return mime;
+        } 
 
         /// <summary>
         /// the http request user agent
