@@ -43,11 +43,11 @@ namespace com.mosso.cloudfiles.integration.tests
             Assert.That(deleteStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.NoContent));
         }
 
-        public void AddMetaTagsToItem(string storageItemName)
+        public void AddMetadataToItem(string storageItemName)
         {
-            Dictionary<string, string> metaTags = new Dictionary<string, string> {{"Test", "test"}, {"Test2", "test2"}};
+            Dictionary<string, string> metadata = new Dictionary<string, string> {{"Test", "test"}, {"Test2", "test2"}};
             SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, containerName, storageItemName,
-                                                                                                            metaTags, storageToken);
+                                                                                                            metadata, storageToken);
             IResponse postStorageItemResponse =
                 new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
             Assert.That(postStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.Accepted));
@@ -55,9 +55,9 @@ namespace com.mosso.cloudfiles.integration.tests
             Assert.That(postStorageItemResponse.Headers["Content-Length"], Is.EqualTo("0"));
         }
 
-        public void AddMetaTagsToItem()
+        public void AddMetadataToItem()
         {
-            AddMetaTagsToItem(Constants.StorageItemName);
+            AddMetadataToItem(Constants.StorageItemName);
         }
 
         public void PutItemInContainer(string storageItemName, string remoteName)

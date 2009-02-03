@@ -14,10 +14,18 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
     {
         [Test]
         [ExpectedException(typeof (ContainerNameLengthException))]
-        public void Should_throw_exception_if_container_name_greater_than_64_characters()
+        public void Should_throw_exception_if_container_name_greater_than_256_characters()
         {
-            CreateContainer createContainer = new CreateContainer(storageUrl, storageToken, Constants.BadContainerName);
+            new CreateContainer(storageUrl, storageToken, Constants.BadContainerName);
             Assert.Fail("Should fail due to container name exceeding 64 characters");
+        }
+
+        [Test]
+        [ExpectedException(typeof(ContainerNameBadlyFormedException))]
+        public void Should_throw_exception_if_container_name_contains_a_slash()
+        {
+            new CreateContainer(storageUrl, storageToken, Constants.BadContainerNameWithSlash);
+            Assert.Fail("Should fail due to container name having a slash");
         }
 
         [Test]

@@ -60,9 +60,9 @@ namespace com.mosso.cloudfiles.domain.response
         /// <summary>
         /// A property representing the meta information associated with the storage item
         /// </summary>
-        public Dictionary<string, string> MetaTags
+        public Dictionary<string, string> Metadata
         {
-            get { return storageItemInformation.MetaTags; }
+            get { return storageItemInformation.Metadata; }
         }
     }
 }

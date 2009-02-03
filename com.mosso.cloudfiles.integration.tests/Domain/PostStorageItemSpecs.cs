@@ -21,8 +21,8 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PostStorageItemSpecs
             {
                 try
                 {
-                    Dictionary<string, string> metaTags = new Dictionary<string, string> {{new string('a', 129), "test"}};
-                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, containerName, Guid.NewGuid().ToString(), metaTags, storageToken);
+                    Dictionary<string, string> metadata = new Dictionary<string, string> {{new string('a', 129), "test"}};
+                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, containerName, Guid.NewGuid().ToString(), metadata, storageToken);
                     IResponse response = new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
                 }
                 catch (Exception ex)
@@ -40,8 +40,8 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PostStorageItemSpecs
             {
                 try
                 {
-                    Dictionary<string, string> metaTags = new Dictionary<string, string> {{new string('a', 10), new string('f', 257)}};
-                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, containerName, Guid.NewGuid().ToString(), metaTags, storageToken);
+                    Dictionary<string, string> metadata = new Dictionary<string, string> {{new string('a', 10), new string('f', 257)}};
+                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, containerName, Guid.NewGuid().ToString(), metadata, storageToken);
                     IResponse response = new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
                 }
                 catch (Exception ex)
@@ -60,11 +60,11 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PostStorageItemSpecs
             {
                 testHelper.PutItemInContainer();
 
-                Dictionary<string, string> metaTags = new Dictionary<string, string>();
-                metaTags.Add("Test", "test");
-                metaTags.Add("Test2", "test2");
+                Dictionary<string, string> metadata = new Dictionary<string, string>();
+                metadata.Add("Test", "test");
+                metadata.Add("Test2", "test2");
 
-                SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, containerName, Constants.StorageItemName, metaTags, storageToken);
+                SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, containerName, Constants.StorageItemName, metadata, storageToken);
 
                 SetStorageItemMetaInformationResponse metaInformationResponse = new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
 
@@ -83,8 +83,8 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PostStorageItemSpecs
             {
                 try
                 {
-                    Dictionary<string, string> metaTags = new Dictionary<string, string>();
-                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, containerName, Guid.NewGuid().ToString(), metaTags, storageToken);
+                    Dictionary<string, string> metadata = new Dictionary<string, string>();
+                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, containerName, Guid.NewGuid().ToString(), metadata, storageToken);
                     IResponse response = new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
                 }
                 catch (Exception ex)

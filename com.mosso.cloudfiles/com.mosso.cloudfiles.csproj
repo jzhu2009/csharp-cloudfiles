@@ -98,6 +98,7 @@
     <Compile Include="Domain\StorageItemInformation.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="Exceptions\ContainerAlreadyPublicException.cs" />
+    <Compile Include="Exceptions\ContainerNameBadlyFormedException.cs" />
     <Compile Include="Exceptions\ContainerNotEmptyException.cs" />
     <Compile Include="Exceptions\InvalidRangeHeaderException.cs" />
     <Compile Include="Exceptions\DateTimeHttpHeaderFormatException.cs" />

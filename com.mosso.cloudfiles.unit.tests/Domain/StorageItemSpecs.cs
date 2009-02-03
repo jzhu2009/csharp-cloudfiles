@@ -13,13 +13,13 @@ namespace com.mosso.cloudfiles.unit.tests.domain.StorageItemSpecs
         [SetUp]
         public void SetUp()
         {
-            Dictionary<string, string> metaTags = new Dictionary<string, string>
+            Dictionary<string, string> metadata = new Dictionary<string, string>
                                                       {
                                                           {Constants.META_KEY1, Constants.META_VALUE1},
                                                           {Constants.META_KEY2, Constants.META_VALUE2}
                                                       };
 
-            storageItem = new StorageItem(Constants.STORAGE_OBJECT_FILE_NAME, metaTags, "text/plain", 0);
+            storageItem = new StorageItem(Constants.STORAGE_OBJECT_FILE_NAME, metadata, "text/plain", 0);
         }
 
         [TearDown]
@@ -49,8 +49,8 @@ namespace com.mosso.cloudfiles.unit.tests.domain.StorageItemSpecs
         [Test]
         public void Should_have_meta_tags()
         {
-            Assert.That(storageItem.MetaTags[Constants.META_KEY1], Is.EqualTo(Constants.META_VALUE1));
-            Assert.That(storageItem.MetaTags[Constants.META_KEY2], Is.EqualTo(Constants.META_VALUE2));
+            Assert.That(storageItem.Metadata[Constants.META_KEY1], Is.EqualTo(Constants.META_VALUE1));
+            Assert.That(storageItem.Metadata[Constants.META_KEY2], Is.EqualTo(Constants.META_VALUE2));
         }
     }
 }

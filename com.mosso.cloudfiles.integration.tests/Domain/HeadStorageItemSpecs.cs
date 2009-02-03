@@ -20,18 +20,18 @@ namespace com.mosso.cloudfiles.integration.tests.domain.HeadStorageItemSpecs
             using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
             {
                 testHelper.PutItemInContainer(Constants.HeadStorageItemName);
-                testHelper.AddMetaTagsToItem(Constants.HeadStorageItemName);
+                testHelper.AddMetadataToItem(Constants.HeadStorageItemName);
 
                 GetStorageItemInformation getStorageItemInformation = new GetStorageItemInformation(storageUrl, containerName, Constants.HeadStorageItemName, storageToken);
                 GetStorageItemInformationResponse getStorageItemInformationResponse = new ResponseFactory<GetStorageItemInformationResponse>().Create(new CloudFilesRequest(getStorageItemInformation));
                 Assert.That(getStorageItemInformationResponse.Status, Is.EqualTo(HttpStatusCode.NoContent));
 
-                Dictionary<string, string> metaTags = getStorageItemInformationResponse.MetaTags;
+                Dictionary<string, string> metadata = getStorageItemInformationResponse.Metadata;
 
                 testHelper.DeleteItemFromContainer(Constants.HeadStorageItemName);
 
-                Assert.That(metaTags["Test"], Is.EqualTo("test"));
-                Assert.That(metaTags["Test2"], Is.EqualTo("test2"));
+                Assert.That(metadata["Test"], Is.EqualTo("test"));
+                Assert.That(metadata["Test2"], Is.EqualTo("test2"));
             }
         }
 

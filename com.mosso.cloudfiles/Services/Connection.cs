@@ -249,8 +249,8 @@ namespace com.mosso.cloudfiles.services
         /// </summary>
         /// <param name="containerName">The name of the container to put the storage object in</param>
         /// <param name="storageItemName">The complete file uri of the storage object to be uploaded</param>
-        /// <param name="metaTags">An optional parameter containing a dictionary of meta tags to associate with the storage object</param>
-        public void PutStorageItem(string containerName, string storageItemName, Dictionary<string, string> metaTags)
+        /// <param name="metadata">An optional parameter containing a dictionary of meta tags to associate with the storage object</param>
+        public void PutStorageItem(string containerName, string storageItemName, Dictionary<string, string> metadata)
         {
             if(string.IsNullOrEmpty(containerName) ||
                 string.IsNullOrEmpty(storageItemName))
@@ -260,7 +260,7 @@ namespace com.mosso.cloudfiles.services
             string localName = storageItemName.Replace("/", "\\");
             try
             {
-                PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, remoteName, localName, storageToken, metaTags);
+                PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, remoteName, localName, storageToken, metadata);
                 PutStorageItemResponse putStorageItemResponse = new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem, userCredentials.ProxyCredentials));
             }
             catch (WebException webException)
@@ -306,9 +306,9 @@ namespace com.mosso.cloudfiles.services
         /// </summary>
         /// <param name="containerName">The name of the container to put the storage object in</param>
         /// <param name="storageStream">The file stream to upload</param>
-        /// <param name="metaTags">An optional parameter containing a dictionary of meta tags to associate with the storage object</param>
+        /// <param name="metadata">An optional parameter containing a dictionary of meta tags to associate with the storage object</param>
         /// <param name="remoteStorageItemName">The name of the storage object as it will be called on cloudfiles</param>
-        public void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName, Dictionary<string, string> metaTags)
+        public void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName, Dictionary<string, string> metadata)
         {
             if (string.IsNullOrEmpty(containerName) ||
                 string.IsNullOrEmpty(remoteStorageItemName))
@@ -318,7 +318,7 @@ namespace com.mosso.cloudfiles.services
             string remoteName = Path.GetFileName(remoteStorageItemName);
             try
             {
-                PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, remoteName, storageStream, storageToken, metaTags);
+                PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, remoteName, storageStream, storageToken, metadata);
                 PutStorageItemResponse putStorageItemResponse = new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem, userCredentials.ProxyCredentials));
             }
             catch (WebException webException)
@@ -458,14 +458,14 @@ namespace com.mosso.cloudfiles.services
         /// </summary>
         /// <param name="containerName">The name of the container containing the storage object</param>
         /// <param name="storageItemName">The name of the storage object</param>
-        /// <param name="metaTags">A dictionary containiner key/value pairs representing the meta data for this storage object</param>
-        public void SetStorageItemMetaInformation(string containerName, string storageItemName, Dictionary<string, string> metaTags)
+        /// <param name="metadata">A dictionary containiner key/value pairs representing the meta data for this storage object</param>
+        public void SetStorageItemMetaInformation(string containerName, string storageItemName, Dictionary<string, string> metadata)
         {
             if (string.IsNullOrEmpty(containerName) ||
                string.IsNullOrEmpty(storageItemName))
                 throw new ArgumentNullException();
 
-            SetStorageItemMetaInformation setStorageItemInformation = new SetStorageItemMetaInformation(storageUrl, containerName, storageItemName, metaTags, storageToken);
+            SetStorageItemMetaInformation setStorageItemInformation = new SetStorageItemMetaInformation(storageUrl, containerName, storageItemName, metadata, storageToken);
             try
             {
                 SetStorageItemMetaInformationResponse response = new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemInformation, userCredentials.ProxyCredentials));
@@ -497,7 +497,7 @@ namespace com.mosso.cloudfiles.services
             try
             {
                 GetStorageItemInformationResponse getStorageItemResponse = new ResponseFactory<GetStorageItemInformationResponse>().Create(new CloudFilesRequest(getStorageItemInformation, userCredentials.ProxyCredentials));
-                storageItem = new StorageItem(storageItemName, getStorageItemResponse.MetaTags, getStorageItemResponse.ContentType, long.Parse(getStorageItemResponse.ContentLength));
+                storageItem = new StorageItem(storageItemName, getStorageItemResponse.Metadata, getStorageItemResponse.ContentType, long.Parse(getStorageItemResponse.ContentLength));
             }
             catch (WebException)
             {

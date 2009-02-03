@@ -20,7 +20,7 @@ namespace com.mosso.cloudfiles.domain.request
     {
         private string fileUri;
         private Stream stream;
-        private const int MAXIMUM_FILE_NAME_LENGTH = 128;
+        private const int MAXIMUM_OBJECT_NAME_LENGTH = 1024;
 
         /// <summary>
         /// PutStorageItem constructor
@@ -58,11 +58,11 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="storageItemName">the name of the storage item to add meta information too</param>
         /// <param name="stream">the fiel stream of the file to put into cloudfiles</param>
         /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
-        /// <param name="metaTags">dictionary of meta tags to apply to the storage item</param>
+        /// <param name="metadata">dictionary of meta tags to apply to the storage item</param>
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         /// <exception cref="ContainerNameLengthException">Thrown when the container name length exceeds the maximum container length allowed</exception>
         public PutStorageItem(string storageUrl, string containerName, string storageItemName, Stream stream,
-                              string storageToken, Dictionary<string, string> metaTags)
+                              string storageToken, Dictionary<string, string> metadata)
         {
             if (string.IsNullOrEmpty(storageUrl)
                 || string.IsNullOrEmpty(storageToken)
@@ -84,11 +84,11 @@ namespace com.mosso.cloudfiles.domain.request
 
             this.stream.Seek(0, 0);
 
-            if (metaTags != null)
+            if (metadata != null)
             {
-                foreach (string s in metaTags.Keys)
+                foreach (string s in metadata.Keys)
                 {
-                    Headers.Add(Constants.META_DATA_HEADER + s, metaTags[s]);
+                    Headers.Add(Constants.META_DATA_HEADER + s, metadata[s]);
                 }
             }
 
@@ -110,12 +110,12 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="storageItemName">the name of the storage item to add meta information too</param>
         /// <param name="fileUri">the path of the file to put into cloudfiles</param>
         /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
-        /// <param name="metaTags">dictionary of meta tags to apply to the storage item</param>
+        /// <param name="metadata">dictionary of meta tags to apply to the storage item</param>
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         /// <exception cref="ContainerNameLengthException">Thrown when the container name length exceeds the maximum container length allowed</exception>
         /// <exception cref="StorageItemNameLengthException">Thrown when the storage name length exceeds the maximum storage object name length allowed</exception>
         public PutStorageItem(string storageUrl, string containerName, string storageItemName, string fileUri,
-                              string storageToken, Dictionary<string, string> metaTags)
+                              string storageToken, Dictionary<string, string> metadata)
         {
             if (string.IsNullOrEmpty(storageUrl)
                 || string.IsNullOrEmpty(storageToken)
@@ -131,9 +131,9 @@ namespace com.mosso.cloudfiles.domain.request
 
             this.fileUri = CleanUpFileUri(fileUri);
 
-            if (storageItemName.Length > MAXIMUM_FILE_NAME_LENGTH)
-                throw new StorageItemNameLengthException("File: " + this.fileUri + " exceeds maximum file length of " +
-                                                         MAXIMUM_FILE_NAME_LENGTH);
+            if (storageItemName.Length > MAXIMUM_OBJECT_NAME_LENGTH)
+                throw new StorageItemNameLengthException("File: " + this.fileUri + " exceeds maximum object length of " +
+                                                         MAXIMUM_OBJECT_NAME_LENGTH);
             Headers = new NameValueCollection();
 
             
@@ -143,11 +143,11 @@ namespace com.mosso.cloudfiles.domain.request
                 ETag = StringifyMD5(new MD5CryptoServiceProvider().ComputeHash(file));
             }
 
-            if (metaTags != null && metaTags.Count > 0)
+            if (metadata != null && metadata.Count > 0)
             {
-                foreach (string s in metaTags.Keys)
+                foreach (string s in metadata.Keys)
                 {
-                    Headers.Add(Constants.META_DATA_HEADER + s, metaTags[s]);
+                    Headers.Add(Constants.META_DATA_HEADER + s, metadata[s]);
                 }
             }
 

@@ -14,7 +14,7 @@ namespace com.mosso.cloudfiles.domain
     public class StorageItem : IDisposable
     {
         private readonly string objectName;
-        private readonly Dictionary<string, string> metaTags;
+        private readonly Dictionary<string, string> metadata;
         private readonly string objectContentType;
         private readonly Stream objectStream;
         private readonly long contentLength;
@@ -23,31 +23,31 @@ namespace com.mosso.cloudfiles.domain
         /// 
         /// </summary>
         /// <param name="objectName"></param>
-        /// <param name="metaTags"></param>
+        /// <param name="metadata"></param>
         /// <param name="objectContentType"></param>
         /// <param name="contentLength"></param>
-        public StorageItem(string objectName, Dictionary<string, string> metaTags, string objectContentType, long contentLength)
+        public StorageItem(string objectName, Dictionary<string, string> metadata, string objectContentType, long contentLength)
         {
             this.objectName = objectName;
             this.contentLength = contentLength;
             this.objectContentType = objectContentType;
-            this.metaTags = metaTags;
+            this.metadata = metadata;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="objectName"></param>
-        /// <param name="metaTags"></param>
+        /// <param name="metadata"></param>
         /// <param name="objectContentType"></param>
         /// <param name="contentStream"></param>
         /// <param name="contentLength"></param>
-        public StorageItem(string objectName, Dictionary<string, string> metaTags, string objectContentType, Stream contentStream, long contentLength)
+        public StorageItem(string objectName, Dictionary<string, string> metadata, string objectContentType, Stream contentStream, long contentLength)
         {
             this.objectName = objectName;
             this.contentLength = contentLength;
             this.objectContentType = objectContentType;
-            this.metaTags = metaTags;
+            this.metadata = metadata;
             objectStream = contentStream;
         }
 
@@ -79,9 +79,9 @@ namespace com.mosso.cloudfiles.domain
         /// <summary>
         /// 
         /// </summary>
-        public Dictionary<string, string> MetaTags
+        public Dictionary<string, string> Metadata
         {
-            get { return metaTags; }
+            get { return metadata; }
         }
 
         /// <summary>

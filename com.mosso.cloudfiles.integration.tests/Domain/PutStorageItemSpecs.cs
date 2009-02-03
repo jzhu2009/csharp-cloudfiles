@@ -35,13 +35,13 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         public void Should_return_created_as_status_when_the_file_does_not_already_exist_and_meta_information_is_supplied()
         {
             string containerName = Guid.NewGuid().ToString();
-            Dictionary<string, string> metaTags = new Dictionary<string, string>
+            Dictionary<string, string> metadata = new Dictionary<string, string>
                                                       {
                                                           {Constants.MetadataKey, Constants.MetadataValue}
                                                       };
             using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
             {
-                PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, Constants.StorageItemName, Constants.StorageItemName, storageToken);
+                PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, Constants.StorageItemName, Constants.StorageItemName, storageToken, metadata);
 
                 Assert.That(putStorageItem.ContentLength, Is.GreaterThan(0));
 
@@ -77,7 +77,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
             {
                 try
                 {
-                    PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, new string('a', 129), "%#", storageToken);
+                    PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, new string('a', 1025), "%#", storageToken);
                 }
                 catch (Exception ex)
                 {

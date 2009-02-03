@@ -43,7 +43,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
     }
 
     [TestFixture]
-    public class When_adding_an_object_to_the_container_via_file_path_successfully_without_metatags
+    public class When_adding_an_object_to_the_container_via_file_path_successfully_without_metadata
     {
         [Test]
         public void should_add_the_object()
@@ -57,7 +57,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
     }
 
     [TestFixture]
-    public class When_adding_an_object_to_the_container_for_the_second_time_via_file_path_successfully_without_metatags
+    public class When_adding_an_object_to_the_container_for_the_second_time_via_file_path_successfully_without_metadata
     {
         [Test]
         public void should_add_the_object()
@@ -119,12 +119,12 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
             PublicUrl = new Uri("http://tempuri.org");
         }
 
-        protected override void CloudFilesPutObject(string objectName, System.Collections.Generic.Dictionary<string,string> metaTags)
+        protected override void CloudFilesPutObject(string objectName, System.Collections.Generic.Dictionary<string,string> metadata)
         {
             return;
         }
 
-        protected override void  CloudFilesPutObject(System.IO.Stream localObjectStream, string remoteObjectName, System.Collections.Generic.Dictionary<string,string> metaTags)
+        protected override void  CloudFilesPutObject(System.IO.Stream localObjectStream, string remoteObjectName, System.Collections.Generic.Dictionary<string,string> metadata)
         {
             return;
         }

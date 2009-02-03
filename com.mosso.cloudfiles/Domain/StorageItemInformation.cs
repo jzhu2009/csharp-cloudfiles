@@ -47,7 +47,7 @@ namespace com.mosso.cloudfiles.domain
         /// <summary>
         /// dictionary of meta tags assigned to this storage item
         /// </summary>
-        public Dictionary<string, string> MetaTags
+        public Dictionary<string, string> Metadata
         {
             get
             {

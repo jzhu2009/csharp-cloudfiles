@@ -24,7 +24,7 @@ namespace com.mosso.cloudfiles.integration.tests.services
         {
             string containerName = Guid.NewGuid().ToString();
 
-            Dictionary<string, string> metaTags = new Dictionary<string, string>
+            Dictionary<string, string> metadata = new Dictionary<string, string>
                                                       {
                                                           {Constants.MetadataKey, Constants.MetadataValue}
                                                       };
@@ -34,7 +34,7 @@ namespace com.mosso.cloudfiles.integration.tests.services
             {
                 connection.CreateContainer(containerName);
                 connection.PutStorageItem(containerName, Constants.StorageItemName);
-                connection.SetStorageItemMetaInformation(containerName, Constants.StorageItemName, metaTags);
+                connection.SetStorageItemMetaInformation(containerName, Constants.StorageItemName, metadata);
                 storageItem = connection.GetStorageItem(containerName, Constants.StorageItemName);
             }
             finally
@@ -44,7 +44,7 @@ namespace com.mosso.cloudfiles.integration.tests.services
             }
 
             Assert.That(storageItem, Is.Not.Null);
-            Assert.That(storageItem.MetaTags[Constants.MetadataKey], Is.EqualTo(Constants.MetadataValue));
+            Assert.That(storageItem.Metadata[Constants.MetadataKey], Is.EqualTo(Constants.MetadataValue));
         }
 
         [Test]

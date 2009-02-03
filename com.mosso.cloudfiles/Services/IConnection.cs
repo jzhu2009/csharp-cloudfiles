@@ -27,10 +27,10 @@ namespace com.mosso.cloudfiles.services
         
         Container GetContainerInformation(string containerName);
         
-        void PutStorageItem(string containerName, string storageItemName, Dictionary<string, string> metaTags);
+        void PutStorageItem(string containerName, string storageItemName, Dictionary<string, string> metadata);
         void PutStorageItem(string containerName, string storageItemName);
         void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName);
-        void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName, Dictionary<string, string> metaTags);
+        void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName, Dictionary<string, string> metadata);
         
         void DeleteStorageItem(string containerName, string storageItemname);
 
@@ -42,7 +42,7 @@ namespace com.mosso.cloudfiles.services
         
         StorageItem GetStorageItemInformation(string containerName, string storageItemName);
         
-        void SetStorageItemMetaInformation(string containerName, string storageItemName, Dictionary<string, string> metaTags);
+        void SetStorageItemMetaInformation(string containerName, string storageItemName, Dictionary<string, string> metadata);
         
         List<string> GetPublicContainers();
         

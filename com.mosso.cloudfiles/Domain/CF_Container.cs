@@ -15,9 +15,9 @@ namespace com.mosso.cloudfiles.domain
         long BytesUsed { get; }
         string Name { get; }
         IObject AddObject(string objectName);
-        IObject AddObject(string objectName, Dictionary<string, string> metaTags);
+        IObject AddObject(string objectName, Dictionary<string, string> metadata);
         IObject AddObject(Stream localObjectStream, string remoteObjectName);
-        IObject AddObject(Stream localObjectStream, string remoteObjectName, Dictionary<string, string> metaTags);
+        IObject AddObject(Stream localObjectStream, string remoteObjectName, Dictionary<string, string> metadata);
         void DeleteObject(string objectName);
         void MarkAsPublic();
         bool ObjectExists(string objectName);
@@ -77,16 +77,13 @@ namespace com.mosso.cloudfiles.domain
             return AddObject(objectName, new Dictionary<string, string>());
         }
 
-        public IObject AddObject(string objectName, Dictionary<string, string> metaTags)
+        public IObject AddObject(string objectName, Dictionary<string, string> metadata)
         {
             if (string.IsNullOrEmpty(objectName))
                 throw new ArgumentNullException();
 
-            CloudFilesPutObject(objectName, metaTags);
-
-            CF_Object @object = new CF_Object(objectName);
-            @object.PublicUrl = PublicUrl;
-            @object.MetaTags = metaTags;
+            CloudFilesPutObject(objectName, metadata);
+            IObject @object = PopulateObjectProperties(objectName, metadata);
 
             if (objects.Find(x => x.Name == objectName) == null)
                 objects.Add(@object);
@@ -99,21 +96,31 @@ namespace com.mosso.cloudfiles.domain
             return AddObject(localObjectStream, remoteObjectName, new Dictionary<string, string>());
         }
 
-        public IObject AddObject(Stream localObjectStream, string remoteObjectName, Dictionary<string, string> metaTags)
+        public IObject AddObject(Stream localObjectStream, string remoteObjectName, Dictionary<string, string> metadata)
         {
             if (string.IsNullOrEmpty(remoteObjectName)
                 || localObjectStream == null)
                 throw new ArgumentNullException();
 
-            CloudFilesPutObject(localObjectStream, remoteObjectName, metaTags);
-
-            CF_Object @object = new CF_Object(remoteObjectName);
-            @object.PublicUrl = PublicUrl;
-            @object.MetaTags = metaTags;
+            CloudFilesPutObject(localObjectStream, remoteObjectName, metadata);
+            IObject @object = PopulateObjectProperties(remoteObjectName, metadata);
 
             if (objects.Find(x => x.Name == remoteObjectName) == null)
                 objects.Add(@object);
 
+            return @object;
+        }
+
+        private CF_Object PopulateObjectProperties(string objectName, Dictionary<string, string> metadata)
+        {
+            CF_Object @object = new CF_Object(objectName, metadata);
+            @object.PublicUrl = PublicUrl;
+            @object.CDNManagementUrl = CDNManagementUrl;
+            @object.StorageUrl = StorageUrl;
+            @object.StorageToken = StorageToken;
+            @object.AuthToken = AuthToken;
+            @object.ContainerName = containerName;
+            @object.UserCredentials = UserCredentials;
             return @object;
         }
 
@@ -164,7 +171,7 @@ namespace com.mosso.cloudfiles.domain
             }
         }
 
-        protected virtual void CloudFilesPutObject(string objectName, Dictionary<string, string> metaTags)
+        protected virtual void CloudFilesPutObject(string objectName, Dictionary<string, string> metadata)
         {
             if (string.IsNullOrEmpty(containerName) ||
                 string.IsNullOrEmpty(objectName))
@@ -174,7 +181,7 @@ namespace com.mosso.cloudfiles.domain
             string localName = objectName.Replace("/", "\\");
             try
             {
-                PutStorageItem putStorageItem = new PutStorageItem(StorageUrl.ToString(), containerName, remoteName, localName, StorageToken, metaTags);
+                PutStorageItem putStorageItem = new PutStorageItem(StorageUrl.ToString(), containerName, remoteName, localName, StorageToken, metadata);
                 PutStorageItemResponse putStorageItemResponse = new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem, UserCredentials.ProxyCredentials));
             }
             catch (WebException webException)
@@ -187,7 +194,7 @@ namespace com.mosso.cloudfiles.domain
             }
         }
 
-        protected virtual void CloudFilesPutObject(Stream localObjectStream, string remoteObjectName, Dictionary<string, string> metaTags)
+        protected virtual void CloudFilesPutObject(Stream localObjectStream, string remoteObjectName, Dictionary<string, string> metadata)
         {
             if (string.IsNullOrEmpty(containerName) ||
                 string.IsNullOrEmpty(remoteObjectName))
@@ -197,7 +204,7 @@ namespace com.mosso.cloudfiles.domain
             string remoteName = Path.GetFileName(remoteObjectName);
             try
             {
-                PutStorageItem putStorageItem = new PutStorageItem(StorageUrl.ToString(), containerName, remoteName, localObjectStream, StorageToken, metaTags);
+                PutStorageItem putStorageItem = new PutStorageItem(StorageUrl.ToString(), containerName, remoteName, localObjectStream, StorageToken, metadata);
                 PutStorageItemResponse putStorageItemResponse = new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem, UserCredentials.ProxyCredentials));
             }
             catch (WebException webException)

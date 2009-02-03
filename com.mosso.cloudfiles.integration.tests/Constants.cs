@@ -52,7 +52,8 @@ namespace com.mosso.cloudfiles.integration.tests
         public const int ContainerAlreadyPresentResponse = 202;
 
         //Container related constants
-        public static string BadContainerName = new string('a', 65);
+        public static string BadContainerName = new string('a', 257);
+        public static string BadContainerNameWithSlash = "thisIsAName/WithASlash";
         public static string PublicContainerTTL = "10000";
 
         public const string EmptyContainerName = "";
@@ -82,6 +83,6 @@ namespace com.mosso.cloudfiles.integration.tests
         public const int ApiVersion = 1;
 
         public const string CloudVersion = "v1";
-        public const int MaximumContainerNameLength = 64;
+        public const int MaximumContainerNameLength = 256;
     }
 }
