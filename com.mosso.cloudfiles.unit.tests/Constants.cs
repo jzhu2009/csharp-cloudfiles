@@ -11,6 +11,8 @@ namespace com.mosso.cloudfiles.unit.tests
         public const string X_META_KEY_HEADER = "X-Object-Meta-";
         public const string X_ACCOUNT_CONTAINER_COUNT = "X-Account-Container-Count";
         public const string X_ACCOUNT_BYTES_USED = "X-Account-Bytes-Used";
+        public const string X_CDN_MANAGEMENT_URL = "X-CDN-Management-URL";
+        public const string X_AUTH_TOKEN = "X-Auth-Token";
 
         //AUTHENTICATION ITEMS
         public const string STORAGE_TOKEN = "TestToken";

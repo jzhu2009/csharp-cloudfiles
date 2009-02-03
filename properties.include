@@ -2,6 +2,7 @@
 <project name="com.mosso.cloudfiles.properties" xmlns="http://nant.sf.net/schemas/nant.xsd">
   <property name="config" value="Release" />
   <setenv name="BUILD_NUMBER" value="1" unless="${environment::variable-exists('BUILD_NUMBER')}"/>
+  <setenv name="BUILD_NUMBER" value="1.2.0.0"/>
   <setenv name="DXROOT" value="C:\Program Files\Sandcastle\" unless="${environment::variable-exists('DXROOT')}"/>
   <property name="core.project.original.dll.dir" value="com.mosso.cloudfiles\bin\${config}"/>
   <property name="integration.tests.original.dll.dir" value="com.mosso.cloudfiles.integration.tests\bin\${config}"/>

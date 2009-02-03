@@ -56,6 +56,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Domain\CF\AccountSpecs.cs" />
+    <Compile Include="Domain\CF\AuthenticationSpecs.cs" />
+    <Compile Include="Domain\CF\ContainerSpecs.cs" />
     <Compile Include="Domain\DeleteContainerItemSpecs.cs" />
     <Compile Include="Domain\DeleteContainerSpecs.cs" />
     <Compile Include="Domain\GetAccountInformationSpecs.cs" />

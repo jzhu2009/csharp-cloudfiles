@@ -49,6 +49,9 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Domain\AccountSpecs.cs" />
+    <Compile Include="Domain\CF\AccountSpecs.cs" />
+    <Compile Include="Domain\CF\AuthenticationSpecs.cs" />
+    <Compile Include="Domain\CF\ContainerSpecs.cs" />
     <Compile Include="Domain\request\GetAuthenticationSpecs.cs" />
     <Compile Include="Domain\request\GetStorageItemSpecs.cs" />
     <Compile Include="Services\ConnectionSpecs.cs" />

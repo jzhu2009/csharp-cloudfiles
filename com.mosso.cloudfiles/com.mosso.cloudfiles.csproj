@@ -80,6 +80,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\AccountInformation.cs" />
+    <Compile Include="Domain\CF_Account.cs" />
+    <Compile Include="Domain\CF_Authentication.cs" />
+    <Compile Include="Domain\CF_Container.cs" />
+    <Compile Include="Domain\CF_Object.cs" />
     <Compile Include="Domain\Request\BaseRequest.cs" />
     <Compile Include="Domain\Request\GetAccountInformation.cs" />
     <Compile Include="Domain\Request\GetPublicContainerInformationRequest.cs" />

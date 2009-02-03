@@ -314,7 +314,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetContainerItemListSpec
             using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
             {
                 
-                testHelper.PutItemInContainer(Constants.StorageItemName, Constants.StorageItemName);
+                testHelper.PutItemInContainer(Constants .StorageItemName, Constants.StorageItemName);
 
                 GetContainerItemList getContainerItemsRequest = new GetContainerItemList(storageUrl, containerName, storageToken, Format.JSON);
                 getContainerItemsRequest.UserAgent = "NASTTestUserAgent";
