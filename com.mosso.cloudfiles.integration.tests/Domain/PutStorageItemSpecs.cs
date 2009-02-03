@@ -32,7 +32,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         }
 
         [Test]
-        public void Should_set_content_type_of_jpg()
+        public void Should_set_content_type_of_jpg_for_local_file_upload()
         {
             string containerName = Guid.NewGuid().ToString();
             using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
@@ -50,12 +50,50 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         }
 
         [Test]
-        public void Should_set_content_type_of_gif()
+        public void Should_set_content_type_of_gif_for_local_file_upload()
         {
             string containerName = Guid.NewGuid().ToString();
             using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
             {
                 PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, Constants.StorageItemNameGif, Constants.StorageItemNameGif, storageToken);
+
+                Assert.That(putStorageItem.ContentLength, Is.GreaterThan(0));
+                Assert.That(putStorageItem.ContentType, Is.EqualTo("image/gif"));
+
+                PutStorageItemResponse response = new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem));
+                Assert.That(response.Status, Is.EqualTo(HttpStatusCode.Created));
+                Assert.That(response.ETag, Is.EqualTo(putStorageItem.ETag));
+                testHelper.DeleteItemFromContainer(Constants.StorageItemNameGif);
+            }
+        }
+
+        [Test]
+        public void Should_set_content_type_of_jpg_for_stream_upload()
+        {
+            string containerName = Guid.NewGuid().ToString();
+            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            {
+                FileStream fileStream = new FileStream(Constants.StorageItemNameJpg, FileMode.Open);
+                PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, Constants.StorageItemNameJpg, fileStream, storageToken);
+
+                Assert.That(putStorageItem.ContentLength, Is.GreaterThan(0));
+                Assert.That(putStorageItem.ContentType, Is.EqualTo("image/jpeg"));
+
+                PutStorageItemResponse response = new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem));
+                Assert.That(response.Status, Is.EqualTo(HttpStatusCode.Created));
+                Assert.That(response.ETag, Is.EqualTo(putStorageItem.ETag));
+                testHelper.DeleteItemFromContainer(Constants.StorageItemNameJpg);
+            }
+        }
+
+        [Test]
+        public void Should_set_content_type_of_gif_for_stream_upload()
+        {
+            string containerName = Guid.NewGuid().ToString();
+            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            {
+                FileStream fileStream = new FileStream(Constants.StorageItemNameGif, FileMode.Open);
+                PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, Constants.StorageItemNameGif, fileStream, storageToken);
 
                 Assert.That(putStorageItem.ContentLength, Is.GreaterThan(0));
                 Assert.That(putStorageItem.ContentType, Is.EqualTo("image/gif"));

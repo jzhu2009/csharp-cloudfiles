@@ -75,7 +75,7 @@ namespace com.mosso.cloudfiles.domain.request
             if (containerName.Length > Constants.MAXIMUM_CONTAINER_NAME_LENGTH)
                 throw new ContainerNameLengthException("The container name length exceeds " + Constants.MAXIMUM_CONTAINER_NAME_LENGTH + " characters.s");
 
-
+            this.fileUri = CleanUpFileUri(storageItemName);
             this.stream = stream;
             Headers = new NameValueCollection();
             ContentLength = this.stream.Length;
