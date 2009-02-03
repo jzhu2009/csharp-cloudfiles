@@ -326,8 +326,8 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetContainerItemListSpec
                 try
                 {
                     List<string> contentBody = response.ContentBody;
-                    foreach (string s in response.ContentBody)
-                        Console.WriteLine(s);
+//                    foreach (string s in response.ContentBody)
+//                        Console.WriteLine(s);
                     string expectedItem = "{\"name\": \"TestStorageItem.txt\", \"hash\": \"5c66108b7543c6f16145e25df9849f7f\", \"bytes\": 34, \"content_type\": \"text\\u002fplain\", \"last_modified\": \"" + String.Format("{0:yyyy-MM-dd}", DateTime.Now);
                     bool expectedItemFound = false;
                     foreach(string s in contentBody)
@@ -355,7 +355,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetContainerItemListSpec
     public class When_requesting_a_list_of_items_in_a_container_in_a_xml_serialized_format : TestBase
     {
         [Test]
-        public void should_get_json_serialized_list_of_items()
+        public void should_get_xml_serialized_list_of_items()
         {
             string containerName = Guid.NewGuid().ToString();
             using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))

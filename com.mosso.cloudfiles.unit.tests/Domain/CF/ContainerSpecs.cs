@@ -34,7 +34,11 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
         [Test]
         public void should_give_the_object_public_url()
         {
-            Assert.Ignore();
+            var container = new MockCFContainer("testcontainername");
+            container.MarkAsPublic();
+            var @object = container.AddObject(Constants.STORAGE_ITEM_NAME);
+
+            Assert.That(@object.PublicUrl.ToString(), Is.EqualTo("http://tempuri.org/" + Constants.STORAGE_ITEM_NAME));
         }
     }
 
@@ -47,6 +51,8 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
             var container = new MockCFContainer("testcontainername");
             container.AddObject(Constants.STORAGE_ITEM_NAME);
             Assert.That(container.ObjectExists(Constants.STORAGE_ITEM_NAME), Is.True);
+            Assert.That(container.ObjectCount, Is.EqualTo(1));
+            Assert.That(container.BytesUsed, Is.EqualTo(34));
         }
     }
 
@@ -121,6 +127,12 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
         protected override void  CloudFilesPutObject(System.IO.Stream localObjectStream, string remoteObjectName, System.Collections.Generic.Dictionary<string,string> metaTags)
         {
             return;
+        }
+
+        protected override void CloudFilesHeadContainer()
+        {
+            objectCount = objects.Count;
+            bytesUsed = objects.Count * 34;
         }
     }
 }

@@ -20,6 +20,8 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.AccountSpecs
             Assert.That(container.Name, Is.EqualTo("testcontainername"));
             Assert.That(container.CDNManagementUrl, Is.EqualTo(account.CDNManagementUrl));
             Assert.That(container.AuthToken, Is.EqualTo(account.AuthToken));
+            Assert.That(account.ContainerCount, Is.EqualTo(1));
+            Assert.That(account.BytesUsed, Is.EqualTo(34));
         }
     }
 
@@ -82,28 +84,6 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.AccountSpecs
     }
 
     [TestFixture]
-    public class When_deleting_a_container_and_container_is_not_empty
-    {
-        
-        [Test]
-        [ExpectedException(typeof(ContainerNotEmptyException))]
-        public void should_throw_container_not_empty_exception_if_the_container_not_empty()
-        {
-            Assert.Ignore();
-            var account = new MockCFAccount();
-            IContainer container = account.CreateContainer("testcontainername");
-            Assert.That(account.ContainerExists("testcontainername"), Is.True);
-
-            container.AddObject(Constants.STORAGE_ITEM_NAME);
-            container.ObjectExists(Constants.STORAGE_ITEM_NAME);
-
-            account.DeleteContainer("testcontainername");
-
-            Assert.Fail("Allowed deletion of a non-empty container");
-        }
-    }
-
-    [TestFixture]
     public class When_deleting_a_container_and_container_does_not_exist
     {
         [Test]
@@ -119,6 +99,8 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.AccountSpecs
 
     public class MockCFAccount : CF_Account
     {
+        public MockCFAccount() : base(null, null){}
+
         protected override void CloudFileCreateContainer(string containerName)
         {
             if (containers.Contains(containers.Find(x => x.Name == containerName))) throw new ContainerAlreadyExistsException();
@@ -145,6 +127,12 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.AccountSpecs
         protected override bool CloudFilesHeadContainer(string containerName)
         {
             return containers.Contains(containers.Find(x => x.Name == containerName));
+        }
+
+        protected override void CloudFilesHeadAccount()
+        {
+            containerCount = containers.Count;
+            bytesUsed = containers.Count * 34;
         }
     }
 }

@@ -4,14 +4,15 @@ using System.Net;
 using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.domain.response;
 using com.mosso.cloudfiles.exceptions;
-using CloudFilesRequest=com.mosso.cloudfiles.domain.request.CloudFilesRequest;
 
 namespace com.mosso.cloudfiles.domain
 {
     public interface IAccount
     {
-        Uri StorageUrl { get; set; }
-        string StorageToken { get; set; }
+        int ContainerCount { get; }
+        long BytesUsed { get; }
+        Uri StorageUrl { get; }
+        string StorageToken { get; }
         string AuthToken { get; set; }
         Uri CDNManagementUrl { get; set; }
         IContainer CreateContainer(string containerName);
@@ -24,16 +25,50 @@ namespace com.mosso.cloudfiles.domain
     public class CF_Account : IAccount
     {
         protected List<IContainer> containers;
+        protected string storageToken;
+        protected Uri storageUrl;
+        protected int containerCount;
+        protected long bytesUsed;
 
-        public CF_Account()
+        public CF_Account(string storageToken, Uri storageUrl)
         {
+            this.storageToken = storageToken;
+            this.storageUrl = storageUrl;
             containers = new List<IContainer>();
         }
 
-        public Uri StorageUrl { get; set; }
-        public string StorageToken { get; set; }
+        public Uri StorageUrl
+        {
+            get { return storageUrl; }
+        }
+
+        public string StorageToken
+        {
+            get { return storageToken; }
+        }
+
+        public int ContainerCount
+        {
+            get
+            {
+                CloudFilesHeadAccount();
+                return containerCount;
+            }
+        }
+
+        public long BytesUsed
+        {
+            get
+            {
+                CloudFilesHeadAccount();
+                return bytesUsed;
+            }
+        }
+
         public string AuthToken { get; set; }
+
         public Uri CDNManagementUrl { get; set; }
+
         public UserCredentials UserCredentials { get; set; }
 
         public IContainer CreateContainer(string containerName)
@@ -56,14 +91,14 @@ namespace com.mosso.cloudfiles.domain
             if (string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            return CloudFilesHeadContainer(containerName) 
-                && containers.Contains(containers.Find(x => x.Name == containerName));
+            return CloudFilesHeadContainer(containerName)
+                   && containers.Contains(containers.Find(x => x.Name == containerName));
         }
 
         public void DeleteContainer(string containerName)
         {
             CloudFilesDeleteContainer(containerName);
-            if(containers.Find(x => x.Name == containerName) == null)
+            if (containers.Find(x => x.Name == containerName) == null)
                 throw new ContainerNotFoundException();
             containers.Remove(containers.Find(x => x.Name == containerName));
         }
@@ -80,10 +115,19 @@ namespace com.mosso.cloudfiles.domain
                 throw new ArgumentNullException();
 
             CreateContainer createContainer = new CreateContainer(StorageUrl.ToString(), StorageToken, containerName);
-            CreateContainerResponse createContainerResponse = 
+            CreateContainerResponse createContainerResponse =
                 new ResponseFactory<CreateContainerResponse>().Create(new CloudFilesRequest(createContainer));
             if (createContainerResponse.Status == HttpStatusCode.Accepted)
                 throw new ContainerAlreadyExistsException("The container already exists");
+        }
+
+        protected virtual void CloudFilesHeadAccount()
+        {
+            GetAccountInformation getAccountInformation = new GetAccountInformation(StorageUrl.ToString(), StorageToken);
+            GetAccountInformationResponse getAccountInformationResponse =
+                new ResponseFactory<GetAccountInformationResponse>().Create(new CloudFilesRequest(getAccountInformation));
+            containerCount = Int32.Parse(getAccountInformationResponse.Headers[Constants.X_ACCOUNT_CONTAINER_COUNT]);
+            bytesUsed = Convert.ToInt64(getAccountInformationResponse.Headers[Constants.X_ACCOUNT_BYTES_USED]);
         }
 
         protected virtual bool CloudFilesHeadContainer(string containerName)
@@ -96,7 +140,7 @@ namespace com.mosso.cloudfiles.domain
             }
             catch (WebException we)
             {
-                HttpStatusCode code = ((HttpWebResponse)we.Response).StatusCode;
+                HttpStatusCode code = ((HttpWebResponse) we.Response).StatusCode;
                 if (we.Response != null && code == HttpStatusCode.NotFound)
                     return false;
             }
@@ -115,7 +159,7 @@ namespace com.mosso.cloudfiles.domain
             }
             catch (WebException ex)
             {
-                HttpWebResponse response = ((HttpWebResponse)ex.Response);
+                HttpWebResponse response = ((HttpWebResponse) ex.Response);
                 if (response != null && response.StatusCode == HttpStatusCode.NotFound)
                     throw new ContainerNotFoundException("The requested container does not exist");
 

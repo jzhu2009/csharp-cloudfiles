@@ -30,9 +30,7 @@ namespace com.mosso.cloudfiles.domain
 
             if (AuthenticationPassed(getAuthenticationResponse))
             {
-                IAccount account = new CF_Account();
-                account.StorageToken = getAuthenticationResponse.StorageToken;
-                account.StorageUrl = new Uri(getAuthenticationResponse.StorageUrl);
+                IAccount account = new CF_Account(getAuthenticationResponse.StorageToken, new Uri(getAuthenticationResponse.StorageUrl));
                 account.AuthToken = getAuthenticationResponse.Headers[Constants.X_AUTH_TOKEN];
                 account.CDNManagementUrl = new Uri(getAuthenticationResponse.Headers[Constants.X_CDN_MANAGEMENT_URL]);
                 account.UserCredentials = userCredentials;

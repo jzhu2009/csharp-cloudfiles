@@ -11,6 +11,8 @@ namespace com.mosso.cloudfiles.domain
 {
     public interface IContainer
     {
+        int ObjectCount { get; }
+        long BytesUsed { get; }
         string Name { get; }
         IObject AddObject(string objectName);
         IObject AddObject(string objectName, Dictionary<string, string> metaTags);
@@ -31,6 +33,8 @@ namespace com.mosso.cloudfiles.domain
     {
         private string containerName;
         protected List<IObject> objects;
+        protected int objectCount;
+        protected long bytesUsed;
 
         public CF_Container(string containerName)
         {
@@ -41,6 +45,24 @@ namespace com.mosso.cloudfiles.domain
         public string Name
         {
             get { return containerName; }
+        }
+
+        public int ObjectCount
+        {
+            get
+            {
+                CloudFilesHeadContainer();
+                return objectCount;
+            }
+        }
+
+        public long BytesUsed
+        {
+            get
+            {
+                CloudFilesHeadContainer();
+                return bytesUsed;
+            }
         }
 
         public string AuthToken { get; set; }
@@ -119,6 +141,27 @@ namespace com.mosso.cloudfiles.domain
 
             return CloudFilesHeadObject(objectName)
                    && objects.Contains(objects.Find(x => x.Name == objectName));
+        }
+
+        protected virtual void CloudFilesHeadContainer()
+        {
+            if (string.IsNullOrEmpty(containerName))
+                throw new ArgumentNullException();
+
+            GetContainerInformation getContainerInformation = new GetContainerInformation(StorageUrl.ToString(), containerName, StorageToken);
+
+            try
+            {
+                GetContainerInformationResponse getContainerInformationResponse = new ResponseFactory<GetContainerInformationResponse>().Create(new CloudFilesRequest(getContainerInformation, UserCredentials.ProxyCredentials));
+                bytesUsed = long.Parse(getContainerInformationResponse.Headers[Constants.X_CONTAINER_BYTES_USED]);
+                objectCount = int.Parse(getContainerInformationResponse.Headers[Constants.X_CONTAINER_STORAGE_OBJECT_COUNT]);
+            }
+            catch (WebException we)
+            {
+                HttpWebResponse response = (HttpWebResponse)we.Response;
+                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
+                    throw new ContainerNotFoundException("The requested container does not exist");
+            }
         }
 
         protected virtual void CloudFilesPutObject(string objectName, Dictionary<string, string> metaTags)
