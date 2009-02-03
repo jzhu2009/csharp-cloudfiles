@@ -63,6 +63,8 @@ namespace com.mosso.cloudfiles.integration.tests
 
         //StorageItem related constants
         public const string StorageItemName = "TestStorageItem.txt";
+        public const string StorageItemNameGif = "TestStorageItem.gif";
+        public const string StorageItemNameJpg = "TestStorageItem.jpg";
         public const string HeadStorageItemName = "HeadStorageItem.txt";
         public const string EmptyStorageObjectName = "";
         public const string MetadataKey = "Testkey";

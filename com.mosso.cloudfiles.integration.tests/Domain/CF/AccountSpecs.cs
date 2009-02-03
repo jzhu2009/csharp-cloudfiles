@@ -30,17 +30,21 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.AccountSpecs
         public void should_give_you_container_instance_when_successful()
         {
             var containerName = Guid.NewGuid().ToString();
+            var originalContainerCount = account.ContainerCount;
+            var originalBytesUsed = account.BytesUsed;
             try
             {
                 account.CreateContainer(containerName);
                 Assert.That(account.ContainerExists(containerName), Is.True);
-                Assert.That(account.ContainerCount, Is.EqualTo(1));
-                Assert.That(account.BytesUsed, Is.EqualTo(0));
+                Assert.That(account.ContainerCount, Is.EqualTo(originalContainerCount + 1));
+                Assert.That(account.BytesUsed, Is.EqualTo(originalBytesUsed + 0));
             }
             finally
             {
                 account.DeleteContainer(containerName);
                 Assert.That(account.ContainerExists(containerName), Is.False);
+                Assert.That(account.ContainerCount, Is.EqualTo(originalContainerCount));
+                Assert.That(account.BytesUsed, Is.EqualTo(originalBytesUsed));
             }
             
 
@@ -78,27 +82,30 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.AccountSpecs
         {
             var containerName = Guid.NewGuid().ToString();
             IContainer container = null;
+            var originalContainerCount = account.ContainerCount;
+            var originalBytesUsed = account.BytesUsed;
             try
             {
+                
                 container = account.CreateContainer(containerName);
                 container.AddObject(Constants.StorageItemName);
                 Assert.That(container.ObjectExists(Constants.StorageItemName), Is.True);
-                Assert.That(account.ContainerCount, Is.EqualTo(1));
-                Assert.That(account.BytesUsed, Is.EqualTo(34));
+                Assert.That(account.ContainerCount, Is.EqualTo(originalContainerCount + 1));
+                Assert.That(account.BytesUsed, Is.EqualTo(originalBytesUsed + 34));
 
                 account.DeleteContainer(containerName);
             }
             finally
             {
-                Assert.That(account.ContainerCount, Is.EqualTo(1));
-                Assert.That(account.BytesUsed, Is.EqualTo(34));
+                Assert.That(account.ContainerCount, Is.EqualTo(originalContainerCount + 1));
+                Assert.That(account.BytesUsed, Is.EqualTo(originalBytesUsed + 34));
 
                 container.DeleteObject(Constants.StorageItemName);
                 Assert.That(container.ObjectExists(Constants.StorageItemName), Is.False);
                 account.DeleteContainer(containerName);
                 Assert.That(account.ContainerExists(containerName), Is.False);
-                Assert.That(account.ContainerCount, Is.EqualTo(0));
-                Assert.That(account.BytesUsed, Is.EqualTo(0));
+                Assert.That(account.ContainerCount, Is.EqualTo(originalContainerCount));
+                Assert.That(account.BytesUsed, Is.EqualTo(originalBytesUsed));
             }
         }
     }
@@ -111,13 +118,15 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.AccountSpecs
         {
             var containerName = Guid.NewGuid().ToString();
             IContainer container = null;
+            var originalContainerCount = account.ContainerCount;
             try
             {
+                
                 container = account.CreateContainer(containerName);
                 container.AddObject(Constants.StorageItemName);
                 container.AddObject(Constants.HeadStorageItemName);
                 Assert.That(container.ObjectExists(Constants.StorageItemName), Is.True);
-                Assert.That(account.ContainerCount, Is.EqualTo(1));
+                Assert.That(account.ContainerCount, Is.EqualTo(originalContainerCount + 1));
                 Assert.That(container.ObjectCount, Is.EqualTo(2));
             }
             finally
@@ -129,7 +138,7 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.AccountSpecs
                 Assert.That(container.ObjectExists(Constants.HeadStorageItemName), Is.False);
                 account.DeleteContainer(containerName);
                 Assert.That(account.ContainerExists(containerName), Is.False);
-                Assert.That(account.ContainerCount, Is.EqualTo(0));
+                Assert.That(account.ContainerCount, Is.EqualTo(originalContainerCount));
             }
         }
     }

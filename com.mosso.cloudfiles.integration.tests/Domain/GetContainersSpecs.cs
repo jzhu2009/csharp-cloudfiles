@@ -83,8 +83,6 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
     [TestFixture]
     public class When_requesting_a_list_of_containers_and_no_containers_are_present : TestBase
     {
-
-        //IF THIS TEST FAILS IT IS MOST LIKELY BECAUSE AN INTEGRATION TEST LEFT A CONTAINER BEHIND AND DIDN'T CLEANUP CORRECTLY
         [Test]
         public void Should_return_No_Content_status()
         {

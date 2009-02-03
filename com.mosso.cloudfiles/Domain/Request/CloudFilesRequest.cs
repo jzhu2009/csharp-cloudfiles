@@ -108,8 +108,9 @@ namespace com.mosso.cloudfiles.domain.request
 
             IRequestWithContentBody requestWithContentBody = (IRequestWithContentBody) request;
             httpWebRequest.ContentLength = requestWithContentBody.ContentLength;
-            if (!String.IsNullOrEmpty(request.ContentType))
-                httpWebRequest.ContentType = request.ContentType;
+            var requestMimeType = request.ContentType;
+            if (!String.IsNullOrEmpty(requestMimeType))
+                httpWebRequest.ContentType = requestMimeType;
             else
                 httpWebRequest.ContentType = "application/octet-stream";
 

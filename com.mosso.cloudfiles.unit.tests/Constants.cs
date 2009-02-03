@@ -21,6 +21,7 @@ namespace com.mosso.cloudfiles.unit.tests
 
         //StorageItem constants
         public const string STORAGE_ITEM_NAME = "TestStorageItem.txt";
+        public const string HEAD_STORAGE_ITEM_NAME = "HeadStorageItem.txt";
         public const string META_KEY1 = "Key1";
         public const string META_VALUE1 = "Value1";
         public const string META_KEY2 = "Key2";

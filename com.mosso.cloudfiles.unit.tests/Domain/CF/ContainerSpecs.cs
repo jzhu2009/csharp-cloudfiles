@@ -1,8 +1,10 @@
 using System;
 using com.mosso.cloudfiles.domain;
+using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.exceptions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using System.Collections.Generic;
 
 namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
 {
@@ -65,6 +67,101 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
             var container = new MockCFContainer("testcontainername");
             container.AddObject(Constants.STORAGE_ITEM_NAME);
             Assert.That(container.ObjectExists(Constants.STORAGE_ITEM_NAME), Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_an_object_list_from_the_container_without_query_parameters
+    {
+        [Test]
+        public void should_add_the_object()
+        {
+            var container = new MockCFContainer("testcontainername");
+            container.AddObject(Constants.STORAGE_ITEM_NAME);
+            Assert.That(container.ObjectExists(Constants.STORAGE_ITEM_NAME), Is.True);
+            string[] objectNames = container.GetObjectNames();
+            Assert.That(objectNames[0], Is.EqualTo(Constants.STORAGE_ITEM_NAME));
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_an_object_list_from_the_container_with_the_limit_query_parameter
+    {
+        [Test]
+        public void should_return_only_the_specified_number_of_objects()
+        {
+            var container = new MockCFContainer("testcontainername");
+            container.AddObject(Constants.STORAGE_ITEM_NAME);
+            Assert.That(container.ObjectExists(Constants.STORAGE_ITEM_NAME), Is.True);
+            container.AddObject(Constants.HEAD_STORAGE_ITEM_NAME);
+            Assert.That(container.ObjectExists(Constants.HEAD_STORAGE_ITEM_NAME), Is.True);
+
+            string[] objectNames = container.GetObjectNames();
+            Assert.That(objectNames.Length, Is.EqualTo(2));
+            Assert.That(objectNames[0], Is.EqualTo(Constants.STORAGE_ITEM_NAME));
+            Assert.That(objectNames[1], Is.EqualTo(Constants.HEAD_STORAGE_ITEM_NAME));
+
+            Dictionary<GetItemListParameters, string> parameters = new Dictionary<GetItemListParameters, string>();
+            parameters.Add(GetItemListParameters.Limit, "1");
+            objectNames = container.GetObjectNames(parameters);
+            Assert.That(objectNames.Length, Is.EqualTo(1));
+            Assert.That(objectNames[0], Is.EqualTo(Constants.STORAGE_ITEM_NAME));
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_an_object_list_from_the_container_with_the_offset_query_parameter
+    {
+        [Test]
+        public void should_return_only_objects_starting_from_the_offset()
+        {
+            var container = new MockCFContainer("testcontainername");
+            container.AddObject(Constants.STORAGE_ITEM_NAME);
+            Assert.That(container.ObjectExists(Constants.STORAGE_ITEM_NAME), Is.True);
+            container.AddObject(Constants.HEAD_STORAGE_ITEM_NAME);
+            Assert.That(container.ObjectExists(Constants.HEAD_STORAGE_ITEM_NAME), Is.True);
+
+            string[] objectNames = container.GetObjectNames();
+            Assert.That(objectNames.Length, Is.EqualTo(2));
+            Assert.That(objectNames[0], Is.EqualTo(Constants.STORAGE_ITEM_NAME));
+            Assert.That(objectNames[1], Is.EqualTo(Constants.HEAD_STORAGE_ITEM_NAME));
+
+            Dictionary<GetItemListParameters, string> parameters = new Dictionary<GetItemListParameters, string>();
+            parameters.Add(GetItemListParameters.Offset, "1");
+            objectNames = container.GetObjectNames(parameters);
+            Assert.That(objectNames.Length, Is.EqualTo(1));
+            Assert.That(objectNames[0], Is.EqualTo(Constants.HEAD_STORAGE_ITEM_NAME));
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_an_object_list_from_the_container_with_the_prefix_query_parameter
+    {
+        [Test]
+        public void should_return_only_objects_beginning_with_the_provided_substring()
+        {
+            var container = new MockCFContainer("testcontainername");
+            container.AddObject(Constants.STORAGE_ITEM_NAME);
+            Assert.That(container.ObjectExists(Constants.STORAGE_ITEM_NAME), Is.True);
+            container.AddObject(Constants.HEAD_STORAGE_ITEM_NAME);
+            Assert.That(container.ObjectExists(Constants.HEAD_STORAGE_ITEM_NAME), Is.True);
+
+            string[] objectNames = container.GetObjectNames();
+            Assert.That(objectNames.Length, Is.EqualTo(2));
+            Assert.That(objectNames[0], Is.EqualTo(Constants.STORAGE_ITEM_NAME));
+            Assert.That(objectNames[1], Is.EqualTo(Constants.HEAD_STORAGE_ITEM_NAME));
+
+            Dictionary<GetItemListParameters, string> parameters = new Dictionary<GetItemListParameters, string>();
+            parameters.Add(GetItemListParameters.Prefix, "h");
+            objectNames = container.GetObjectNames(parameters);
+            Assert.That(objectNames.Length, Is.EqualTo(1));
+            Assert.That(objectNames[0], Is.EqualTo(Constants.HEAD_STORAGE_ITEM_NAME));
+
+            parameters.Clear();
+            parameters.Add(GetItemListParameters.Prefix, "t");
+            objectNames = container.GetObjectNames(parameters);
+            Assert.That(objectNames.Length, Is.EqualTo(1));
+            Assert.That(objectNames[0], Is.EqualTo(Constants.STORAGE_ITEM_NAME));
         }
     }
 
@@ -133,6 +230,33 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
         {
             objectCount = objects.Count;
             bytesUsed = objects.Count * 34;
+        }
+
+        protected override string[] CloudFilesGetContainer(Dictionary<GetItemListParameters, string> parameters)
+        {
+            List<string> objectNames = new List<string>();
+            string limit = parameters.ContainsKey(GetItemListParameters.Limit) ? parameters[GetItemListParameters.Limit] : null;
+            string offset = parameters.ContainsKey(GetItemListParameters.Offset) ? parameters[GetItemListParameters.Offset] : null;
+            string prefix = parameters.ContainsKey(GetItemListParameters.Prefix) ? parameters[GetItemListParameters.Prefix] : null;
+
+            int count = 0;
+            foreach(IObject @object in objects)
+            {
+                if (offset != null && count < int.Parse(offset))
+                {
+                    count++;
+                    continue;
+                }
+                if (prefix != null && !@object.Name.ToLower().StartsWith(prefix.ToLower())) continue;
+
+                objectNames.Add(@object.Name);
+                count++;
+
+                if (limit != null && count == int.Parse(limit))
+                    return objectNames.ToArray();
+            }
+
+            return objectNames.ToArray();
         }
     }
 }

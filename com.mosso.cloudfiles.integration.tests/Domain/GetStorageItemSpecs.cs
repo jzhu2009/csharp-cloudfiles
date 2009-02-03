@@ -36,6 +36,54 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
         }
 
         [Test]
+        public void Should_return_ok_if_the_object_exists_and_valid_content_type_of_image_gif()
+        {
+            string containerName = Guid.NewGuid().ToString();
+            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            {
+                GetStorageItemResponse getStorageItemResponse = null;
+                try
+                {
+                    testHelper.PutItemInContainer(Constants.StorageItemNameGif);
+                    GetStorageItem getStorageItem = new GetStorageItem(storageUrl, containerName, Constants.StorageItemNameGif, storageToken);
+
+                    getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
+                    Assert.That(getStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.OK));
+                    Assert.That(getStorageItemResponse.Headers["Content-Type"], Is.EqualTo("image/gif"));
+                }
+                finally
+                {
+                    if (getStorageItemResponse != null) getStorageItemResponse.Dispose();
+                    testHelper.DeleteItemFromContainer(Constants.StorageItemNameGif);
+                }
+            }
+        }
+
+        [Test]
+        public void Should_return_ok_if_the_object_exists_and_valid_content_type_of_image_jpeg()
+        {
+            string containerName = Guid.NewGuid().ToString();
+            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            {
+                GetStorageItemResponse getStorageItemResponse = null;
+                try
+                {
+                    testHelper.PutItemInContainer(Constants.StorageItemNameJpg);
+                    GetStorageItem getStorageItem = new GetStorageItem(storageUrl, containerName, Constants.StorageItemNameJpg, storageToken);
+
+                    getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
+                    Assert.That(getStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.OK));
+                    Assert.That(getStorageItemResponse.Headers["Content-Type"], Is.EqualTo("image/jpeg"));
+                }
+                finally
+                {
+                    if (getStorageItemResponse != null) getStorageItemResponse.Dispose();
+                    testHelper.DeleteItemFromContainer(Constants.StorageItemNameJpg);
+                }
+            }
+        }
+
+        [Test]
         public void Should_return_not_found_if_the_object_does_not_exist()
         {
             string containerName = Guid.NewGuid().ToString();

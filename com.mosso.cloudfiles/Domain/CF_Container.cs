@@ -21,6 +21,8 @@ namespace com.mosso.cloudfiles.domain
         void DeleteObject(string objectName);
         void MarkAsPublic();
         bool ObjectExists(string objectName);
+        string[] GetObjectNames();
+        string[] GetObjectNames(Dictionary<GetItemListParameters, string> parameters);
         Uri PublicUrl { get; set; }
         Uri CDNManagementUrl { get; set; }
         string AuthToken { get; set; }
@@ -63,6 +65,16 @@ namespace com.mosso.cloudfiles.domain
                 CloudFilesHeadContainer();
                 return bytesUsed;
             }
+        }
+
+        public string[] GetObjectNames()
+        {
+            return GetObjectNames(new Dictionary<GetItemListParameters, string>());
+        }
+
+        public string[] GetObjectNames(Dictionary<GetItemListParameters, string> parameters)
+        {
+            return CloudFilesGetContainer(parameters);
         }
 
         public string AuthToken { get; set; }
@@ -148,6 +160,29 @@ namespace com.mosso.cloudfiles.domain
 
             return CloudFilesHeadObject(objectName)
                    && objects.Contains(objects.Find(x => x.Name == objectName));
+        }
+
+        protected virtual string[] CloudFilesGetContainer(Dictionary<GetItemListParameters, string> parameters)
+        {
+            List<string> containerItemList = new List<string>();
+            try
+            {
+                GetContainerItemList getContainerItemList = new GetContainerItemList(StorageUrl.ToString(), containerName,StorageToken, parameters);
+                IResponseWithContentBody getContainerItemListResponse = new ResponseFactoryWithContentBody<GetContainerItemListResponse>().Create(
+                        new CloudFilesRequest(getContainerItemList, UserCredentials.ProxyCredentials));
+                
+                if (getContainerItemListResponse.Status == HttpStatusCode.OK)
+                {
+                    containerItemList.AddRange(getContainerItemListResponse.ContentBody);
+                }
+            }
+            catch (WebException we)
+            {
+                HttpWebResponse response = (HttpWebResponse)we.Response;
+                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
+                    throw new ContainerNotFoundException("The requested container does not exist!");
+            }
+            return containerItemList.ToArray();
         }
 
         protected virtual void CloudFilesHeadContainer()

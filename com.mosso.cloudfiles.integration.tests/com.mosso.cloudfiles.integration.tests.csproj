@@ -92,6 +92,12 @@
     <Content Include="HeadStorageItem.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestStorageItem.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestStorageItem.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestStorageItem.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
