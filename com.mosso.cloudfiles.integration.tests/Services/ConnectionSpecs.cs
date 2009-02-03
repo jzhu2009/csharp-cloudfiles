@@ -253,4 +253,37 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
             Assert.That(excepted, Is.True);
         }
     }
+
+    [TestFixture]
+    public class When_putting_an_object_into_a_container
+    {
+        private IConnection connection;
+
+        [SetUp]
+        public void SetUp()
+        {
+            UserCredentials userCredentials = new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY);
+            connection = new Connection(userCredentials);
+        }
+
+        [Test]
+        public void Should_upload_the_content_type()
+        {
+            string containerName = Guid.NewGuid().ToString();
+            connection.CreateContainer(containerName);
+
+            try
+            {
+                connection.PutStorageItem(containerName, Constants.StorageItemNameJpg);
+                var storageItem = connection.GetStorageItem(containerName, Constants.StorageItemNameJpg);
+                Assert.That(storageItem.ContentType, Is.EqualTo("image/jpeg"));
+
+            }
+            finally
+            {
+                connection.DeleteStorageItem(containerName, Constants.StorageItemNameJpg);
+                connection.DeleteContainer(containerName);
+            }
+        }
+    }
 }
