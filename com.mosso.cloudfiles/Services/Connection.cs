@@ -385,10 +385,11 @@ namespace com.mosso.cloudfiles.services
                 throw new ArgumentNullException();
 
             StorageItem storageItem = null;
+            GetStorageItemResponse getStorageItemResponse = null;
             GetStorageItem getStorageItem = new GetStorageItem(storageUrl, containerName, storageItemName, storageToken, requestHeaderFields);
             try
             {
-                GetStorageItemResponse getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem, userCredentials.ProxyCredentials));
+                 getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem, userCredentials.ProxyCredentials));
                 storageItem = new StorageItem(storageItemName, null, getStorageItemResponse.ContentType, getStorageItemResponse.ContentStream, long.Parse(getStorageItemResponse.ContentLength));
                 
             }
@@ -401,6 +402,10 @@ namespace com.mosso.cloudfiles.services
 
                 throw;
             }
+//            finally
+//            {
+//                if (getStorageItemResponse != null) getStorageItemResponse.Dispose();
+//            }
             return storageItem;
         }
 

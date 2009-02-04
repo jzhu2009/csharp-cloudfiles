@@ -41,7 +41,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
         [Test]
         public void Should_return_the_list_of_containers()
         {
-            Console.WriteLine("Begin listing containers");
+//            Console.WriteLine("Begin listing containers");
 
             string containerName = Guid.NewGuid().ToString();
             using (new TestHelper(storageToken, storageUrl, containerName))
@@ -54,7 +54,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
                     Assert.That(response.ContentBody.Count, Is.GreaterThan(0));
 //                    foreach (string s in response.ContentBody)
 //                        Console.WriteLine(s);
-                    Console.WriteLine("End of listing containers");
+//                    Console.WriteLine("End of listing containers");
                 }
                 finally
                 {

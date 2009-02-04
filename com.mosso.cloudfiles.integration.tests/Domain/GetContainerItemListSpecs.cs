@@ -328,7 +328,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetContainerItemListSpec
                     List<string> contentBody = response.ContentBody;
 //                    foreach (string s in response.ContentBody)
 //                        Console.WriteLine(s);
-                    string expectedItem = "{\"name\": \"TestStorageItem.txt\", \"hash\": \"5c66108b7543c6f16145e25df9849f7f\", \"bytes\": 34, \"content_type\": \"text\\u002fplain\", \"last_modified\": \"" + String.Format("{0:yyyy-MM-dd}", DateTime.Now);
+                    string expectedItem = "{\"name\": \"TestStorageItem.txt\", \"hash\": \"5c66108b7543c6f16145e25df9849f7f\", \"bytes\": 34, \"content_type\": \"text\\u002fplain\", \"last_modified\": \"" + String.Format("{0:yyyy-MM}", DateTime.Now);
                     bool expectedItemFound = false;
                     foreach(string s in contentBody)
                     {
@@ -390,8 +390,8 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetContainerItemListSpec
                 {
                     Console.WriteLine(e.Message);
                 }
-                Console.WriteLine(xmlDocument.InnerXml);
-                string expectedItem = "<container name=\"" + containerName + "\"><object><name>TestStorageItem.txt</name><hash>5c66108b7543c6f16145e25df9849f7f</hash><bytes>34</bytes><content_type>text/plain</content_type><last_modified>" + String.Format("{0:yyyy-MM-dd}", DateTime.Now);
+//                Console.WriteLine(xmlDocument.InnerXml);
+                string expectedItem = "<container name=\"" + containerName + "\"><object><name>TestStorageItem.txt</name><hash>5c66108b7543c6f16145e25df9849f7f</hash><bytes>34</bytes><content_type>text/plain</content_type><last_modified>" + String.Format("{0:yyyy-MM}", DateTime.Now);
                 testHelper.DeleteItemFromContainer(Constants.StorageItemName);
 
                 Assert.That(response.Status, Is.EqualTo(HttpStatusCode.OK));

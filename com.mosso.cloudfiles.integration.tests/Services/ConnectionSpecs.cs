@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.exceptions;
 using com.mosso.cloudfiles.services;
@@ -272,16 +273,44 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
             string containerName = Guid.NewGuid().ToString();
             connection.CreateContainer(containerName);
 
+            StorageItem storageItem = null;
             try
             {
                 connection.PutStorageItem(containerName, Constants.StorageItemNameJpg);
-                var storageItem = connection.GetStorageItem(containerName, Constants.StorageItemNameJpg);
+                storageItem = connection.GetStorageItem(containerName, Constants.StorageItemNameJpg);
                 Assert.That(storageItem.ContentType, Is.EqualTo("image/jpeg"));
 
             }
             finally
             {
+                if(storageItem != null && storageItem.ObjectStream.CanRead) storageItem.ObjectStream.Close();
                 connection.DeleteStorageItem(containerName, Constants.StorageItemNameJpg);
+                connection.DeleteContainer(containerName);
+            }
+        }
+
+        [Test]
+        public void Should_upload_the_content_type_when_using_dotnet_fileinfo_type()
+        {
+            string containerName = Guid.NewGuid().ToString();
+            connection.CreateContainer(containerName);
+
+            StorageItem storageItem = null;
+            try
+            {
+                var file = new FileInfo(Constants.StorageItemNamePdf);
+                var metadata = new Dictionary<string, string>();
+                metadata.Add("Source", "1");
+                metadata.Add("Note", "2");
+
+                connection.PutStorageItem(containerName, file.Open(FileMode.Open), file.Name, metadata);
+                storageItem = connection.GetStorageItem(containerName, Constants.StorageItemNamePdf);
+                Assert.That(storageItem.ContentType, Is.EqualTo("application/pdf"));
+            }
+            finally
+            {
+                if (storageItem != null && storageItem.ObjectStream.CanRead) storageItem.ObjectStream.Close();
+                connection.DeleteStorageItem(containerName, Constants.StorageItemNamePdf);
                 connection.DeleteContainer(containerName);
             }
         }

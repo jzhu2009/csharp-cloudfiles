@@ -82,13 +82,14 @@
     <call target="deploy.example" />
     <call target="deploy.docs" />
     <call target="deploy.src" />
+    <call target="deploy.package.master.zip" />
   </target>
 
   <target name="deploy.src">
     <call target="remove.tests.for.deployment" />
     <move file="com.mosso.cloudfiles.sln" tofile="temp/com.mosso.cloudfiles.sln" overwrite="true" />
     <move file="${sln.file.without.tests}" tofile="com.mosso.cloudfiles.sln" overwrite="true" />
-    <zip zipfile="${deploy.src.dir}\${zip.file.prefix}.src_${build.number}.zip">
+    <zip zipfile="${deploy.src.dir}\${zip.file.prefix}-src-${cloud.files.release.build.number}.zip">
       <fileset basedir="${directory::get-current-directory()}">
         <include name="${help.dir}/*.chm" />
         <exclude name="temp/**" />
@@ -122,7 +123,7 @@
   </target>
 
   <target name="deploy.bin">
-    <zip zipfile="${deploy.bin.dir}\${zip.file.prefix}.bin_${build.number}.zip">
+    <zip zipfile="${deploy.bin.dir}\${zip.file.prefix}-bin-${cloud.files.release.build.number}.zip">
       <fileset basedir="${config.dir}">
         <exclude name ="*.pdb" />
         <exclude name ="*.xml" />
@@ -134,7 +135,7 @@
   </target>
 
   <target name="deploy.example">
-    <zip zipfile="${deploy.example.dir}\${zip.file.prefix}.example_${build.number}.zip">
+    <zip zipfile="${deploy.example.dir}\${zip.file.prefix}-example-${cloud.files.release.build.number}.zip">
       <fileset basedir="${directory::get-current-directory()}\cloudfilesviewer">
         <exclude name=".svn/" />
         <exclude name="*.*resharper*" />
@@ -225,7 +226,7 @@
   </target>
 
   <target name="package.docs">
-    <zip zipfile="${deploy.docs.dir}\${zip.file.prefix}.doc_${build.number}.zip">
+    <zip zipfile="${deploy.docs.dir}\${zip.file.prefix}-doc-${cloud.files.release.build.number}.zip">
       <fileset basedir="${help.dir}">
         <include name="**" />
       </fileset>
@@ -253,5 +254,22 @@
     <copy file="com.mosso.cloudfiles/Properties/AssemblyInfo.cs" tofile="com.mosso.cloudfiles/Properties/AssemblyInfo_old.cs" overwrite="true" />
     <copy file="AssemblyInfo.cs" tofile="com.mosso.cloudfiles/Properties/AssemblyInfo.cs" overwrite="true" />
     <delete file="AssemblyInfo.cs" />
+  </target>
+  
+  <target name="deploy.package.master.zip">
+    <zip zipfile="${deploy.dir}\${zip.file.prefix}-${cloud.files.release.build.number}.zip">
+      <fileset basedir="${deploy.src.dir}">
+        <include name="**" />
+      </fileset>
+      <fileset basedir="${deploy.bin.dir}">
+        <include name="**" />
+      </fileset>
+      <fileset basedir="${deploy.example.dir}">
+        <include name="**" />
+      </fileset>
+      <fileset basedir="${deploy.docs.dir}">
+        <include name="**" />
+      </fileset>
+    </zip>
   </target>
 </project>
