@@ -315,31 +315,5 @@ namespace com.mosso.cloudfiles.integration.tests.services.ConnectionSpecs
             }
         }
 
-        [Test]
-        public void Should_still_come_back_as_pdf_even_when_sent_up_as_octet_stream()
-        {
-            string containerName = Guid.NewGuid().ToString();
-            connection.CreateContainer(containerName);
-
-            StorageItem storageItem = null;
-            string dummyFileName = "HAHAHA";
-            try
-            {
-                var file = new FileInfo(Constants.StorageItemNamePdf);
-                var metadata = new Dictionary<string, string>();
-                metadata.Add("Source", "1");
-                metadata.Add("Note", "2");
-
-                connection.PutStorageItem(containerName, file.Open(FileMode.Open), dummyFileName, metadata);
-                storageItem = connection.GetStorageItem(containerName, dummyFileName);
-                Assert.That(storageItem.ContentType, Is.EqualTo("application/pdf"));
-            }
-            finally
-            {
-                if (storageItem != null && storageItem.ObjectStream.CanRead) storageItem.ObjectStream.Close();
-                connection.DeleteStorageItem(containerName, dummyFileName);
-                connection.DeleteContainer(containerName);
-            }
-        }
     }
 }
