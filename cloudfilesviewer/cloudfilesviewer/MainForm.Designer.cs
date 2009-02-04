@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.treeView1 = new System.Windows.Forms.TreeView();
-            this.button1 = new System.Windows.Forms.Button();
             this.readOnlyContainerInformationGroup = new System.Windows.Forms.GroupBox();
             this.textBoxContainerInfo = new System.Windows.Forms.TextBox();
             this.readOnlyFileInformationGroup = new System.Windows.Forms.GroupBox();
@@ -56,6 +56,11 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.deleteAllContainersButton = new System.Windows.Forms.Button();
+            this.cmObject = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deleteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.downloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.downloadAsStreamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.assignMetadataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.readOnlyContainerInformationGroup.SuspendLayout();
             this.readOnlyFileInformationGroup.SuspendLayout();
             this.containerInformationGroup.SuspendLayout();
@@ -63,6 +68,7 @@
             this.menuStrip1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.cmObject.SuspendLayout();
             this.SuspendLayout();
             // 
             // treeView1
@@ -74,18 +80,8 @@
             this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(169, 320);
             this.treeView1.TabIndex = 0;
+            this.treeView1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseUp);
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(12, 401);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "Retrieve List";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // readOnlyContainerInformationGroup
             // 
@@ -169,6 +165,7 @@
             this.treeViewStorageObjects.Name = "treeViewStorageObjects";
             this.treeViewStorageObjects.Size = new System.Drawing.Size(156, 320);
             this.treeViewStorageObjects.TabIndex = 0;
+            this.treeViewStorageObjects.MouseUp += new System.Windows.Forms.MouseEventHandler(this.treeViewStorageObjects_MouseUp);
             this.treeViewStorageObjects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewStorageObjects_AfterSelect);
             // 
             // menuStrip1
@@ -347,6 +344,40 @@
             this.deleteAllContainersButton.UseVisualStyleBackColor = true;
             this.deleteAllContainersButton.Click += new System.EventHandler(this.deleteAllContainersButton_Click);
             // 
+            // cmObject
+            // 
+            this.cmObject.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteToolStripMenuItem1,
+            this.downloadToolStripMenuItem,
+            this.downloadAsStreamToolStripMenuItem,
+            this.assignMetadataToolStripMenuItem});
+            this.cmObject.Name = "cmObject";
+            this.cmObject.Size = new System.Drawing.Size(185, 92);
+            // 
+            // deleteToolStripMenuItem1
+            // 
+            this.deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
+            this.deleteToolStripMenuItem1.Size = new System.Drawing.Size(184, 22);
+            this.deleteToolStripMenuItem1.Text = "Delete";
+            // 
+            // downloadToolStripMenuItem
+            // 
+            this.downloadToolStripMenuItem.Name = "downloadToolStripMenuItem";
+            this.downloadToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.downloadToolStripMenuItem.Text = "Download";
+            // 
+            // downloadAsStreamToolStripMenuItem
+            // 
+            this.downloadAsStreamToolStripMenuItem.Name = "downloadAsStreamToolStripMenuItem";
+            this.downloadAsStreamToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.downloadAsStreamToolStripMenuItem.Text = "Download As Stream";
+            // 
+            // assignMetadataToolStripMenuItem
+            // 
+            this.assignMetadataToolStripMenuItem.Name = "assignMetadataToolStripMenuItem";
+            this.assignMetadataToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.assignMetadataToolStripMenuItem.Text = "Assign Metadata";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -355,7 +386,6 @@
             this.Controls.Add(this.deleteAllContainersButton);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupBox5);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
@@ -373,6 +403,7 @@
             this.groupBox5.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.cmObject.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -381,7 +412,6 @@
         #endregion
 
         private System.Windows.Forms.TreeView treeView1;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox readOnlyContainerInformationGroup;
         private System.Windows.Forms.GroupBox readOnlyFileInformationGroup;
         private System.Windows.Forms.GroupBox containerInformationGroup;
@@ -408,6 +438,11 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Button deleteAllContainersButton;
         private System.Windows.Forms.ToolStripMenuItem getAccountInformationToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip cmObject;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem downloadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem downloadAsStreamToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem assignMetadataToolStripMenuItem;
     }
 }
 

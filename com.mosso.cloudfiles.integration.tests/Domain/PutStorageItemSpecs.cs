@@ -50,6 +50,36 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         }
 
         [Test]
+        public void Should_still_come_back_as_pdf_even_when_sent_up_as_octet_stream()
+        {
+            string containerName = Guid.NewGuid().ToString();
+            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            {
+                var file = new FileInfo(Constants.StorageItemNamePdf);
+                var metadata = new Dictionary<string, string>();
+                metadata.Add("Source", "1");
+                metadata.Add("Note", "2");
+                const string DUMMY_FILE_NAME = "HAHAHA";
+
+                PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, DUMMY_FILE_NAME, file.Open(FileMode.Open), storageToken, metadata);
+
+                Assert.That(putStorageItem.ContentLength, Is.GreaterThan(0));
+                Assert.That(putStorageItem.ContentType, Is.EqualTo("application/octet-stream"));
+
+                PutStorageItemResponse response = new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem));
+                Assert.That(response.Status, Is.EqualTo(HttpStatusCode.Created));
+                Assert.That(response.ETag, Is.EqualTo(putStorageItem.ETag));
+
+                GetStorageItem getStorageItem = new GetStorageItem(storageUrl, containerName, DUMMY_FILE_NAME, storageToken);
+                GetStorageItemResponse getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
+                Assert.That(getStorageItemResponse.ContentType, Is.EqualTo("application/octet-stream"));
+                getStorageItemResponse.Dispose();
+
+                testHelper.DeleteItemFromContainer(DUMMY_FILE_NAME);
+            }
+        }
+
+        [Test]
         public void Should_set_content_type_of_gif_for_local_file_upload()
         {
             string containerName = Guid.NewGuid().ToString();

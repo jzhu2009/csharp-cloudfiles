@@ -209,7 +209,7 @@ namespace com.mosso.cloudfiles.domain.request
         {
             get
             {
-                if (String.IsNullOrEmpty(fileUri)) return "application/octet-stream";
+                if (String.IsNullOrEmpty(fileUri) || fileUri.IndexOf(".") < 0) return "application/octet-stream";
                 return MimeType(fileUri);
             }
         }

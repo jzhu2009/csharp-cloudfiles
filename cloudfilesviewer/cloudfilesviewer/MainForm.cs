@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -23,8 +24,9 @@ namespace CloudFSViewer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            username = "";
-            api_access_key = "";
+            ResetUsernameAndApiKey();
+            ClearStatusBar();
+            CheckAuthentication();
         }
 
         private void PopulateTree(List<string> folders)
@@ -42,38 +44,46 @@ namespace CloudFSViewer
             if (username.Length == 0 || api_access_key.Length == 0)
             {
                 CredentialsDialog credentialsDialog = new CredentialsDialog();
-                if (credentialsDialog.ShowDialog(this) == DialogResult.OK)
+                System.Windows.Forms.DialogResult dialogResult = credentialsDialog.ShowDialog(this);
+
+                if (dialogResult != DialogResult.OK) return;
+
+                if (dialogResult == DialogResult.OK)
                 {
                     username = credentialsDialog.Username;
                     api_access_key = credentialsDialog.ApiAccessKey;
                     deleteAllContainersButton.Enabled = true;
                 }
+
+                try
+                {
+                    connection = new Connection(new UserCredentials(username, api_access_key));
+                    RetrieveContainers();
+                }
+                catch
+                {
+                    MessageBox.Show("Authentication failed");
+                    ResetUsernameAndApiKey();
+                }
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void ResetUsernameAndApiKey()
         {
-            ClearStatusBar();
-            CheckAuthentication();
-
-            try
-            {
-                connection = new Connection(new UserCredentials(username, api_access_key));
-                RetrieveContainers();
-            }
-            catch
-            {
-                MessageBox.Show("Authentication failed");
-                username = "";
-            }
+            username = "";
+            api_access_key = "";
         }
 
         private void RetrieveContainers()
         {
             ClearStatusBar();
             treeView1.Nodes.Clear();
+            treeViewStorageObjects.Nodes.Clear();
             List<string> containerList = connection.GetContainers();
-            PopulateTree(containerList);
+            if (containerList != null && containerList.Count > 0)
+            {
+                PopulateTree(containerList);
+            }
         }
 
         private void PopulateStorageObjectList(List<string> containerItems)
@@ -107,29 +117,33 @@ namespace CloudFSViewer
                 {
                     TreeNode selectedNode = treeView1.SelectedNode;
 
-                    Container container =
-                        connection.GetContainerInformation(selectedNode.Text);
-                    if (container != null)
-                    {
-                        textBoxContainerInfo.Text =
-                            container.Name + Environment.NewLine +
-                            "Num objects:" + container.ObjectCount + Environment.NewLine +
-                            "Size: " + container.ByteCount + Environment.NewLine;
+                    PopulateContainerInfo(selectedNode.Text);
 
-                        RetrieveContainerInfo();
+                    RetrieveContainerInfo();
 
-                        //Enable menu items
-                        deleteContainerToolStripMenuItem.Enabled = true;
-                        uploadFileToolStripMenuItem.Enabled = true;
-                        uploadFileAsStreamToolStripMenuItem.Enabled = true;
+                    //Enable menu items
+                    deleteContainerToolStripMenuItem.Enabled = true;
+                    uploadFileToolStripMenuItem.Enabled = true;
+                    uploadFileAsStreamToolStripMenuItem.Enabled = true;
 
-                        SetSuccessfulMessageInStatusBar();
-                    }
+                    SetSuccessfulMessageInStatusBar();
                 }
                 catch (ContainerNotFoundException notFoundException)
                 {
                     MessageBox.Show(notFoundException.Message);
                 }
+            }
+        }
+
+        private void PopulateContainerInfo(string containerName)
+        {
+            Container container = connection.GetContainerInformation(containerName); 
+            if (container != null)
+            {
+                textBoxContainerInfo.Text =
+                    container.Name + Environment.NewLine +
+                    "Num objects:" + container.ObjectCount + Environment.NewLine +
+                    "Size: " + container.ByteCount + Environment.NewLine;
             }
         }
 
@@ -150,6 +164,7 @@ namespace CloudFSViewer
         {
             ClearStatusBar();
             RetrieveContainerItemList();
+            textBoxStorageObjectInformation.Text = "";
         }
 
         private void RetrieveStorageObjectInfo()
@@ -164,34 +179,39 @@ namespace CloudFSViewer
             assignMetaToolStripMenuItem.Enabled = false;
             dowToolStripMenuItem.Enabled = false;
 
-
             textBoxStorageObjectInformation.Text = "";
             if (selectedContainerNode != null && selectedTreeNode != null)
             {
-                StorageItem storageObject = connection.GetStorageItemInformation(selectedContainerNode.Text, selectedTreeNode.Text);
-                if (storageObject != null)
+                PopulateObjectInfo(selectedContainerNode.Text, selectedTreeNode.Text);
+            }
+        }
+
+
+        private void PopulateObjectInfo(string containerName, string objectName)
+        {
+            StorageItem storageObject = connection.GetStorageItemInformation(containerName, objectName);
+            if (storageObject != null)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append(
+                    "Name:" + objectName + Environment.NewLine +
+                    "Type:" + storageObject.ContentType + Environment.NewLine +
+                    "Size:" + storageObject.FileLength + Environment.NewLine +
+                    "Meta:" + Environment.NewLine);
+
+                foreach (string s in storageObject.Metadata.Keys)
                 {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.Append(
-                        "Name:" + selectedTreeNode.Text + Environment.NewLine +
-                        "Type:" + storageObject.ContentType + Environment.NewLine +
-                        "Size:" + storageObject.FileLength + Environment.NewLine +
-                        "Meta:" + Environment.NewLine);
-
-                    foreach (string s in storageObject.MetaTags.Keys)
-                    {
-                        stringBuilder.Append("\t" + s + " -> " + storageObject.MetaTags[s]);
-                    }
-
-                    deleteStorageObjectToolStripMenuItem.Enabled = true;
-                    uploadFileToolStripMenuItem.Enabled = true;
-                    downloadFileToolStripMenuItem.Enabled = true;
-                    assignMetaToolStripMenuItem.Enabled = true;
-                    dowToolStripMenuItem.Enabled = true;
-
-
-                    textBoxStorageObjectInformation.Text = stringBuilder.ToString();
+                    stringBuilder.Append("\t" + s + " -> " + storageObject.Metadata[s]);
                 }
+
+                deleteStorageObjectToolStripMenuItem.Enabled = true;
+                uploadFileToolStripMenuItem.Enabled = true;
+                downloadFileToolStripMenuItem.Enabled = true;
+                assignMetaToolStripMenuItem.Enabled = true;
+                dowToolStripMenuItem.Enabled = true;
+
+
+                textBoxStorageObjectInformation.Text = stringBuilder.ToString();
             }
         }
 
@@ -222,8 +242,9 @@ namespace CloudFSViewer
             if (selectedContainerNode != null && selectedTreeNode != null)
             {
                 connection.DeleteStorageItem(selectedContainerNode.Text, selectedTreeNode.Text);
+                PopulateContainerInfo(selectedContainerNode.Text);
+                textBoxStorageObjectInformation.Text = "";
                 SetSuccessfulMessageInStatusBar();
-                //Now "refresh" the container
                 RetrieveContainerInfo();
             }
         }
@@ -460,6 +481,60 @@ namespace CloudFSViewer
                 accountInformationDialog.ShowDialog(this);
             }
             SetSuccessfulMessageInStatusBar();
+        }
+
+        private void treeView1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                TreeNode node = treeView1.GetNodeAt(e.X, e.Y);
+                if (node == null)
+                {
+                    MenuItem[] items = new MenuItem[4];
+                    items[0] = new MenuItem("Create Container");
+                    items[0].Click += createContainerToolStripMenuItem_Click;
+
+                    ContextMenu cmMenu = new ContextMenu(items);
+                    cmMenu.Show(this, new Point(e.X, e.Y));
+                }
+                else
+                {
+                    MenuItem[] items = new MenuItem[4];
+                    items[0] = new MenuItem("Get Information");
+                    items[0].Click += getAccountInformationToolStripMenuItem_Click;
+                    items[1] = new MenuItem("Upload Local File");
+                    items[1].Click += uploadFileToolStripMenuItem_Click;
+                    items[2] = new MenuItem("Upload File Stream");
+                    items[2].Click += uploadFileAsStreamToolStripMenuItem_Click;
+                    items[3] = new MenuItem("Delete");
+                    items[3].Click += deleteContainerToolStripMenuItem_Click;
+
+                    ContextMenu cmMenu = new ContextMenu(items);
+                    cmMenu.Show(this, new Point(e.X, e.Y));
+                }
+            }
+        }
+
+        private void treeViewStorageObjects_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                TreeNode node = treeView1.GetNodeAt(e.X, e.Y);
+                if (node == null) return;
+
+                MenuItem[] items = new MenuItem[4];
+                items[0] = new MenuItem("Delete");
+                items[0].Click += deleteStorageObjectToolStripMenuItem_Click;
+                items[1] = new MenuItem("Download");
+                items[1].Click += downloadFileToolStripMenuItem_Click;
+                items[2] = new MenuItem("Download As Stream");
+                items[2].Click += dowToolStripMenuItem_Click;
+                items[3] = new MenuItem("Assign Metadata");
+                items[3].Click += assignMetaToolStripMenuItem_Click;
+
+                ContextMenu cmMenu = new ContextMenu(items);
+                cmMenu.Show(this, new Point(e.X, e.Y));
+            }
         }
     }
 }
