@@ -21,9 +21,13 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.CreateContainer
                 connection.DeleteContainer(containerName);
             }
         }
+    }
 
+    [TestFixture]
+    public class When_creating_a_new_container_and_the_container_already_exists : TestBase
+    {
         [Test]
-        public void Should_throw_an_exception_when_the_container_already_exists()
+        public void Should_throw_a_container_already_exists_exception()
         {
             string containerName = Guid.NewGuid().ToString();
             bool exceptionWasThrown = false;
@@ -35,7 +39,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.CreateContainer
             }
             catch (Exception exception)
             {
-                Assert.That(exception.GetType(), Is.EqualTo(typeof (ContainerAlreadyExistsException)));
+                Assert.That(exception.GetType(), Is.EqualTo(typeof(ContainerAlreadyExistsException)));
                 exceptionWasThrown = true;
             }
             finally
