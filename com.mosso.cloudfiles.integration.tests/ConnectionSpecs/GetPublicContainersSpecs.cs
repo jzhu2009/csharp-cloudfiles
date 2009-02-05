@@ -17,9 +17,9 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetPublicContai
 
             try
             {
-                string cdnUrl = connection.MarkContainerAsPublic(containerName);
+                Uri cdnUrl = connection.MarkContainerAsPublic(containerName);
                 Assert.That(cdnUrl, Is.Not.Null);
-                Assert.That(cdnUrl.Length, Is.GreaterThan(0));
+                Assert.That(cdnUrl.ToString().Length, Is.GreaterThan(0));
 
                 List<string> containerList = connection.GetPublicContainers();
                 Assert.That(containerList, Is.Not.Null);

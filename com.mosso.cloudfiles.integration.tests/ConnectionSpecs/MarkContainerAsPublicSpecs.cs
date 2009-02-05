@@ -16,9 +16,9 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.MarkContainerAs
             connection.CreateContainer(containerName);
             try
             {
-                string cdnUrl = connection.MarkContainerAsPublic(containerName);
+                Uri cdnUrl = connection.MarkContainerAsPublic(containerName);
                 Assert.That(cdnUrl, Is.Not.Null);
-                Assert.That(cdnUrl.Length, Is.GreaterThan(0));
+                Assert.That(cdnUrl.ToString().Length, Is.GreaterThan(0));
             }
             catch (Exception ex)
             {

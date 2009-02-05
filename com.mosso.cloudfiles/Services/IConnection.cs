@@ -2,6 +2,7 @@
 /// See COPYING file for licensing information
 ///
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -49,8 +50,8 @@ namespace com.mosso.cloudfiles.services
         
         List<string> GetPublicContainers();
         
-        string MarkContainerAsPublic(string containerName);
-        string SetPublicContainerDetails(string containerName, bool isCdnEnabled);
+        Uri MarkContainerAsPublic(string containerName);
+        Uri SetPublicContainerDetails(string containerName, bool isCdnEnabled);
         
         Container GetPublicContainerInformation(string containerName);
     }

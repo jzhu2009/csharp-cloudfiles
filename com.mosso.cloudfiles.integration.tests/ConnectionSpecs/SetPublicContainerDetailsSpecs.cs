@@ -14,9 +14,9 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs
         {
             using (TestHelper testHelper = new TestHelper(connection, true, true))
             {
-                string cdnUrl = connection.SetPublicContainerDetails(testHelper.ContainerName, true);
+                Uri cdnUrl = connection.SetPublicContainerDetails(testHelper.ContainerName, true);
                 Assert.That(cdnUrl, Is.Not.Null);
-                Assert.That(cdnUrl.Length, Is.GreaterThan(0));
+                Assert.That(cdnUrl.ToString().Length, Is.GreaterThan(0));
             }
         }
 
