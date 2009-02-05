@@ -37,6 +37,7 @@
   <property name="sln.file.without.tests" value="com.mosso.cloudfiles.sln.withouttests" />
   <property name="documentation.xml.file" value="com.mosso.cloudfiles\bin\${config}\com.mosso.cloudfiles.XML" />
   <property name="sandcastle.exe.dir" value="C:\Program Files\Sandcastle" />
+  <property name="htmlhelpworkshop.dir" value="C:\Program Files\HTML Help Workshop" />
   <property name="help.dir" value="Help" />
   <property name="chm.file.name" value="com.mosso.cloudfiles" />
   

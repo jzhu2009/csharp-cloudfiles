@@ -187,15 +187,23 @@
   </target>
 
   <target name="deploy.docs">
-    <property name="sandcastle.is.installed" value="true" />
+    <call target="verify.sandcastle.installed" />
+    <call target="verify.htmlhelpworkshop.installed" />
+    <call target="deploy.docs.all" />
+  </target>
+
+  <target name="verify.sandcastle.installed" >
     <if test="${not directory::exists(sandcastle.exe.dir)}">
-      <property name="sandcastle.is.installed" value="false" />
       <fail message="Sandcastle needs to be installed at ${sandcastle.exe.dir} to generate documentation, please download from http://www.microsoft.com/downloads/details.aspx?FamilyID=E82EA71D-DA89-42EE-A715-696E3A4873B2." />
     </if>
-    <if test="${sandcastle.is.installed=='true'}">
-      <call target="deploy.docs.all" />
+  </target>
+
+  <target name="verify.htmlhelpworkshop.installed" >
+    <if test="${not directory::exists(htmlhelpworkshop.dir)}">
+      <fail message="HTML Help Workshop needs to be installed at ${htmlhelpworkshop.dir} to generate documentation, please download from http://go.microsoft.com/fwlink/?linkid=14188." />
     </if>
   </target>
+
 
   <target name="deploy.docs.all" description="creates chm file and packages into zip file">
     <call target="create.docs" />
