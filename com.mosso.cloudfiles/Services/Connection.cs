@@ -32,8 +32,10 @@ namespace com.mosso.cloudfiles.services
         /// A constructor used to create an instance of the Connection class
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
+        /// </code>
         /// </example>
         /// <param name="userCredentials">An instance of the UserCredentials class, containing all pertinent authentication information</param>
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
@@ -82,9 +84,11 @@ namespace com.mosso.cloudfiles.services
         /// This method returns the number of containers and the size, in bytes, of the specified account
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// AccountInformation accountInformation = connection.GetAccountInformation();
+        /// </code>
         /// </example>
         /// <returns>An instance of AccountInformation, containing the byte size and number of containers associated with this account</returns>
         public AccountInformation GetAccountInformation()
@@ -100,9 +104,11 @@ namespace com.mosso.cloudfiles.services
         /// Get account information in json format
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// string jsonReturnValue = connection.GetAccountInformationJson();
+        /// </code>
         /// </example>
         /// <returns>JSON serialized format of the account information</returns>
         public string GetAccountInformationJson()
@@ -127,9 +133,11 @@ namespace com.mosso.cloudfiles.services
         /// Get account information in xml format
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// XmlDocument xmlReturnValue = connection.GetAccountInformationXml();
+        /// </code>
         /// </example>
         /// <returns>XML serialized format of the account information</returns>
         public XmlDocument GetAccountInformationXml()
@@ -163,9 +171,11 @@ namespace com.mosso.cloudfiles.services
         /// This method is used to create a container on cloudfiles with a given name
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// connection.CreateContainer("container name");
+        /// </code>
         /// </example>
         /// <param name="containerName">The desired name of the container</param>
         public void CreateContainer(string containerName)
@@ -183,9 +193,11 @@ namespace com.mosso.cloudfiles.services
         /// This method is used to delete a container on cloudfiles
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// connection.DeleteContainer("container name");
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container to delete</param>
         public void DeleteContainer(string containerName)
@@ -215,9 +227,11 @@ namespace com.mosso.cloudfiles.services
         /// This method retrieves a list of containers associated with a given account
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// List{string} containers = connection.GetContainers();
+        /// </code>
         /// </example>
         /// <returns>An instance of List, containing the names of the containers this account owns</returns>
         public List<string> GetContainers()
@@ -236,9 +250,11 @@ namespace com.mosso.cloudfiles.services
         /// This method retrieves the contents of a container
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// List{string} containerItemList = connection.GetContainerItemList("container name");
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container</param>
         /// <returns>An instance of List, containing the names of the storage objects in the give container</returns>
@@ -254,6 +270,7 @@ namespace com.mosso.cloudfiles.services
         /// This method retrieves the contents of a container
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// Dictionary{GetItemListParameters, string} parameters = new Dictionary{GetItemListParameters, string}();
@@ -261,6 +278,7 @@ namespace com.mosso.cloudfiles.services
         /// parameters.Add(GetItemListParameters.Offset, 1);
         /// parameters.Add(GetItemListParameters.Prefix, "a");
         /// List{string} containerItemList = connection.GetContainerItemList("container name", parameters);
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container</param>
         /// <param name="parameters">Parameters to feed to the request to filter the returned list</param>
@@ -298,9 +316,11 @@ namespace com.mosso.cloudfiles.services
         /// This method retrieves the number of storage objects in a container, and the total size, in bytes, of the container
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// Container container = connection.GetContainerInformation("container name");
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container to query about</param>
         /// <returns>An instance of container, with the number of storage objects contained and total byte allocation</returns>
@@ -334,6 +354,7 @@ namespace com.mosso.cloudfiles.services
         /// This method uploads a storage object to cloudfiles with meta tags
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// Dictionary{string, string} metadata = new Dictionary{string, string}();
@@ -341,6 +362,7 @@ namespace com.mosso.cloudfiles.services
         /// metadata.Add("key2", "value2");
         /// metadata.Add("key3", "value3");
         /// connection.PutStorageItem("container name", "C:\Local\File\Path\file.txt", metadata);
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container to put the storage object in</param>
         /// <param name="storageItemName">The complete file uri of the storage object to be uploaded</param>
@@ -371,9 +393,11 @@ namespace com.mosso.cloudfiles.services
         /// This method uploads a storage object to cloudfiles
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// connection.PutStorageItem("container name", "C:\Local\File\Path\file.txt");
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container to put the storage object in</param>
         /// <param name="storageItemName">The complete file uri of the storage object to be uploaded</param>
@@ -390,10 +414,12 @@ namespace com.mosso.cloudfiles.services
         /// This method uploads a storage object to cloudfiles with an alternate name
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// FileInfo file = new FileInfo("C:\Local\File\Path\file.txt");
         /// connection.PutStorageItem("container name", file.Open(FileMode.Open), "RemoteFileName.txt");
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container to put the storage object in</param>
         /// <param name="remoteStorageItemName">The alternate name as it will be called on cloudfiles</param>
@@ -411,6 +437,7 @@ namespace com.mosso.cloudfiles.services
         /// This method uploads a storage object to cloudfiles with an alternate name
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// Dictionary{string, string} metadata = new Dictionary{string, string}();
@@ -419,6 +446,7 @@ namespace com.mosso.cloudfiles.services
         /// metadata.Add("key3", "value3");
         /// FileInfo file = new FileInfo("C:\Local\File\Path\file.txt");
         /// connection.PutStorageItem("container name", file.Open(FileMode.Open), "RemoteFileName.txt", metadata);
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container to put the storage object in</param>
         /// <param name="storageStream">The file stream to upload</param>
@@ -450,9 +478,11 @@ namespace com.mosso.cloudfiles.services
         /// This method deletes a storage object in a given container
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// connection.DeleteStorageItem("container name", "RemoteStorageItem.txt");
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container that contains the storage object</param>
         /// <param name="storageItemName">The name of the storage object to delete</param>
@@ -481,9 +511,11 @@ namespace com.mosso.cloudfiles.services
         /// This method downloads a storage object from cloudfiles
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// StorageItem storageItem = connection.GetStorageItem("container name", "RemoteStorageItem.txt");
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container that contains the storage object to retrieve</param>
         /// <param name="storageItemName">The name of the storage object to retrieve</param>
@@ -501,6 +533,7 @@ namespace com.mosso.cloudfiles.services
         /// An alternate method for downloading storage objects. This one allows specification of special HTTP 1.1 compliant GET headers
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials); 
         /// Dictionary{RequestHeaderFields, string} requestHeaderFields = Dictionary{RequestHeaderFields, string}();
@@ -511,6 +544,7 @@ namespace com.mosso.cloudfiles.services
         /// requestHeaderFields.Add(RequestHeaderFields.IfUnmodifiedSince, DateTime.Now.AddDays(-6).ToString());
         /// requestHeaderFields.Add(RequestHeaderFields.Range, "0-5");
         /// StorageItem storageItem = connection.GetStorageItem("container name", "RemoteStorageItem.txt", requestHeaderFields);
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container that contains the storage object</param>
         /// <param name="storageItemName">The name of the storage object</param>
@@ -549,9 +583,11 @@ namespace com.mosso.cloudfiles.services
         /// An alternate method for downloading storage objects from cloudfiles directly to a file name specified in the method
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// StorageItem storageItem = connection.GetStorageItem("container name", "RemoteStorageItem.txt", "C:\Local\File\Path\file.txt");
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container that contains the storage object to retrieve</param>
         /// <param name="storageItemName">The name of the storage object to retrieve</param>
@@ -570,6 +606,7 @@ namespace com.mosso.cloudfiles.services
         /// An alternate method for downloading storage objects from cloudfiles directly to a file name specified in the method
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// Dictionary{RequestHeaderFields, string} requestHeaderFields = Dictionary{RequestHeaderFields, string}();
@@ -580,6 +617,7 @@ namespace com.mosso.cloudfiles.services
         /// requestHeaderFields.Add(RequestHeaderFields.IfUnmodifiedSince, DateTime.Now.AddDays(-6).ToString());
         /// requestHeaderFields.Add(RequestHeaderFields.Range, "0-5");
         /// StorageItem storageItem = connection.GetStorageItem("container name", "RemoteFileName.txt", "C:\Local\File\Path\file.txt", requestHeaderFields);
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container that contains the storage object to retrieve</param>
         /// <param name="storageItemName">The name of the storage object to retrieve</param>
@@ -613,6 +651,7 @@ namespace com.mosso.cloudfiles.services
         /// This method applies meta tags to a storage object on cloudfiles
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// Dictionary{string, string} metadata = new Dictionary{string, string}();
@@ -620,6 +659,7 @@ namespace com.mosso.cloudfiles.services
         /// metadata.Add("key2", "value2");
         /// metadata.Add("key3", "value3");
         /// connection.SetStorageItemMetaInformation("container name", "C:\Local\File\Path\file.txt", metadata);
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container containing the storage object</param>
         /// <param name="storageItemName">The name of the storage object</param>
@@ -649,9 +689,11 @@ namespace com.mosso.cloudfiles.services
         /// This method retrieves meta information and size, in bytes, of a requested storage object
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// StorageItem storageItem = connection.GetStorageItemInformation("container name", "RemoteStorageItem.txt");
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container that contains the storage object</param>
         /// <param name="storageItemName">The name of the storage object</param>
@@ -680,9 +722,11 @@ namespace com.mosso.cloudfiles.services
         /// This method retrieves the names of the of the containers made public on the CDN
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// List{string} containers = connection.GetPublicContainers();
+        /// </code>
         /// </example>
         /// <returns>A list of the public containers</returns>
         public List<string> GetPublicContainers()
@@ -705,9 +749,11 @@ namespace com.mosso.cloudfiles.services
         /// This method sets a container as public on the CDN
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// Uri containerPublicUrl = connection.MarkContainerAsPublic("copntainer name");
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container to mark public</param>
         /// <returns>A string representing the URL of the public container or null</returns>
@@ -725,9 +771,11 @@ namespace com.mosso.cloudfiles.services
         /// Updates the details associated with the container on the cdn
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// Uri containerPublicUrl = connection.SetPublicContainerDetails("copntainer name", true);
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container to update</param>
         /// <param name="isCdnEnabled">Enables/Disables the public status of the container</param>
@@ -746,9 +794,11 @@ namespace com.mosso.cloudfiles.services
         /// Retrieves a Container object containing the public CDN information
         /// </summary>
         /// <example>
+        /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
         /// Container container = connection.GetPublicContainerInformation("container name")
+        /// </code>
         /// </example>
         /// <param name="containerName">The name of the container to query about</param>
         /// <returns>An instance of Container with appropriate CDN information or null</returns>
