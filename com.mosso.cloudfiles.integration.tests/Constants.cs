@@ -54,6 +54,7 @@ namespace com.mosso.cloudfiles.integration.tests
         //Container related constants
         public static string BadContainerName = new string('a', 257);
         public static string BadContainerNameWithSlash = "thisIsAName/WithASlash";
+        public static string BadContainerNameWithQuestionMark = "thisIsAName?WithAQuestionMark";
         public static string PublicContainerTTL = "10000";
 
         public const string EmptyContainerName = "";

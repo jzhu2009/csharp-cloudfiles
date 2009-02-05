@@ -1,10 +1,9 @@
 using System;
 using com.mosso.cloudfiles.exceptions;
-using com.mosso.cloudfiles.integration.tests.domain;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace com.mosso.cloudfiles.integration.tests.services.DeleteContainerCommandSpecs
+namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.DeleteContainerSpecs
 {
     [TestFixture]
     public class When_deleting_a_container_using_connection : TestBase

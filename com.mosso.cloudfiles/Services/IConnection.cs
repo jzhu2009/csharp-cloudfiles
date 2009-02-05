@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.domain.request;
 
@@ -15,6 +16,8 @@ namespace com.mosso.cloudfiles.services
     public interface IConnection
     {
         AccountInformation GetAccountInformation();
+        string GetAccountInformationJson();
+        XmlDocument GetAccountInformationXml();
 
         void CreateContainer(string containerName);
         
@@ -49,6 +52,6 @@ namespace com.mosso.cloudfiles.services
         string MarkContainerAsPublic(string containerName);
         string SetPublicContainerDetails(string containerName, bool isCdnEnabled);
         
-        Container RetrievePublicContainerInformation(string containerName);
+        Container GetPublicContainerInformation(string containerName);
     }
 }

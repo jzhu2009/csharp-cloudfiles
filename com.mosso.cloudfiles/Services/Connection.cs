@@ -88,28 +88,78 @@ namespace com.mosso.cloudfiles.services
         }
 
         /// <summary>
-        /// 
+        /// Get account information in json format
         /// </summary>
-        /// <returns></returns>
+        /// <example>
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// connection.PutStorageItem("container name", new FileInfo("file path"));
+        /// string jsonReturnValue = connection.GetAccountInformationJson();
+        /// </example>
+        /// <returns>JSON serialized format of the account information</returns>
         public string GetAccountInformationJson()
         {
-//            string result = formatter.Format();
-//            return result;
-            return "";
+            GetAccountInformationSerialized getAccountInformationJson = new GetAccountInformationSerialized(storageUrl, storageToken, Format.JSON);
+            GetAccountInformationSerializedResponse getAccountInformationJsonResponse 
+                = new ResponseFactoryWithContentBody<GetAccountInformationSerializedResponse>()
+                .Create(new CloudFilesRequest(getAccountInformationJson));
+
+            if (getAccountInformationJsonResponse.ContentBody.Count == 0) return "";
+
+            var jsonReturnValue = "";
+            foreach (string s in getAccountInformationJsonResponse.ContentBody)
+            {
+                jsonReturnValue += s;
+            }
+            getAccountInformationJsonResponse.Dispose();
+            return jsonReturnValue;
         }
 
         /// <summary>
-        /// 
+        /// Get account information in xml format
         /// </summary>
-        /// <returns></returns>
+        /// <example>
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// connection.PutStorageItem("container name", new FileInfo("file path"));
+        /// XmlDocument xmlReturnValue = connection.GetAccountInformationXml();
+        /// </example>
+        /// <returns>XML serialized format of the account information</returns>
         public XmlDocument GetAccountInformationXml()
         {
-            return new XmlDocument();
+            GetAccountInformationSerialized accountInformationXml = new GetAccountInformationSerialized(storageUrl, storageToken, Format.XML);
+            GetAccountInformationSerializedResponse getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<GetAccountInformationSerializedResponse>().Create(new CloudFilesRequest(accountInformationXml));
+
+            if (getAccountInformationXmlResponse.ContentBody.Count == 0) return null;
+
+            string contentBody = "";
+            foreach (string s in getAccountInformationXmlResponse.ContentBody)
+            {
+                contentBody += s;
+            }
+
+            getAccountInformationXmlResponse.Dispose();
+            XmlDocument xmlDocument = new XmlDocument();
+            try
+            {
+                xmlDocument.LoadXml(contentBody);
+            }
+            catch (XmlException)
+            {
+                return null;
+            }
+
+            return xmlDocument;
         }
 
         /// <summary>
         /// This method is used to create a container on cloudfiles with a given name
         /// </summary>
+        /// <example>
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// connection.CreateContainer("container name");
+        /// </example>
         /// <param name="containerName">The desired name of the container</param>
         public void CreateContainer(string containerName)
         {
@@ -125,6 +175,11 @@ namespace com.mosso.cloudfiles.services
         /// <summary>
         /// This method is used to delete a container on cloudfiles
         /// </summary>
+        /// <example>
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// connection.DeleteContainer("container name");
+        /// </example>
         /// <param name="containerName">The name of the container to delete</param>
         public void DeleteContainer(string containerName)
         {
@@ -152,6 +207,11 @@ namespace com.mosso.cloudfiles.services
         /// <summary>
         /// This method retrieves a list of containers associated with a given account
         /// </summary>
+        /// <example>
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// List{string} containers = connection.GetContainers();
+        /// </example>
         /// <returns>An instance of List, containing the names of the containers this account owns</returns>
         public List<string> GetContainers()
         {
@@ -168,6 +228,11 @@ namespace com.mosso.cloudfiles.services
         /// <summary>
         /// This method retrieves the contents of a container
         /// </summary>
+        /// <example>
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// List{string} containerItemList = connection.GetContainerItemList("container name");
+        /// </example>
         /// <param name="containerName">The name of the container</param>
         /// <returns>An instance of List, containing the names of the storage objects in the give container</returns>
         public List<string> GetContainerItemList(string containerName)
@@ -181,6 +246,11 @@ namespace com.mosso.cloudfiles.services
          /// <summary>
         /// This method retrieves the contents of a container
         /// </summary>
+        /// <example>
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// List{string} containerItemList = connection.GetContainerItemList("container name);
+        /// </example>
         /// <param name="containerName">The name of the container</param>
         /// <param name="parameters">Parameters to feed to the request to filter the returned list</param>
         /// <returns>An instance of List, containing the names of the storage objects in the give container</returns>
@@ -566,7 +636,7 @@ namespace com.mosso.cloudfiles.services
         /// </summary>
         /// <param name="containerName">The name of the container to query about</param>
         /// <returns>An instance of Container with appropriate CDN information</returns>
-        public Container RetrievePublicContainerInformation(string containerName)
+        public Container GetPublicContainerInformation(string containerName)
         {
             if (string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();

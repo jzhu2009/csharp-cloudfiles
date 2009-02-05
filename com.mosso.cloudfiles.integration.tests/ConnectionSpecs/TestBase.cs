@@ -5,7 +5,7 @@ using com.mosso.cloudfiles.services;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace com.mosso.cloudfiles.integration.tests.domain
+namespace com.mosso.cloudfiles.integration.tests
 {
     public class TestBase
     {

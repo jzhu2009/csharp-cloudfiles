@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConnectionSpecs\AuthenticationSpecs.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Domain\CF\AccountSpecs.cs" />
     <Compile Include="Domain\CF\AuthenticationSpecs.cs" />
@@ -72,20 +73,22 @@
     <Compile Include="Domain\PutContainerSpecs.cs" />
     <Compile Include="Domain\PutStorageItemSpecs.cs" />
     <Compile Include="Domain\GetContainersSpecs.cs" />
-    <Compile Include="Services\CreateNewContainerCommandSpecs.cs" />
-    <Compile Include="Services\DeleteContainerCommandSpecs.cs" />
-    <Compile Include="Services\DeleteFileCommandSpecs.cs" />
-    <Compile Include="Services\DownloadFileSpecs.cs" />
-    <Compile Include="Services\RetrieveAccountInformationCommandSpecs.cs" />
-    <Compile Include="Services\RetrieveContainerInformationSpecs.cs" />
-    <Compile Include="Services\RetrieveContainerItemsListCommandSpecs.cs" />
-    <Compile Include="Services\RetrieveContainerListCommandSpecs.cs" />
-    <Compile Include="Services\RetrieveStorageObjectInformationCommandSpecs.cs" />
-    <Compile Include="Services\SetStorageObjectMetaInformationCommandSpecs.cs" />
-    <Compile Include="Services\ConnectionSpecs.cs" />
-    <Compile Include="Services\TestBase.cs" />
+    <Compile Include="ConnectionSpecs\CreateContainerSpecs.cs" />
+    <Compile Include="ConnectionSpecs\DeleteContainerSpecs.cs" />
+    <Compile Include="ConnectionSpecs\DeleteStorageItemSpecs.cs" />
+    <Compile Include="ConnectionSpecs\GetStorageItemSpecs.cs" />
+    <Compile Include="ConnectionSpecs\GetPublicContainerInformationSpecs.cs" />
+    <Compile Include="ConnectionSpecs\GetPublicContainersSpecs.cs" />
+    <Compile Include="ConnectionSpecs\MarkContainerAsPublicSpecs.cs" />
+    <Compile Include="ConnectionSpecs\PutStorageItemSpecs.cs" />
+    <Compile Include="ConnectionSpecs\GetAccountInformationSpecs.cs" />
+    <Compile Include="ConnectionSpecs\GetContainerInformationSpecs.cs" />
+    <Compile Include="ConnectionSpecs\GetContainerItemListSpecs.cs" />
+    <Compile Include="ConnectionSpecs\GetContainersSpecs.cs" />
+    <Compile Include="ConnectionSpecs\SetPublicContainerDetailsSpecs.cs" />
+    <Compile Include="ConnectionSpecs\SetStorageItemMetaInformationSpecs.cs" />
+    <Compile Include="ConnectionSpecs\TestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\UploadFileCommandSpecs.cs" />
     <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>

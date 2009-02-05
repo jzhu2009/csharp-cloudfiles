@@ -34,7 +34,10 @@ namespace com.mosso.cloudfiles.domain.request
                                                        Constants.MAXIMUM_CONTAINER_NAME_LENGTH + " character limit");
 
             if(containerName.IndexOf("/") > -1)
-                throw new ContainerNameBadlyFormedException("Container name " + containerName + " has an invalid character (currently only the slash '/' character)");
+                throw new ContainerNameBadlyFormedException("Container name " + containerName + " has an invalid character (a slash '/' character)");
+
+            if (containerName.IndexOf("?") > -1)
+                throw new ContainerNameBadlyFormedException("Container name " + containerName + " has an invalid character (a question mark '?' character)");
 
             Uri = new Uri(storageUrl + "/" + HttpUtility.UrlEncode(containerName).Replace("+", "%20"));
             Method = "PUT";

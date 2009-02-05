@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.exceptions;
-using com.mosso.cloudfiles.integration.tests.domain;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace com.mosso.cloudfiles.integration.tests.services.UploadFileCommandSpecs
+namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.PutStorageItemSpecs
 {
     [TestFixture]
-    public class When_uploading_a_file_with_connection : TestBase
+    public class When_uploading_a_file : TestBase
     {
         [Test]
         public void Should_return_nothing_when_the_file_is_uploaded_successfully()
@@ -23,7 +23,7 @@ namespace com.mosso.cloudfiles.integration.tests.services.UploadFileCommandSpecs
         }
 
         [Test]
-        [ExpectedException(typeof (ContainerNotFoundException))]
+        [ExpectedException(typeof(ContainerNotFoundException))]
         public void Should_throw_an_exception_when_the_container_does_not_exist()
         {
             string containerName = Guid.NewGuid().ToString();
@@ -70,5 +70,59 @@ namespace com.mosso.cloudfiles.integration.tests.services.UploadFileCommandSpecs
                 connection.DeleteContainer(containerName);
             }
         }
+    }
+
+    [TestFixture]
+    public class When_putting_an_object_into_a_container : TestBase
+    {
+
+        [Test]
+        public void Should_upload_the_content_type()
+        {
+            string containerName = Guid.NewGuid().ToString();
+            connection.CreateContainer(containerName);
+
+            StorageItem storageItem = null;
+            try
+            {
+                connection.PutStorageItem(containerName, Constants.StorageItemNameJpg);
+                storageItem = connection.GetStorageItem(containerName, Constants.StorageItemNameJpg);
+                Assert.That(storageItem.ContentType, Is.EqualTo("image/jpeg"));
+
+            }
+            finally
+            {
+                if (storageItem != null && storageItem.ObjectStream.CanRead) storageItem.ObjectStream.Close();
+                connection.DeleteStorageItem(containerName, Constants.StorageItemNameJpg);
+                connection.DeleteContainer(containerName);
+            }
+        }
+
+        [Test]
+        public void Should_upload_the_content_type_when_using_dotnet_fileinfo_type()
+        {
+            string containerName = Guid.NewGuid().ToString();
+            connection.CreateContainer(containerName);
+
+            StorageItem storageItem = null;
+            try
+            {
+                var file = new FileInfo(Constants.StorageItemNamePdf);
+                var metadata = new Dictionary<string, string>();
+                metadata.Add("Source", "1");
+                metadata.Add("Note", "2");
+
+                connection.PutStorageItem(containerName, file.Open(FileMode.Open), file.Name, metadata);
+                storageItem = connection.GetStorageItem(containerName, Constants.StorageItemNamePdf);
+                Assert.That(storageItem.ContentType, Is.EqualTo("application/pdf"));
+            }
+            finally
+            {
+                if (storageItem != null && storageItem.ObjectStream.CanRead) storageItem.ObjectStream.Close();
+                connection.DeleteStorageItem(containerName, Constants.StorageItemNamePdf);
+                connection.DeleteContainer(containerName);
+            }
+        }
+
     }
 }

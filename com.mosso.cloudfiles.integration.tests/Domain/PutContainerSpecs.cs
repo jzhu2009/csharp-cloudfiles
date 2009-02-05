@@ -29,6 +29,14 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
         }
 
         [Test]
+        [ExpectedException(typeof(ContainerNameBadlyFormedException))]
+        public void Should_throw_exception_if_container_name_contains_a_question_mark()
+        {
+            new CreateContainer(storageUrl, storageToken, Constants.BadContainerNameWithQuestionMark);
+            Assert.Fail("Should fail due to container name having a question mark");
+        }
+
+        [Test]
         public void Should_return_created_status_when_the_container_does_not_exist()
         {
             string containerName = Guid.NewGuid().ToString();

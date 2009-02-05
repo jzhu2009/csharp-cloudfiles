@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using com.mosso.cloudfiles.integration.tests.domain;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace com.mosso.cloudfiles.integration.tests.services.RetrieveContainerItemsListCommandSpecs
+namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetContainerItemListSpecs
 {
     [TestFixture]
     public class When_retrieving_a_list_of_items_from_a_container_using_connection : TestBase

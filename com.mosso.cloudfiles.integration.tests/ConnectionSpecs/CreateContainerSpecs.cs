@@ -1,10 +1,9 @@
 using System;
 using com.mosso.cloudfiles.exceptions;
-using com.mosso.cloudfiles.integration.tests.domain;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace com.mosso.cloudfiles.integration.tests.services.CreateNewContainerCommandSpecs
+namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.CreateContainerSpecs
 {
     [TestFixture]
     public class When_creating_a_new_container_with_connection : TestBase

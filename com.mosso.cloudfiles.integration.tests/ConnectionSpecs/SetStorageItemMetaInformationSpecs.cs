@@ -1,61 +1,51 @@
 using System;
 using System.Collections.Generic;
-using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.exceptions;
-using com.mosso.cloudfiles.services;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace com.mosso.cloudfiles.integration.tests.services
+namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.SetStorageItemMetaInformationSpecs
 {
     [TestFixture]
-    public class RetrieveStorageObjectInformationCommandSpecs
+    public class When_setting_meta_information_on_an_object : TestBase
     {
-        private IConnection connection;
-
-        [SetUp]
-        public void SetUp()
-        {
-            connection = new Connection(new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY));
-        }
-
-        [Test, Ignore]
-        public void Should_return_a_storage_item_when_successful()
+        [Test]
+        public void Should_return_nothing_when_the_command_succeeds()
         {
             string containerName = Guid.NewGuid().ToString();
-
             Dictionary<string, string> metadata = new Dictionary<string, string>
                                                       {
                                                           {Constants.MetadataKey, Constants.MetadataValue}
                                                       };
-
-            StorageItem storageItem;
             try
             {
                 connection.CreateContainer(containerName);
                 connection.PutStorageItem(containerName, Constants.StorageItemName);
                 connection.SetStorageItemMetaInformation(containerName, Constants.StorageItemName, metadata);
-                storageItem = connection.GetStorageItem(containerName, Constants.StorageItemName);
             }
             finally
             {
                 connection.DeleteStorageItem(containerName, Constants.StorageItemName);
                 connection.DeleteContainer(containerName);
             }
-
-            Assert.That(storageItem, Is.Not.Null);
-            Assert.That(storageItem.Metadata[Constants.MetadataKey], Is.EqualTo(Constants.MetadataValue));
         }
+    }
 
+    [TestFixture]
+    public class When_setting_meta_information_on_an_object_and_the_object_does_not_exist : TestBase
+    {
         [Test]
         public void Should_throw_an_exception_when_the_storage_object_does_not_exist()
         {
             string containerName = Guid.NewGuid().ToString();
+            Dictionary<string, string> metadata = new Dictionary<string, string>
+                                                      {
+                                                          {Constants.MetadataKey, Constants.MetadataValue}
+                                                      };
             connection.CreateContainer(containerName);
-
             try
             {
-                StorageItem storageItem = connection.GetStorageItem(containerName, Constants.StorageItemName);
+                connection.SetStorageItemMetaInformation(containerName, Constants.StorageItemName, metadata);
             }
             catch (Exception ex)
             {
@@ -67,4 +57,6 @@ namespace com.mosso.cloudfiles.integration.tests.services
             }
         }
     }
+
+
 }

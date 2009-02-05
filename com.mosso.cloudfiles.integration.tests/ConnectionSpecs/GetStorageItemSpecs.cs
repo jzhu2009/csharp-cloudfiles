@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.exceptions;
-using com.mosso.cloudfiles.integration.tests.domain;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace com.mosso.cloudfiles.integration.tests.services.GetFileSpecs
+namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetStorageItemSpecs
 {
     [TestFixture]
     public class When_downloading_a_file_using_connection : TestBase
@@ -92,6 +91,64 @@ namespace com.mosso.cloudfiles.integration.tests.services.GetFileSpecs
             {
                 if (si != null) si.Dispose();
                 connection.DeleteStorageItem(containerName, Constants.StorageItemName);
+                connection.DeleteContainer(containerName);
+            }
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_storage_item : TestBase
+    {
+        [Test, Ignore]
+        public void Should_return_a_storage_item()
+        {
+            string containerName = Guid.NewGuid().ToString();
+
+            Dictionary<string, string> metadata = new Dictionary<string, string>
+                                                      {
+                                                          {Constants.MetadataKey, Constants.MetadataValue}
+                                                      };
+
+            StorageItem storageItem;
+            try
+            {
+                connection.CreateContainer(containerName);
+                connection.PutStorageItem(containerName, Constants.StorageItemName);
+                connection.SetStorageItemMetaInformation(containerName, Constants.StorageItemName, metadata);
+                storageItem = connection.GetStorageItem(containerName, Constants.StorageItemName);
+            }
+            finally
+            {
+                connection.DeleteStorageItem(containerName, Constants.StorageItemName);
+                connection.DeleteContainer(containerName);
+            }
+
+            Assert.That(storageItem, Is.Not.Null);
+            Assert.That(storageItem.Metadata[Constants.MetadataKey], Is.EqualTo(Constants.MetadataValue));
+        }
+
+
+    }
+
+    [TestFixture]
+    public class When_getting_storage_item_and_item_does_not_exist : TestBase
+    {
+        [Test]
+        public void Should_throw_a__storage_item_not_found_exception()
+        {
+            string containerName = Guid.NewGuid().ToString();
+            connection.CreateContainer(containerName);
+
+            try
+            {
+                StorageItem storageItem = connection.GetStorageItem(containerName, Constants.StorageItemName);
+            }
+            catch (Exception ex)
+            {
+                Assert.That(ex.GetType(), Is.EqualTo(typeof(StorageItemNotFoundException)));
+            }
+            finally
+            {
                 connection.DeleteContainer(containerName);
             }
         }

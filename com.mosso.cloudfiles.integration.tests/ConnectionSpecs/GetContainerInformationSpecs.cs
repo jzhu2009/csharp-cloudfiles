@@ -1,11 +1,10 @@
 using System;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.exceptions;
-using com.mosso.cloudfiles.integration.tests.domain;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace com.mosso.cloudfiles.integration.tests.services.RetrieveContainerInformationSpecs
+namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetContainerInformationSpecs
 {
     [TestFixture]
     public class When_requesting_information_on_a_container_using_connection : TestBase
