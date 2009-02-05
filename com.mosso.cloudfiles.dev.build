@@ -92,6 +92,7 @@
     <zip zipfile="${deploy.src.dir}\${zip.file.prefix}-src-${cloud.files.release.build.number}.zip">
       <fileset basedir="${directory::get-current-directory()}">
         <include name="${help.dir}/*.chm" />
+        <exclude name="lib/**" />
         <exclude name="temp/**" />
         <exclude name="temp/**" />
         <exclude name="TempConstants.cs" />
