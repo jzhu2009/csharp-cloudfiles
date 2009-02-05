@@ -1,3 +1,7 @@
+///
+/// See COPYING file for licensing information
+///
+
 using System;
 using System.Net;
 using com.mosso.cloudfiles.domain.request;

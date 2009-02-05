@@ -1,4 +1,5 @@
 using System;
+using System.Xml;
 using com.mosso.cloudfiles.domain;
 using NUnit.Framework;
 using com.mosso.cloudfiles.exceptions;
@@ -97,6 +98,60 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.AccountSpecs
         }
     }
 
+    [TestFixture]
+    public class When_getting_a_json_serialized_version_of_an_account_and_containers_exist
+    {
+        [Test]
+        public void should_return_json_string_with_container_names_and_item_count_and_bytes_used()
+        {
+            var account = new MockCFAccount();
+            account.CreateContainer("container");
+            var expectedJson = "[{\"name\": \"container\", \"count\": 0, \"bytes\": 0}]";
+
+            Assert.That(account.JSON, Is.EqualTo(expectedJson));
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_a_json_serialized_version_of_an_account_and_no_containers_exist
+    {
+        [Test]
+        public void should_return_json_string_emptry_brackets()
+        {
+            var account = new MockCFAccount();
+            var expectedJson = "[]";
+
+            Assert.That(account.JSON, Is.EqualTo(expectedJson));
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_a_xml_serialized_version_of_an_account_and_containers_exist
+    {
+        [Test]
+        public void should_return_xml_document_with_container_names_and_item_count_and_bytes_used()
+        {
+            var account = new MockCFAccount();
+            account.CreateContainer("container");
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><account name=\"MossoCloudFS_5d8f3dca-7eb9-4453-aa79-2eea1b980353\"><container><name>container</name><count>0</count><bytes>0</bytes></container></account>";
+
+            Assert.That(account.XML.InnerXml, Is.EqualTo(expectedXml));
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_a_xml_serialized_version_of_an_account_and_no_containers_exist
+    {
+        [Test]
+        public void should_return_xml_document_with_account_name()
+        {
+            var account = new MockCFAccount();
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><account name=\"MossoCloudFS_5d8f3dca-7eb9-4453-aa79-2eea1b980353\"></account>";
+
+            Assert.That(account.XML.InnerXml, Is.EqualTo(expectedXml));
+        }
+    }
+
     public class MockCFAccount : CF_Account
     {
         public MockCFAccount() : base(null, null){}
@@ -133,6 +188,28 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.AccountSpecs
         {
             containerCount = containers.Count;
             bytesUsed = containers.Count * 34;
+        }
+
+        protected override string CloudFileAccountInformationJson()
+        {
+            if(containers.Count > 0) 
+                return "[{\"name\": \"container\", \"count\": 0, \"bytes\": 0}]";
+
+            return "[]";
+        }
+
+        protected override XmlDocument CloudFileAccountInformationXml()
+        {
+            XmlDocument xmlDocument = new XmlDocument();
+            if (containers.Count > 0)
+            {
+                xmlDocument.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><account name=\"MossoCloudFS_5d8f3dca-7eb9-4453-aa79-2eea1b980353\"><container><name>container</name><count>0</count><bytes>0</bytes></container></account>");
+                return xmlDocument;
+            }
+
+            xmlDocument.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><account name=\"MossoCloudFS_5d8f3dca-7eb9-4453-aa79-2eea1b980353\"></account>");
+            return xmlDocument;
+
         }
     }
 }

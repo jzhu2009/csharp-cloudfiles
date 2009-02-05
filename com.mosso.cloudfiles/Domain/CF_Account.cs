@@ -1,6 +1,11 @@
+///
+/// See COPYING file for licensing information
+///
+
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Xml;
 using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.domain.response;
 using com.mosso.cloudfiles.exceptions;
@@ -20,6 +25,8 @@ namespace com.mosso.cloudfiles.domain
         IContainer GetContainer(string containerName);
         bool ContainerExists(string containerName);
         UserCredentials UserCredentials { get; set; }
+        string JSON { get; }
+        XmlDocument XML { get; }
     }
 
     public class CF_Account : IAccount
@@ -71,6 +78,22 @@ namespace com.mosso.cloudfiles.domain
 
         public UserCredentials UserCredentials { get; set; }
 
+        public string JSON
+        {
+            get
+            {
+                return CloudFileAccountInformationJson();
+            }
+        }
+
+        public XmlDocument XML
+        {
+            get
+            {
+                return CloudFileAccountInformationXml();
+            }
+        }
+
         public IContainer CreateContainer(string containerName)
         {
             CloudFileCreateContainer(containerName);
@@ -107,6 +130,16 @@ namespace com.mosso.cloudfiles.domain
         {
             CloudFilesGetContainer(containerName);
             return containers.Find(x => x.Name == containerName);
+        }
+
+        protected virtual string CloudFileAccountInformationJson()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual XmlDocument CloudFileAccountInformationXml()
+        {
+            throw new NotImplementedException();
         }
 
         protected virtual void CloudFileCreateContainer(string containerName)

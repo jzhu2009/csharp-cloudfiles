@@ -1,7 +1,4 @@
-﻿using System.Collections.Specialized;
-using System.Net;
-
-///
+﻿///
 /// See COPYING file for licensing information
 ///
 

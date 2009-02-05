@@ -142,4 +142,73 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.AccountSpecs
             }
         }
     }
+
+    [TestFixture]
+    public class When_getting_a_json_serialized_version_of_an_account_and_containers_exist : AccountIntegrationTestBase
+    {
+        [Test]
+        public void should_return_json_string_with_container_names_and_item_count_and_bytes_used()
+        {
+            var containerName = Guid.NewGuid().ToString();
+            try
+            {
+                account.CreateContainer(containerName);
+                var expectedJson = "[{\"name\": \"container\", \"count\": 0, \"bytes\": 0}]";
+
+                Assert.That(account.JSON, Is.EqualTo(expectedJson));
+            }
+            finally
+            {
+                account.DeleteContainer(containerName);
+                Assert.That(account.ContainerExists(containerName), Is.False);
+            }
+            
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_a_json_serialized_version_of_an_account_and_no_containers_exist : AccountIntegrationTestBase
+    {
+        [Test]
+        public void should_return_json_string_emptry_brackets()
+        {
+            var expectedJson = "[]";
+
+            Assert.That(account.JSON, Is.EqualTo(expectedJson));
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_a_xml_serialized_version_of_an_account_and_containers_exist : AccountIntegrationTestBase
+    {
+        [Test]
+        public void should_return_xml_document_with_container_names_and_item_count_and_bytes_used()
+        {
+            var containerName = Guid.NewGuid().ToString();
+            try
+            {
+                account.CreateContainer(containerName);
+                var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><account name=\"MossoCloudFS_5d8f3dca-7eb9-4453-aa79-2eea1b980353\"><container><name>container</name><count>0</count><bytes>0</bytes></container></account>";
+
+                Assert.That(account.XML.InnerXml, Is.EqualTo(expectedXml));
+            }
+            finally
+            {
+                account.DeleteContainer(containerName);
+                Assert.That(account.ContainerExists(containerName), Is.False);
+            }
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_a_xml_serialized_version_of_an_account_and_no_containers_exist : AccountIntegrationTestBase
+    {
+        [Test]
+        public void should_return_xml_document_with_account_name()
+        {
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><account name=\"MossoCloudFS_5d8f3dca-7eb9-4453-aa79-2eea1b980353\"></account>";
+
+            Assert.That(account.XML.InnerXml, Is.EqualTo(expectedXml));
+        }
+    }
 }
