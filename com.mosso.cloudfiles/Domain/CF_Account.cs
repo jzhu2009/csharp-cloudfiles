@@ -134,12 +134,47 @@ namespace com.mosso.cloudfiles.domain
 
         protected virtual string CloudFileAccountInformationJson()
         {
-            throw new NotImplementedException();
+            GetAccountInformationSerialized getAccountInformationJson = new GetAccountInformationSerialized(storageUrl.ToString(), storageToken, Format.JSON);
+            GetAccountInformationSerializedResponse getAccountInformationJsonResponse
+                = new ResponseFactoryWithContentBody<GetAccountInformationSerializedResponse>()
+                .Create(new CloudFilesRequest(getAccountInformationJson));
+
+            if (getAccountInformationJsonResponse.ContentBody.Count == 0) return "";
+
+            var jsonReturnValue = "";
+            foreach (string s in getAccountInformationJsonResponse.ContentBody)
+            {
+                jsonReturnValue += s;
+            }
+            getAccountInformationJsonResponse.Dispose();
+            return jsonReturnValue;
         }
 
         protected virtual XmlDocument CloudFileAccountInformationXml()
         {
-            throw new NotImplementedException();
+            GetAccountInformationSerialized accountInformationXml = new GetAccountInformationSerialized(storageUrl.ToString(), storageToken, Format.XML);
+            GetAccountInformationSerializedResponse getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<GetAccountInformationSerializedResponse>().Create(new CloudFilesRequest(accountInformationXml));
+
+            if (getAccountInformationXmlResponse.ContentBody.Count == 0) return new XmlDocument();
+
+            string contentBody = "";
+            foreach (string s in getAccountInformationXmlResponse.ContentBody)
+            {
+                contentBody += s;
+            }
+
+            getAccountInformationXmlResponse.Dispose();
+            XmlDocument xmlDocument = new XmlDocument();
+            try
+            {
+                xmlDocument.LoadXml(contentBody);
+            }
+            catch (XmlException)
+            {
+                return null;
+            }
+
+            return xmlDocument;
         }
 
         protected virtual void CloudFileCreateContainer(string containerName)

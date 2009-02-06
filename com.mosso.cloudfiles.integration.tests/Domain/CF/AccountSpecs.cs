@@ -153,7 +153,7 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.AccountSpecs
             try
             {
                 account.CreateContainer(containerName);
-                var expectedJson = "[{\"name\": \"container\", \"count\": 0, \"bytes\": 0}]";
+                var expectedJson = "[{\"name\": \"" + containerName + "\", \"count\": 0, \"bytes\": 0}]";
 
                 Assert.That(account.JSON, Is.EqualTo(expectedJson));
             }
@@ -188,7 +188,7 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.AccountSpecs
             try
             {
                 account.CreateContainer(containerName);
-                var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><account name=\"MossoCloudFS_5d8f3dca-7eb9-4453-aa79-2eea1b980353\"><container><name>container</name><count>0</count><bytes>0</bytes></container></account>";
+                var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><account name=\"MossoCloudFS_5d8f3dca-7eb9-4453-aa79-2eea1b980353\"><container><name>" + containerName + "</name><count>0</count><bytes>0</bytes></container></account>";
 
                 Assert.That(account.XML.InnerXml, Is.EqualTo(expectedXml));
             }

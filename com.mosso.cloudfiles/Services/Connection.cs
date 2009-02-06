@@ -145,7 +145,7 @@ namespace com.mosso.cloudfiles.services
             GetAccountInformationSerialized accountInformationXml = new GetAccountInformationSerialized(storageUrl, storageToken, Format.XML);
             GetAccountInformationSerializedResponse getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<GetAccountInformationSerializedResponse>().Create(new CloudFilesRequest(accountInformationXml));
 
-            if (getAccountInformationXmlResponse.ContentBody.Count == 0) return null;
+            if (getAccountInformationXmlResponse.ContentBody.Count == 0) return new XmlDocument();
 
             string contentBody = "";
             foreach (string s in getAccountInformationXmlResponse.ContentBody)
