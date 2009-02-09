@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Security.Authentication;
+using System.Xml;
 using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.domain.response;
 using com.mosso.cloudfiles.exceptions;
@@ -33,6 +34,8 @@ namespace com.mosso.cloudfiles.domain
         Uri StorageUrl { get; set; }
         string StorageToken { get; set; }
         UserCredentials UserCredentials { get; set; }
+        string JSON { get; }
+        XmlDocument XML { get; }
     }
 
     public class CF_Container : IContainer
@@ -68,6 +71,22 @@ namespace com.mosso.cloudfiles.domain
             {
                 CloudFilesHeadContainer();
                 return bytesUsed;
+            }
+        }
+
+        public string JSON
+        {
+            get
+            {
+                return CloudFileAccountInformationJson();
+            }
+        }
+
+        public XmlDocument XML
+        {
+            get
+            {
+                return CloudFileAccountInformationXml();
             }
         }
 
@@ -164,6 +183,62 @@ namespace com.mosso.cloudfiles.domain
 
             return CloudFilesHeadObject(objectName)
                    && objects.Contains(objects.Find(x => x.Name == objectName));
+        }
+
+
+        protected virtual string CloudFileAccountInformationJson()
+        {
+            try
+            {
+                var getContainerInformation = new GetContainerInformationSerialized(StorageUrl.ToString(), StorageToken, containerName, Format.JSON);
+                var getSerializedResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(getContainerInformation, UserCredentials.ProxyCredentials));
+                if (getSerializedResponse.ContentBody.Count == 0) return "";
+
+                var jsonResponse = String.Join("", getSerializedResponse.ContentBody.ToArray());
+                getSerializedResponse.Dispose();
+                return jsonResponse;
+            }
+            catch (WebException we)
+            {
+                var response = (HttpWebResponse)we.Response;
+                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
+                    throw new ContainerNotFoundException("The requested container does not exist");
+            }
+            return "";
+        }
+
+        protected virtual XmlDocument CloudFileAccountInformationXml()
+        {
+            try
+            {
+                var getContainerInformation = new GetContainerInformationSerialized(StorageUrl.ToString(), StorageToken, containerName, Format.XML);
+                var getSerializedResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(getContainerInformation, UserCredentials.ProxyCredentials));
+                var xmlResponse = String.Join("", getSerializedResponse.ContentBody.ToArray());
+                getSerializedResponse.Dispose();
+
+                if (xmlResponse == null) return new XmlDocument();
+
+                var xmlDocument = new XmlDocument();
+                try
+                {
+                    xmlDocument.LoadXml(xmlResponse);
+
+                }
+                catch (XmlException)
+                {
+                    return xmlDocument;
+                }
+
+                return xmlDocument;
+            }
+            catch (WebException we)
+            {
+                var response = (HttpWebResponse)we.Response;
+                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
+                    throw new ContainerNotFoundException("The requested container does not exist");
+
+                throw;
+            }
         }
 
         protected virtual string[] CloudFilesGetContainer(Dictionary<GetItemListParameters, string> parameters)

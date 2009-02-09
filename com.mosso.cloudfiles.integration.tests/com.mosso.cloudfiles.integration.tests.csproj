@@ -67,9 +67,9 @@
     <Compile Include="Domain\GetAuthenticationSpecs.cs" />
     <Compile Include="Domain\GetContainerItemListSpecs.cs" />
     <Compile Include="Domain\GetStorageItemSpecs.cs" />
-    <Compile Include="Domain\HeadContainerSpecs.cs" />
-    <Compile Include="Domain\HeadStorageItemSpecs.cs" />
-    <Compile Include="Domain\PostStorageItemSpecs.cs" />
+    <Compile Include="Domain\GetContainerInformationSpecs.cs" />
+    <Compile Include="Domain\GetStorageItemInformationSpecs.cs" />
+    <Compile Include="Domain\SetStorageItemMetaInformationSpecs.cs" />
     <Compile Include="Domain\PutContainerSpecs.cs" />
     <Compile Include="Domain\PutStorageItemSpecs.cs" />
     <Compile Include="Domain\GetContainersSpecs.cs" />

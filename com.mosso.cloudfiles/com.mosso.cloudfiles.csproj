@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContainerNameValidator.cs" />
     <Compile Include="Domain\AccountInformation.cs" />
     <Compile Include="Domain\CF_Account.cs" />
     <Compile Include="Domain\CF_Authentication.cs" />
@@ -89,12 +90,12 @@
     <Compile Include="Domain\Response\GetAccountInformationResponse.cs" />
     <Compile Include="Domain\Response\GetPublicContainerInformationResponse.cs" />
     <Compile Include="Domain\Response\GetPublicContainersResponse.cs" />
+    <Compile Include="Domain\Response\GetSerializedResponse.cs" />
     <Compile Include="Domain\Response\SetContainerAsPublicResponse.cs" />
     <Compile Include="Domain\Response\SetPublicContainerDetailsResponse.cs" />
     <Compile Include="Domain\StorageItemInformation.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="Exceptions\ContainerAlreadyPublicException.cs" />
-    <Compile Include="Exceptions\ContainerNameBadlyFormedException.cs" />
     <Compile Include="Exceptions\ContainerNotEmptyException.cs" />
     <Compile Include="Exceptions\InvalidRangeHeaderException.cs" />
     <Compile Include="Exceptions\DateTimeHttpHeaderFormatException.cs" />
@@ -133,15 +134,16 @@
     <Compile Include="Exceptions\ContainerNotFoundException.cs" />
     <Compile Include="Exceptions\InvalidETagException.cs" />
     <Compile Include="Exceptions\StorageItemNotFoundException.cs" />
+    <Compile Include="ObjectNameValidator.cs" />
     <Compile Include="Services\IConnection.cs" />
     <Compile Include="Services\Connection.cs" />
     <Compile Include="Domain\StorageItem.cs" />
     <Compile Include="Domain\UserCredentials.cs" />
-    <Compile Include="Exceptions\ContainerNameLengthException.cs" />
+    <Compile Include="Exceptions\ContainerNameException.cs" />
     <Compile Include="Exceptions\InvalidResponseTypeException.cs" />
     <Compile Include="Exceptions\MetaKeyLengthException.cs" />
     <Compile Include="Exceptions\MetaValueLengthException.cs" />
-    <Compile Include="Exceptions\StorageItemNameLengthException.cs" />
+    <Compile Include="Exceptions\StorageItemNameException.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Domain\Request\IRequest.cs" />
     <Compile Include="Exceptions\AuthenticationFailedException.cs" />

@@ -20,8 +20,9 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="storageUrl">the customer unique url to interact with cloudfiles</param>
         /// <param name="containerName">the name of the container where the storage item is located</param>
         /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
-        /// <exception cref="System.ArgumentNullException">Thrown when any of the reference arguments are null</exception>
-        /// <exception cref="ContainerNameLengthException">Thrown when the container name length exceeds the maximum container length allowed</exception>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference arguments are null</exception>
+        /// <exception cref="ContainerNameException">Thrown when the container name is invalid</exception>
+        /// <exception cref="StorageItemNameException">Thrown when the object name is invalid</exception>
         public CreateContainer(string storageUrl, string storageToken, string containerName)
         {
             if (string.IsNullOrEmpty(storageUrl)
@@ -29,15 +30,7 @@ namespace com.mosso.cloudfiles.domain.request
                 || string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            if (containerName.Length > Constants.MAXIMUM_CONTAINER_NAME_LENGTH)
-                throw new ContainerNameLengthException("Container name " + containerName + " exceeds " +
-                                                       Constants.MAXIMUM_CONTAINER_NAME_LENGTH + " character limit");
-
-            if(containerName.IndexOf("/") > -1)
-                throw new ContainerNameBadlyFormedException("Container name " + containerName + " has an invalid character (a slash '/' character)");
-
-            if (containerName.IndexOf("?") > -1)
-                throw new ContainerNameBadlyFormedException("Container name " + containerName + " has an invalid character (a question mark '?' character)");
+            if (!ContainerNameValidator.Validate(containerName)) throw new ContainerNameException();
 
             Uri = new Uri(storageUrl + "/" + HttpUtility.UrlEncode(containerName).Replace("+", "%20"));
             Method = "PUT";

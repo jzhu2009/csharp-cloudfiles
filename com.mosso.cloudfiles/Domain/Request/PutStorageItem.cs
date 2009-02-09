@@ -60,7 +60,8 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
         /// <param name="metadata">dictionary of meta tags to apply to the storage item</param>
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
-        /// <exception cref="ContainerNameLengthException">Thrown when the container name length exceeds the maximum container length allowed</exception>
+        /// <exception cref="ContainerNameException">Thrown when the container name is invalid</exception>
+        /// <exception cref="StorageItemNameException">Thrown when the object name is invalid</exception>
         public PutStorageItem(string storageUrl, string containerName, string storageItemName, Stream stream,
                               string storageToken, Dictionary<string, string> metadata)
         {
@@ -72,8 +73,8 @@ namespace com.mosso.cloudfiles.domain.request
                 throw new ArgumentNullException();
 
 
-            if (containerName.Length > Constants.MAXIMUM_CONTAINER_NAME_LENGTH)
-                throw new ContainerNameLengthException("The container name length exceeds " + Constants.MAXIMUM_CONTAINER_NAME_LENGTH + " characters.s");
+            if (!ContainerNameValidator.Validate(containerName)) throw new ContainerNameException();
+            if (!ObjectNameValidator.Validate(storageItemName)) throw new StorageItemNameException();
 
             this.fileUri = CleanUpFileUri(storageItemName);
             this.stream = stream;
@@ -112,8 +113,8 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
         /// <param name="metadata">dictionary of meta tags to apply to the storage item</param>
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
-        /// <exception cref="ContainerNameLengthException">Thrown when the container name length exceeds the maximum container length allowed</exception>
-        /// <exception cref="StorageItemNameLengthException">Thrown when the storage name length exceeds the maximum storage object name length allowed</exception>
+        /// <exception cref="ContainerNameException">Thrown when the container name is invalid</exception>
+        /// <exception cref="StorageItemNameException">Thrown when the object name is invalid</exception>
         public PutStorageItem(string storageUrl, string containerName, string storageItemName, string fileUri,
                               string storageToken, Dictionary<string, string> metadata)
         {
@@ -125,15 +126,10 @@ namespace com.mosso.cloudfiles.domain.request
                 throw new ArgumentNullException();
 
 
-            if (containerName.Length > Constants.MAXIMUM_CONTAINER_NAME_LENGTH)
-                throw new ContainerNameLengthException("The container name length exceeds " + Constants.MAXIMUM_CONTAINER_NAME_LENGTH + " characters.s");
-
-
+            if (!ContainerNameValidator.Validate(containerName)) throw new ContainerNameException();
+            if (!ObjectNameValidator.Validate(storageItemName))throw new StorageItemNameException();
+            
             this.fileUri = CleanUpFileUri(fileUri);
-
-            if (storageItemName.Length > MAXIMUM_OBJECT_NAME_LENGTH)
-                throw new StorageItemNameLengthException("File: " + this.fileUri + " exceeds maximum object length of " +
-                                                         MAXIMUM_OBJECT_NAME_LENGTH);
             Headers = new NameValueCollection();
 
             

@@ -30,11 +30,11 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.MarkContainerAs
             }
         }
 
-        private void MarkContainerPublic(IConnection connection, string containerName)
+        private void MarkContainerPublic(IConnection conn, string containerName)
         {
             try
             {
-                connection.MarkContainerAsPublic(containerName);
+                conn.MarkContainerAsPublic(containerName);
             }
             catch (Exception ex)
             {
@@ -42,7 +42,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.MarkContainerAs
             }
             finally
             {
-                connection.DeleteContainer(containerName);
+                conn.DeleteContainer(containerName);
             }
         }
 

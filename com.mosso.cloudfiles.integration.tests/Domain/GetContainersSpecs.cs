@@ -69,14 +69,14 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_the_storage_url_is_null()
         {
-            GetContainers request = new GetContainers(null, "a");
+            new GetContainers(null, "a");
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_the_storage_token_is_null()
         {
-            GetContainers request = new GetContainers("a", null);
+            new GetContainers("a", null);
         }
     }
 

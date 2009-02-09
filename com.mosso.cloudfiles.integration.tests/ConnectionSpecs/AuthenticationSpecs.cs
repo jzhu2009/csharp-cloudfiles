@@ -12,14 +12,14 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs
         [ExpectedException(typeof(ArgumentNullException))]
         public void Should_throw_argument_null_exception_with_null_authentication()
         {
-            IConnection engine = new Connection(null);
+            new Connection(null);
         }
 
         [Test]
         public void Should_instantiate_engine_without_throwing_exception_when_authentication_passes()
         {
 
-            IConnection engine = new Connection(new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY));
+            new Connection(new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY));
         }
     }
 }

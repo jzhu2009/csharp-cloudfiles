@@ -41,7 +41,7 @@ namespace com.mosso.cloudfiles.domain.request
     public class GetAccountInformationSerialized : BaseRequest
     {
         /// <summary>
-        /// GetAccountInformation constructor
+        /// GetAccountInformationSerialized constructor
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when any of the parameters are null</exception>
         public GetAccountInformationSerialized(string storageUrl, string storageToken, Format format)

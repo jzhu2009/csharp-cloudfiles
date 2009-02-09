@@ -1,4 +1,5 @@
 using System;
+using System.Xml;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.exceptions;
@@ -193,6 +194,60 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
         }
     }
 
+    [TestFixture]
+    public class When_getting_a_json_serialized_version_of_a_container_and_objects_exist
+    {
+        [Test]
+        public void should_return_json_string_with_object_names_and_hash_and_bytes_and_content_type_and_last_modified_date()
+        {
+            var container = new MockCFContainer("testcontainername");
+            container.AddObject("test_object_1");
+            var expectedJson = "[{\"name\":\"test_object_1\",\"hash\":\"4281c348eaf83e70ddce0e07221c3d28\",\"bytes\":14,\"content_type\":\"application\\/octet-stream\",\"last_modified\":\"2009-02-03T05:26:32.612278\"}]";
+
+            Assert.That(container.JSON, Is.EqualTo(expectedJson));
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_a_json_serialized_version_of_a_container_and_no_objects_exist
+    {
+        [Test]
+        public void should_return_json_string_emptry_brackets()
+        {
+            var container  = new MockCFContainer("testcontainername");
+            var expectedJson = "[]";
+
+            Assert.That(container.JSON, Is.EqualTo(expectedJson));
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_a_xml_serialized_version_of_a_container_and_objects_exist
+    {
+        [Test]
+        public void should_return_xml_document_with_objects_names_and_hash_and_bytes_and_content_type_and_last_modified_date()
+        {
+            var container = new MockCFContainer("testcontainername");
+            container.AddObject("object");
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><container name=\"testcontainername\"><object><name>object</name><hash>4281c348eaf83e70ddce0e07221c3d28</hash><bytes>14</bytes><content_type>application/octet-stream</content_type><last_modified>2009-02-03T05:26:32.612278</last_modified></object></container>";
+
+            Assert.That(container.XML.InnerXml, Is.EqualTo(expectedXml));
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_a_xml_serialized_version_of_a_container_and_no_objects_exist
+    {
+        [Test]
+        public void should_return_xml_document_with_xxxxx()
+        {
+            var container = new MockCFContainer("testcontainername");
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><container name=\"testcontainername\"></container>";
+
+            Assert.That(container.XML.InnerXml, Is.EqualTo(expectedXml));
+        }
+    }
+
     public class MockCFContainer : CF_Container
     {
 
@@ -216,12 +271,12 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
             PublicUrl = new Uri("http://tempuri.org");
         }
 
-        protected override void CloudFilesPutObject(string objectName, System.Collections.Generic.Dictionary<string,string> metadata)
+        protected override void CloudFilesPutObject(string objectName, Dictionary<string,string> metadata)
         {
             return;
         }
 
-        protected override void  CloudFilesPutObject(System.IO.Stream localObjectStream, string remoteObjectName, System.Collections.Generic.Dictionary<string,string> metadata)
+        protected override void  CloudFilesPutObject(System.IO.Stream localObjectStream, string remoteObjectName, Dictionary<string,string> metadata)
         {
             return;
         }
@@ -257,6 +312,28 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
             }
 
             return objectNames.ToArray();
+        }
+
+        protected override string CloudFileAccountInformationJson()
+        {
+            if (objects.Count > 0)
+                return "[{\"name\":\"test_object_1\",\"hash\":\"4281c348eaf83e70ddce0e07221c3d28\",\"bytes\":14,\"content_type\":\"application\\/octet-stream\",\"last_modified\":\"2009-02-03T05:26:32.612278\"}]";
+
+            return "[]";
+        }
+
+        protected override XmlDocument CloudFileAccountInformationXml()
+        {
+            XmlDocument xmlDocument = new XmlDocument();
+            if (objects.Count > 0)
+            {
+                xmlDocument.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><container name=\"testcontainername\"><object><name>object</name><hash>4281c348eaf83e70ddce0e07221c3d28</hash><bytes>14</bytes><content_type>application/octet-stream</content_type><last_modified>2009-02-03T05:26:32.612278</last_modified></object></container>");
+                return xmlDocument;
+            }
+
+            xmlDocument.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><container name=\"testcontainername\"></container>");
+            return xmlDocument;
+
         }
     }
 }

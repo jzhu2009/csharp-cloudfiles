@@ -108,7 +108,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ObjectSpecs
             etag = "etag";
         }
 
-        protected override void CloudFilesPostObject(Dictionary<string, string> metadata)
+        protected override void CloudFilesPostObject(Dictionary<string, string> meta)
         {
         }
     }

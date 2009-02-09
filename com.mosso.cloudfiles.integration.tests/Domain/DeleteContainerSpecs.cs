@@ -78,11 +78,11 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteContainerSpecs
                     IResponse putStorageItemResponse = new ResponseFactory<DeleteContainerResponse>().Create(new CloudFilesRequest(putStorageItem));
                     Assert.That(putStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.Created));
                 }
-                Assert.Fail("ContainerNameLengthException expected");
+                Assert.Fail("ContainerNameException expected");
             }
             catch (Exception ex)
             {
-                Assert.That(ex, Is.TypeOf(typeof (ContainerNameLengthException)));
+                Assert.That(ex, Is.TypeOf(typeof (ContainerNameException)));
             }
         }
 

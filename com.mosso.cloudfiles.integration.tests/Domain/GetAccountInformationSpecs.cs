@@ -49,7 +49,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
             try
             {
                 GetAccountInformation getAccountInformation = new GetAccountInformation(storageUrl.Replace("_", "FAIL"), storageToken);
-                GetAccountInformationResponse response = new ResponseFactory<GetAccountInformationResponse>().Create(new CloudFilesRequest(getAccountInformation));
+                new ResponseFactory<GetAccountInformationResponse>().Create(new CloudFilesRequest(getAccountInformation));
             }
             catch (WebException we)
             {
@@ -89,8 +89,8 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
                 {
                     testHelper.PutItemInContainer(Constants.StorageItemName);
 
-                    GetAccountInformationSerialized getAccountInformationJson = new GetAccountInformationSerialized(storageUrl, storageToken, Format.JSON);
-                    GetAccountInformationSerializedResponse getAccountInformationJsonResponse = new ResponseFactoryWithContentBody<GetAccountInformationSerializedResponse>().Create(new CloudFilesRequest(getAccountInformationJson));
+                    var getAccountInformationJson = new GetAccountInformationSerialized(storageUrl, storageToken, Format.JSON);
+                    var getAccountInformationJsonResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(getAccountInformationJson));
 
                     if(getAccountInformationJsonResponse.ContentBody.Count == 0)
                         Assert.Fail("No content body returned in response");
@@ -129,7 +129,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
         public void should_return_empty_brackets_and_ok_status_200()
         {
             GetAccountInformationSerialized getAccountInformationJson = new GetAccountInformationSerialized(storageUrl, storageToken, Format.JSON);
-            GetAccountInformationSerializedResponse getAccountInformationJsonResponse = new ResponseFactoryWithContentBody<GetAccountInformationSerializedResponse>().Create(new CloudFilesRequest(getAccountInformationJson));
+            var getAccountInformationJsonResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(getAccountInformationJson));
             Assert.That(getAccountInformationJsonResponse.Status, Is.EqualTo(HttpStatusCode.OK));
             string contentBody = String.Join("",getAccountInformationJsonResponse.ContentBody.ToArray());
             getAccountInformationJsonResponse.Dispose();
@@ -152,7 +152,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
                     testHelper.PutItemInContainer(Constants.StorageItemName);
 
                     GetAccountInformationSerialized accountInformationXml = new GetAccountInformationSerialized(storageUrl, storageToken, Format.XML);
-                    GetAccountInformationSerializedResponse getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<GetAccountInformationSerializedResponse>().Create(new CloudFilesRequest(accountInformationXml));
+                    var getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(accountInformationXml));
 
                     if (getAccountInformationXmlResponse.ContentBody.Count == 0)
                         Assert.Fail("No content body returned in response");
@@ -193,7 +193,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
         public void should_return_account_name_and_ok_status_200()
         {
             GetAccountInformationSerialized accountInformationXml = new GetAccountInformationSerialized(storageUrl, storageToken, Format.XML);
-            GetAccountInformationSerializedResponse getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<GetAccountInformationSerializedResponse>().Create(new CloudFilesRequest(accountInformationXml));
+            var getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(accountInformationXml));
             Assert.That(getAccountInformationXmlResponse.Status, Is.EqualTo(HttpStatusCode.OK));
 
             string contentBody = "";
@@ -203,7 +203,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
             }
 
             getAccountInformationXmlResponse.Dispose();
-            string expectedSubString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><account name=\"MossoCloudFS_5d8f3dca-7eb9-4453-aa79-2eea1b980353\"></account>";
+            const string expectedSubString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><account name=\"MossoCloudFS_5d8f3dca-7eb9-4453-aa79-2eea1b980353\"></account>";
             Assert.That(contentBody, Is.EqualTo(expectedSubString));
         }
     }

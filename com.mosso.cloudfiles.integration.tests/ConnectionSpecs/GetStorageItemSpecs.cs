@@ -141,7 +141,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetStorageItemS
 
             try
             {
-                StorageItem storageItem = connection.GetStorageItem(containerName, Constants.StorageItemName);
+                connection.GetStorageItem(containerName, Constants.StorageItemName);
             }
             catch (Exception ex)
             {

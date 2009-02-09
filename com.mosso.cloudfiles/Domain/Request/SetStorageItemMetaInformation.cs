@@ -36,9 +36,8 @@ namespace com.mosso.cloudfiles.domain.request
                 throw new ArgumentNullException();
 
 
-            if (containerName.Length > Constants.MAXIMUM_CONTAINER_NAME_LENGTH)
-                throw new ContainerNameLengthException("The container name length exceeds " + Constants.MAXIMUM_CONTAINER_NAME_LENGTH + " characters.s");
-
+            if (!ContainerNameValidator.Validate(containerName)) throw new ContainerNameException();
+            if (!ObjectNameValidator.Validate(storageItemName)) throw new StorageItemNameException();
 
             this.metadata = metadata;
 

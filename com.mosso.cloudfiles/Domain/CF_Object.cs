@@ -118,9 +118,9 @@ namespace com.mosso.cloudfiles.domain
             }
         }
 
-        protected virtual void CloudFilesPostObject(Dictionary<string, string> metadata)
+        protected virtual void CloudFilesPostObject(Dictionary<string, string> meta)
         {
-            SetStorageItemMetaInformation setStorageItemInformation = new SetStorageItemMetaInformation(StorageUrl.ToString(), ContainerName, objectName, metadata, StorageToken);
+            SetStorageItemMetaInformation setStorageItemInformation = new SetStorageItemMetaInformation(StorageUrl.ToString(), ContainerName, objectName, meta, StorageToken);
             try
             {
                 new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemInformation, UserCredentials.ProxyCredentials));

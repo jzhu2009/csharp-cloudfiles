@@ -24,7 +24,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetPublicContai
         {
             using (TestHelper testHelper = new TestHelper(connection, false, false))
             {
-                Container container = connection.GetPublicContainerInformation(testHelper.ContainerName);
+                connection.GetPublicContainerInformation(testHelper.ContainerName);
             }
         }
 
@@ -36,7 +36,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetPublicContai
             {
                 try
                 {
-                    Container container = connection.GetPublicContainerInformation(testHelper.ContainerName);
+                    connection.GetPublicContainerInformation(testHelper.ContainerName);
                 }
                 catch
                 {

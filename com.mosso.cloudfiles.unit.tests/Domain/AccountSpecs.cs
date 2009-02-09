@@ -32,48 +32,46 @@ namespace com.mosso.cloudfiles.unit.tests.domain
     [TestFixture]
     public class When_creating_account_with_invalid_arguments
     {
-        private AccountInformation accountInformation;
-
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void should_throw_an_exception_when_the_container_name_is_empty()
         {
-            accountInformation = new AccountInformation("", "");
+            new AccountInformation("", "");
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void should_throw_an_exception_when_the_container_name_is_null()
         {
-            accountInformation = new AccountInformation(null, "");
+            new AccountInformation(null, "");
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void should_throw_an_exception_when_the_bytes_used_is_empty()
         {
-            accountInformation = new AccountInformation("3", "");
+            new AccountInformation("3", "");
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void should_throw_an_exception_when_the_bytes_used_is_null()
         {
-            accountInformation = new AccountInformation("3", null);
+            new AccountInformation("3", null);
         }
 
         [Test]
         [ExpectedException(typeof (FormatException))]
         public void should_throw_an_exception_when_the_container_name_is_invalid()
         {
-            accountInformation = new AccountInformation("hello", "1231");
+            new AccountInformation("hello", "1231");
         }
 
         [Test]
         [ExpectedException(typeof (FormatException))]
         public void should_throw_an_exception_when_the_bytes_used_is_invalid()
         {
-            accountInformation = new AccountInformation("1231", "hello");
+            new AccountInformation("1231", "hello");
         }
     }
 }

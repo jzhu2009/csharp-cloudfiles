@@ -134,9 +134,9 @@ namespace com.mosso.cloudfiles.domain
 
         protected virtual string CloudFileAccountInformationJson()
         {
-            GetAccountInformationSerialized getAccountInformationJson = new GetAccountInformationSerialized(storageUrl.ToString(), storageToken, Format.JSON);
-            GetAccountInformationSerializedResponse getAccountInformationJsonResponse
-                = new ResponseFactoryWithContentBody<GetAccountInformationSerializedResponse>()
+            var getAccountInformationJson = new GetAccountInformationSerialized(storageUrl.ToString(), storageToken, Format.JSON);
+            var getAccountInformationJsonResponse
+                = new ResponseFactoryWithContentBody<GetSerializedResponse>()
                 .Create(new CloudFilesRequest(getAccountInformationJson));
 
             if (getAccountInformationJsonResponse.ContentBody.Count == 0) return "";
@@ -152,8 +152,8 @@ namespace com.mosso.cloudfiles.domain
 
         protected virtual XmlDocument CloudFileAccountInformationXml()
         {
-            GetAccountInformationSerialized accountInformationXml = new GetAccountInformationSerialized(storageUrl.ToString(), storageToken, Format.XML);
-            GetAccountInformationSerializedResponse getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<GetAccountInformationSerializedResponse>().Create(new CloudFilesRequest(accountInformationXml));
+            var accountInformationXml = new GetAccountInformationSerialized(storageUrl.ToString(), storageToken, Format.XML);
+            var getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(accountInformationXml));
 
             if (getAccountInformationXmlResponse.ContentBody.Count == 0) return new XmlDocument();
 

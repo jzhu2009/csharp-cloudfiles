@@ -11,14 +11,12 @@ namespace com.mosso.cloudfiles.integration.tests.domain.AuthenticationRequestSpe
     [TestFixture]
     public class When_requesting_client_authentication
     {
-        private Uri uri;
         private GetAuthentication request;
         private const string STORAGE_TOKEN = "5d8f3dca-7eb9-4453-aa79-2eea1b980353";
 
         [SetUp]
         public void Setup()
         {
-            uri = new Uri(Constants.MOSSO_AUTH_URL);
             request =
                 new GetAuthentication(new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY));
         }
@@ -80,7 +78,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.AuthenticationRequestSpe
 
             try
             {
-                IResponse response = new ResponseFactory<GetAuthenticationResponse>().Create(new CloudFilesRequest(request, null));
+                new ResponseFactory<GetAuthenticationResponse>().Create(new CloudFilesRequest(request, null));
                 Assert.Fail("Should throw WebException");
             }
             catch (WebException we)

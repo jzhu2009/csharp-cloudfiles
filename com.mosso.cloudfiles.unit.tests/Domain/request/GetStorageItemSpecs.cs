@@ -11,38 +11,31 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetStorageItemSpecs
     public class When_getting_a_storage_object
     {
         [Test]
-        [ExpectedException(typeof(ContainerNameLengthException))]
-        public void Should_throw_an_exception_when_the_container_name_length_exceeds_the_maximum_number_of_allowed_characters()
-        {
-            GetStorageItem getStorageItem = new GetStorageItem("a", new string('a', cloudfiles.Constants.MAXIMUM_CONTAINER_NAME_LENGTH + 1), "a", "a");
-        }
-
-        [Test]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Should_throw_an_exception_when_the_storage_url_is_null()
         {
-            GetStorageItem getStorageItem = new GetStorageItem(null, "a", "a", "a");
+            new GetStorageItem(null, "a", "a", "a");
         }
 
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Should_throw_an_exception_when_the_container_bame_is_null()
         {
-            GetStorageItem getStorageItem = new GetStorageItem("a", null, "a", "a");
+            new GetStorageItem("a", null, "a", "a");
         }
 
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Should_throw_an_exception_when_the_storage_object_name_is_null()
         {
-            GetStorageItem getStorageItem = new GetStorageItem("a", "a", null, "a");
+            new GetStorageItem("a", "a", null, "a");
         }
 
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Should_throw_an_exception_when_the_storage_token_is_null()
         {
-            GetStorageItem getStorageItem = new GetStorageItem("a", "a", "a", null);
+            new GetStorageItem("a", "a", "a", null);
         }
     }
 
@@ -168,7 +161,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetStorageItemSpecs
         {
             requestHeaderFields[RequestHeaderFields.Range] = "a-5";
 
-            GetStorageItem getStorageItem = new GetStorageItem(Constants.STORAGE_URL, Constants.CONTAINER_NAME, Constants.STORAGE_ITEM_NAME, Constants.STORAGE_TOKEN, requestHeaderFields);
+            new GetStorageItem(Constants.STORAGE_URL, Constants.CONTAINER_NAME, Constants.STORAGE_ITEM_NAME, Constants.STORAGE_TOKEN, requestHeaderFields);
         }
 
         [Test]

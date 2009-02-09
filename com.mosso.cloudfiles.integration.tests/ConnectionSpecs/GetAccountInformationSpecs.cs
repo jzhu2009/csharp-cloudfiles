@@ -36,7 +36,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetAccountInfor
     public class When_getting_serialized_account_information_for_an_account_in_json_format_and_container_exists : TestBase
     {
         [Test]
-        public void Should_upload_the_content_type()
+        public void Should_get_serialized_json_format()
         {
             string containerName = Guid.NewGuid().ToString();
             connection.CreateContainer(containerName);
@@ -61,7 +61,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetAccountInfor
     public class When_getting_serialized_account_information_for_an_account_in_xml_format_and_container_exists : TestBase
     {
         [Test]
-        public void Should_upload_the_content_type()
+        public void Should_get_serialized_xml_format()
         {
             string containerName = Guid.NewGuid().ToString();
             connection.CreateContainer(containerName);

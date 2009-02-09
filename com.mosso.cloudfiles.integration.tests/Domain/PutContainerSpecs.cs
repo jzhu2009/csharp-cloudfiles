@@ -13,7 +13,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
     public class When_creating_a_container : TestBase
     {
         [Test]
-        [ExpectedException(typeof (ContainerNameLengthException))]
+        [ExpectedException(typeof (ContainerNameException))]
         public void Should_throw_exception_if_container_name_greater_than_256_characters()
         {
             new CreateContainer(storageUrl, storageToken, Constants.BadContainerName);
@@ -21,7 +21,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
         }
 
         [Test]
-        [ExpectedException(typeof(ContainerNameBadlyFormedException))]
+        [ExpectedException(typeof(ContainerNameException))]
         public void Should_throw_exception_if_container_name_contains_a_slash()
         {
             new CreateContainer(storageUrl, storageToken, Constants.BadContainerNameWithSlash);
@@ -29,7 +29,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
         }
 
         [Test]
-        [ExpectedException(typeof(ContainerNameBadlyFormedException))]
+        [ExpectedException(typeof(ContainerNameException))]
         public void Should_throw_exception_if_container_name_contains_a_question_mark()
         {
             new CreateContainer(storageUrl, storageToken, Constants.BadContainerNameWithQuestionMark);
@@ -52,21 +52,21 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_the_storage_url_is_null()
         {
-            CreateContainer createContainer = new CreateContainer(null, "a", "a");
+            new CreateContainer(null, "a", "a");
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_the_container_name_is_null()
         {
-            CreateContainer createContainer = new CreateContainer("a", null, "a");
+            new CreateContainer("a", null, "a");
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_the_storage_token_is_null()
         {
-            CreateContainer createContainer = new CreateContainer("a", "a", null);
+            new CreateContainer("a", "a", null);
         }
 
 
@@ -87,9 +87,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
             DeleteContainer(storageUrl, containerName);
         }
 
-        private void DeleteContainer(string storageUrl, string containerName)
+        private void DeleteContainer(string storageUri, string containerName)
         {
-            cloudfiles.domain.request.DeleteContainer deleteContainer = new DeleteContainer(storageUrl, containerName, storageToken);
+            DeleteContainer deleteContainer = new DeleteContainer(storageUri, containerName, storageToken);
 
             IResponse response = new ResponseFactory<DeleteContainerResponse>().Create(new CloudFilesRequest(deleteContainer));
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));

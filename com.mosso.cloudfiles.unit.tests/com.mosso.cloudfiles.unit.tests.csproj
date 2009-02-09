@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="ContainerNameValidatorSpecs.cs" />
     <Compile Include="Domain\AccountSpecs.cs" />
     <Compile Include="Domain\CF\AccountSpecs.cs" />
     <Compile Include="Domain\CF\AuthenticationSpecs.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="Domain\CF\ObjectSpecs.cs" />
     <Compile Include="Domain\request\GetAuthenticationSpecs.cs" />
     <Compile Include="Domain\request\GetStorageItemSpecs.cs" />
+    <Compile Include="ObjectNameValidatorSpecs.cs" />
     <Compile Include="Services\ConnectionSpecs.cs" />
     <Compile Include="Domain\ContainerSpecs.cs" />
     <Compile Include="Domain\StorageItemSpecs.cs" />

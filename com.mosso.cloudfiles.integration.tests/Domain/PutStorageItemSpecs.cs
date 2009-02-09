@@ -160,11 +160,11 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         public void Should_throw_file_IO_exception_when_file_does_not_exist()
         {
             string containerName = Guid.NewGuid().ToString();
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            using (new TestHelper(storageToken, storageUrl, containerName))
             {
                 try
                 {
-                    PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, "#%", "noexists.fail", storageToken);
+                    new PutStorageItem(storageUrl, containerName, "#%", "noexists.fail", storageToken);
                 }
                 catch (Exception ex)
                 {
@@ -177,15 +177,15 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         public void Should_not_allow_upload_of_item_if_name_exceeds_128_characters()
         {
             string containerName = Guid.NewGuid().ToString();
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            using (new TestHelper(storageToken, storageUrl, containerName))
             {
                 try
                 {
-                    PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, new string('a', 1025), "%#", storageToken);
+                    new PutStorageItem(storageUrl, containerName, new string('a', 1025), "%#", storageToken);
                 }
                 catch (Exception ex)
                 {
-                    Assert.That(ex, Is.TypeOf(typeof (StorageItemNameLengthException)));
+                    Assert.That(ex, Is.TypeOf(typeof (StorageItemNameException)));
                 }
             }
         }
@@ -257,14 +257,14 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         public void Should_throw_a_WebException_with_status_code_422_when_the_ETag_passed_does_not_match_MD5_of_the_file()
         {
             string containerName = Guid.NewGuid().ToString();
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            using (new TestHelper(storageToken, storageUrl, containerName))
             {
                 PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, Constants.StorageItemName, Constants.StorageItemName, storageToken);
                 putStorageItem.Headers.Remove("ETag");
                 putStorageItem.Headers.Add("ETag", new string('A', 32));
                 try
                 {
-                    IResponse response = new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem));
+                    new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem));
                 }
                 catch (Exception ex)
                 {
@@ -274,10 +274,10 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         }
 
         [Test]
-        [ExpectedException(typeof (ContainerNameLengthException))]
+        [ExpectedException(typeof (ContainerNameException))]
         public void Should_throw_an_exception_when_a_file_name_is_passed_and_the_container_name_exceeds_the_maximum_length()
         {
-            PutStorageItem putStorageItem = new PutStorageItem("a", new string('a', Constants.MaximumContainerNameLength + 1), "a", "a", "a");
+            new PutStorageItem("a", new string('a', Constants.MaximumContainerNameLength + 1), "a", "a", "a");
         }
 
         [Test]
@@ -286,11 +286,11 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
             FileStream s = new FileStream(Constants.StorageItemName, FileMode.Open);
             try
             {
-                PutStorageItem putStorageItem = new PutStorageItem("a", new string('a', Constants.MaximumContainerNameLength + 1), "a", s, "a");
+                new PutStorageItem("a", new string('a', Constants.MaximumContainerNameLength + 1), "a", s, "a");
             }
             catch (Exception ex)
             {
-                Assert.That(ex, Is.TypeOf(typeof (ContainerNameLengthException)));
+                Assert.That(ex, Is.TypeOf(typeof (ContainerNameException)));
             }
             s.Close();
         }
@@ -299,28 +299,28 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_a_file_name_is_passed_and_the_storage_url_is_null()
         {
-            PutStorageItem putStorageItem = new PutStorageItem(null, "a", "a", "a", "a");
+            new PutStorageItem(null, "a", "a", "a", "a");
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_a_file_name_is_passed_and_the_container_name_is_null()
         {
-            PutStorageItem putStorageItem = new PutStorageItem("a", null, "a", "a", "a");
+            new PutStorageItem("a", null, "a", "a", "a");
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_a_file_name_is_passed_and_the_storage_object_name_is_null()
         {
-            PutStorageItem putStorageItem = new PutStorageItem("a", "a", null, "a", "a");
+            new PutStorageItem("a", "a", null, "a", "a");
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_a_file_name_is_passed_and_the_file_uri_is_null()
         {
-            PutStorageItem putStorageItem = new PutStorageItem("a", "a", "a", "", "a");
+            new PutStorageItem("a", "a", "a", "", "a");
         }
 
 
@@ -328,7 +328,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_a_file_name_is_passed_and_the_storage_token_is_null()
         {
-            PutStorageItem putStorageItem = new PutStorageItem("a", "a", "a", "a", null);
+            new PutStorageItem("a", "a", "a", "a", null);
         }
 
         [Test]
@@ -337,7 +337,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
             FileStream s = new FileStream(Constants.StorageItemName, FileMode.Open);
             try
             {
-                PutStorageItem putStorageItem = new PutStorageItem(null, "a", "a", s, "a");
+                new PutStorageItem(null, "a", "a", s, "a");
             }
             catch (Exception ex)
             {
@@ -352,7 +352,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
             FileStream s = new FileStream(Constants.StorageItemName, FileMode.Open);
             try
             {
-                PutStorageItem putStorageItem = new PutStorageItem("a", null, "a", s, "a");
+                new PutStorageItem("a", null, "a", s, "a");
             }
             catch (Exception ex)
             {
@@ -367,7 +367,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
             FileStream s = new FileStream(Constants.StorageItemName, FileMode.Open);
             try
             {
-                PutStorageItem putStorageItem = new PutStorageItem("a", "a", null, s, "a");
+                new PutStorageItem("a", "a", null, s, "a");
             }
             catch (Exception ex)
             {
@@ -382,7 +382,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
             FileStream s = new FileStream(Constants.StorageItemName, FileMode.Open);
             try
             {
-                PutStorageItem putStorageItem = new PutStorageItem("a", "a", "a", s, null);
+                new PutStorageItem("a", "a", "a", s, null);
             }
             catch (Exception ex)
             {

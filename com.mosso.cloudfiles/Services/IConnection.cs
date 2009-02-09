@@ -30,6 +30,8 @@ namespace com.mosso.cloudfiles.services
         List<string> GetContainerItemList(string containerName, Dictionary<GetItemListParameters, string> parameters);
         
         Container GetContainerInformation(string containerName);
+        string GetContainerInformationJson(string containerName);
+        XmlDocument GetContainerInformationXml(string containerName);
         
         void PutStorageItem(string containerName, string storageItemName, Dictionary<string, string> metadata);
         void PutStorageItem(string containerName, string storageItemName);

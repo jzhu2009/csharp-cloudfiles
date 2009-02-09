@@ -22,7 +22,8 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="storageItemName">the name of the storage item to add meta information too</param>
         /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
-        /// <exception cref="ContainerNameLengthException">Thrown when the container name length exceeds the maximum container length allowed</exception>
+        /// <exception cref="ContainerNameException">Thrown when the container name is invalid</exception>
+        /// <exception cref="StorageItemNameException">Thrown when the object name is invalid</exception>
         public DeleteStorageItem(string storageUrl, string containerName, string storageItemName, string storageToken)
         {
             if (string.IsNullOrEmpty(storageUrl)
@@ -31,9 +32,9 @@ namespace com.mosso.cloudfiles.domain.request
                 || string.IsNullOrEmpty(storageItemName))
                 throw new ArgumentNullException();
 
-            if (containerName.Length > Constants.MAXIMUM_CONTAINER_NAME_LENGTH)
-                throw new ContainerNameLengthException("Container name " + containerName + " exceeds " +
-                                                       Constants.MAXIMUM_CONTAINER_NAME_LENGTH + " character limit");
+            if (!ContainerNameValidator.Validate(containerName)) throw new ContainerNameException();
+            if (!ObjectNameValidator.Validate(storageItemName)) throw new StorageItemNameException();
+
 
             Uri =
                 new Uri(storageUrl + "/" + HttpUtility.UrlEncode(containerName).Replace("+", "%20") + "/" +

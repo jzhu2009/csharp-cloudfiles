@@ -26,7 +26,7 @@ namespace com.mosso.cloudfiles.services
         private string storageUrl;
         private string authToken;
         private string cdnManagementUrl;
-        private bool retry = false;
+        private bool retry;
 
         /// <summary>
         /// A constructor used to create an instance of the Connection class
@@ -43,7 +43,7 @@ namespace com.mosso.cloudfiles.services
         {
             storageToken = "";
             storageUrl = "";
-            if (userCredentials == null) throw new ArgumentNullException("You must provide an instance of UserCredentials");
+            if (userCredentials == null) throw new ArgumentNullException("userCredentials");
 
             this.userCredentials = userCredentials;
             VerifyAuthentication();
@@ -113,20 +113,15 @@ namespace com.mosso.cloudfiles.services
         /// <returns>JSON serialized format of the account information</returns>
         public string GetAccountInformationJson()
         {
-            GetAccountInformationSerialized getAccountInformationJson = new GetAccountInformationSerialized(storageUrl, storageToken, Format.JSON);
-            GetAccountInformationSerializedResponse getAccountInformationJsonResponse 
-                = new ResponseFactoryWithContentBody<GetAccountInformationSerializedResponse>()
+            var getAccountInformationJson = new GetAccountInformationSerialized(storageUrl, storageToken, Format.JSON);
+            var getAccountInformationJsonResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>()
                 .Create(new CloudFilesRequest(getAccountInformationJson));
 
             if (getAccountInformationJsonResponse.ContentBody.Count == 0) return "";
+            string jsonResponse =  String.Join("", getAccountInformationJsonResponse.ContentBody.ToArray());
 
-            var jsonReturnValue = "";
-            foreach (string s in getAccountInformationJsonResponse.ContentBody)
-            {
-                jsonReturnValue += s;
-            }
             getAccountInformationJsonResponse.Dispose();
-            return jsonReturnValue;
+            return jsonResponse;
         }
 
         /// <summary>
@@ -142,26 +137,22 @@ namespace com.mosso.cloudfiles.services
         /// <returns>XML serialized format of the account information</returns>
         public XmlDocument GetAccountInformationXml()
         {
-            GetAccountInformationSerialized accountInformationXml = new GetAccountInformationSerialized(storageUrl, storageToken, Format.XML);
-            GetAccountInformationSerializedResponse getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<GetAccountInformationSerializedResponse>().Create(new CloudFilesRequest(accountInformationXml));
+            var accountInformationXml = new GetAccountInformationSerialized(storageUrl, storageToken, Format.XML);
+            var getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(accountInformationXml));
 
             if (getAccountInformationXmlResponse.ContentBody.Count == 0) return new XmlDocument();
 
-            string contentBody = "";
-            foreach (string s in getAccountInformationXmlResponse.ContentBody)
-            {
-                contentBody += s;
-            }
-
+            string contentBody = String.Join("", getAccountInformationXmlResponse.ContentBody.ToArray());
             getAccountInformationXmlResponse.Dispose();
-            XmlDocument xmlDocument = new XmlDocument();
+            
+            var xmlDocument = new XmlDocument();
             try
             {
                 xmlDocument.LoadXml(contentBody);
             }
             catch (XmlException)
             {
-                return null;
+                return xmlDocument;
             }
 
             return xmlDocument;
@@ -183,8 +174,8 @@ namespace com.mosso.cloudfiles.services
             if (string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            CreateContainer createContainer = new CreateContainer(storageUrl, storageToken, containerName);
-            CreateContainerResponse createContainerResponse = new ResponseFactory<CreateContainerResponse>().Create(new CloudFilesRequest(createContainer, userCredentials.ProxyCredentials));
+            var createContainer = new CreateContainer(storageUrl, storageToken, containerName);
+            var createContainerResponse = new ResponseFactory<CreateContainerResponse>().Create(new CloudFilesRequest(createContainer, userCredentials.ProxyCredentials));
             if (createContainerResponse.Status == HttpStatusCode.Accepted)
                 throw new ContainerAlreadyExistsException("The container already exists");
         }
@@ -205,14 +196,14 @@ namespace com.mosso.cloudfiles.services
             if (string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            DeleteContainer deleteContainer = new DeleteContainer(storageUrl, containerName, storageToken);
+            var deleteContainer = new DeleteContainer(storageUrl, containerName, storageToken);
             try
             {
-                DeleteContainerResponse deleteContainerResponse = new ResponseFactory<DeleteContainerResponse>().Create(new CloudFilesRequest(deleteContainer, userCredentials.ProxyCredentials));
+                new ResponseFactory<DeleteContainerResponse>().Create(new CloudFilesRequest(deleteContainer, userCredentials.ProxyCredentials));
             }
             catch (WebException ex)
             {
-                HttpWebResponse response = ((HttpWebResponse)ex.Response);
+                var response = ((HttpWebResponse)ex.Response);
                 if (response != null && response.StatusCode == HttpStatusCode.NotFound)
                     throw new ContainerNotFoundException("The requested container does not exist");
 
@@ -237,8 +228,8 @@ namespace com.mosso.cloudfiles.services
         public List<string> GetContainers()
         {
             List<string> containerList = null;
-            GetContainers getContainers = new GetContainers(storageUrl, storageToken);
-            GetContainersResponse getContainersResponse = new ResponseFactoryWithContentBody<GetContainersResponse>().Create(new CloudFilesRequest(getContainers, userCredentials.ProxyCredentials));
+            var getContainers = new GetContainers(storageUrl, storageToken);
+            var getContainersResponse = new ResponseFactoryWithContentBody<GetContainersResponse>().Create(new CloudFilesRequest(getContainers, userCredentials.ProxyCredentials));
             if (getContainersResponse.Status == HttpStatusCode.OK)
             {
                 containerList = getContainersResponse.ContentBody;
@@ -291,9 +282,9 @@ namespace com.mosso.cloudfiles.services
              List<string> containerItemList = new List<string>();
              try
              {
-                 GetContainerItemList getContainerItemList = new GetContainerItemList(storageUrl, containerName,
+                 var getContainerItemList = new GetContainerItemList(storageUrl, containerName,
                                                                                       storageToken, parameters);
-                 IResponseWithContentBody getContainerItemListResponse =
+                 var getContainerItemListResponse =
                      new ResponseFactoryWithContentBody<GetContainerItemListResponse>().Create(
                          new CloudFilesRequest(getContainerItemList, userCredentials.ProxyCredentials));
                  if (getContainerItemListResponse.Status == HttpStatusCode.OK)
@@ -303,7 +294,7 @@ namespace com.mosso.cloudfiles.services
              }
              catch (WebException we)
              {
-                 HttpWebResponse response = (HttpWebResponse)we.Response;
+                 var response = (HttpWebResponse)we.Response;
                  if (response != null && response.StatusCode == HttpStatusCode.NotFound)
                      throw new ContainerNotFoundException("The requested container does not exist!");
 
@@ -329,25 +320,108 @@ namespace com.mosso.cloudfiles.services
             if (string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            Container container = null;
-            GetContainerInformation getContainerInformation = new GetContainerInformation(storageUrl, containerName, storageToken);
+            var getContainerInformation = new GetContainerInformation(storageUrl, containerName, storageToken);
 
             try
             {
-                GetContainerInformationResponse getContainerInformationResponse = new ResponseFactory<GetContainerInformationResponse>().Create(new CloudFilesRequest(getContainerInformation, userCredentials.ProxyCredentials));
-                container = new Container(containerName);
+                var getContainerInformationResponse = new ResponseFactory<GetContainerInformationResponse>().Create(new CloudFilesRequest(getContainerInformation, userCredentials.ProxyCredentials));
+                var container = new Container(containerName);
                 container.ByteCount = long.Parse(getContainerInformationResponse.Headers[Constants.X_CONTAINER_BYTES_USED]);
                 container.ObjectCount = long.Parse(getContainerInformationResponse.Headers[Constants.X_CONTAINER_STORAGE_OBJECT_COUNT]);
+                return container;
             }
             catch (WebException we)
             {
-                HttpWebResponse response = (HttpWebResponse)we.Response;
+                var response = (HttpWebResponse)we.Response;
                 if (response != null && response.StatusCode == HttpStatusCode.NotFound)
                     throw new ContainerNotFoundException("The requested container does not exist");
 
                 throw;
             }
-            return container;
+        }
+
+        /// <summary>
+        /// JSON serialized format of the container's objects
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// string jsonResponse = connection.GetContainerInformationJson("container name");
+        /// </code>
+        /// </example>
+        /// <param name="containerName">name of the container to get information</param>
+        /// <returns>json string of object information inside the container</returns>
+        public string GetContainerInformationJson(string containerName)
+        {
+            if (string.IsNullOrEmpty(containerName))
+                throw new ArgumentNullException();
+
+            try
+            {
+                var getContainerInformation = new GetContainerInformationSerialized(storageUrl, storageToken, containerName, Format.JSON);
+                var getSerializedResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(getContainerInformation, userCredentials.ProxyCredentials));
+                var jsonResponse = String.Join("", getSerializedResponse.ContentBody.ToArray());
+                getSerializedResponse.Dispose();
+                return jsonResponse;
+            }
+            catch (WebException we)
+            {
+                var response = (HttpWebResponse)we.Response;
+                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
+                    throw new ContainerNotFoundException("The requested container does not exist");
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// XML serialized format of the container's objects
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// XmlDocument xmlResponse = connection.GetContainerInformationXml("container name");
+        /// </code>
+        /// </example>
+        /// <param name="containerName">name of the container to get information</param>
+        /// <returns>xml document of object information inside the container</returns>
+        public XmlDocument GetContainerInformationXml(string containerName)
+        {
+            if (string.IsNullOrEmpty(containerName))
+                throw new ArgumentNullException();
+
+            try
+            {
+                var getContainerInformation = new GetContainerInformationSerialized(storageUrl, storageToken, containerName, Format.XML);
+                var getSerializedResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(getContainerInformation, userCredentials.ProxyCredentials));
+                var xmlResponse = String.Join("", getSerializedResponse.ContentBody.ToArray());
+                getSerializedResponse.Dispose();
+
+                if (xmlResponse == null) return new XmlDocument();
+
+                var xmlDocument = new XmlDocument();
+                try
+                {
+                    xmlDocument.LoadXml(xmlResponse);
+
+                }
+                catch (XmlException)
+                {
+                    return xmlDocument;
+                }
+
+                return xmlDocument;
+            }
+            catch (WebException we)
+            {
+                var response = (HttpWebResponse)we.Response;
+                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
+                    throw new ContainerNotFoundException("The requested container does not exist");
+
+                throw;
+            }
         }
 
         /// <summary>
@@ -373,16 +447,16 @@ namespace com.mosso.cloudfiles.services
                 string.IsNullOrEmpty(storageItemName))
                 throw new ArgumentNullException();
 
-            string remoteName = Path.GetFileName(storageItemName);
-            string localName = storageItemName.Replace("/", "\\");
+            var remoteName = Path.GetFileName(storageItemName);
+            var localName = storageItemName.Replace("/", "\\");
             try
             {
-                PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, remoteName, localName, storageToken, metadata);
-                PutStorageItemResponse putStorageItemResponse = new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem, userCredentials.ProxyCredentials));
+                var putStorageItem = new PutStorageItem(storageUrl, containerName, remoteName, localName, storageToken, metadata);
+                new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem, userCredentials.ProxyCredentials));
             }
             catch (WebException webException)
             {
-                HttpWebResponse webResponse = (HttpWebResponse)webException.Response;
+                var webResponse = (HttpWebResponse)webException.Response;
                 if (webResponse.StatusCode == HttpStatusCode.BadRequest)
                     throw new ContainerNotFoundException("The requested container does not exist");
                 throw new InvalidETagException("The ETag supplied in the request does not match the ETag calculated by the server");
@@ -462,12 +536,12 @@ namespace com.mosso.cloudfiles.services
             string remoteName = Path.GetFileName(remoteStorageItemName);
             try
             {
-                PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, remoteName, storageStream, storageToken, metadata);
-                PutStorageItemResponse putStorageItemResponse = new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem, userCredentials.ProxyCredentials));
+                var putStorageItem = new PutStorageItem(storageUrl, containerName, remoteName, storageStream, storageToken, metadata);
+                new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem, userCredentials.ProxyCredentials));
             }
             catch (WebException webException)
             {
-                HttpWebResponse webResponse = (HttpWebResponse)webException.Response;
+                var webResponse = (HttpWebResponse)webException.Response;
                 if (webResponse.StatusCode == HttpStatusCode.BadRequest)
                     throw new ContainerNotFoundException("The requested container does not exist");
                 throw new InvalidETagException("The ETag supplied in the request does not match the ETag calculated by the server");
@@ -492,14 +566,14 @@ namespace com.mosso.cloudfiles.services
                 string.IsNullOrEmpty(storageItemName))
                 throw new ArgumentNullException();
 
-            DeleteStorageItem deleteStorageItem = new DeleteStorageItem(storageUrl, containerName, storageItemName, storageToken);
+            var deleteStorageItem = new DeleteStorageItem(storageUrl, containerName, storageItemName, storageToken);
             try
             {
-                DeleteStorageItemResponse deleteStorageItemResponse = new ResponseFactory<DeleteStorageItemResponse>().Create(new CloudFilesRequest(deleteStorageItem));
+                new ResponseFactory<DeleteStorageItemResponse>().Create(new CloudFilesRequest(deleteStorageItem));
             }
             catch (WebException we)
             {
-                HttpWebResponse response = (HttpWebResponse)we.Response;
+                var response = (HttpWebResponse)we.Response;
                 if (response != null && response.StatusCode == HttpStatusCode.NotFound)
                     throw new StorageItemNotFoundException("The requested storage object for deletion does not exist");
 
@@ -555,26 +629,23 @@ namespace com.mosso.cloudfiles.services
             if (string.IsNullOrEmpty(containerName) ||
                string.IsNullOrEmpty(storageItemName))
                 throw new ArgumentNullException();
-
-            StorageItem storageItem = null;
-            GetStorageItemResponse getStorageItemResponse = null;
-            GetStorageItem getStorageItem = new GetStorageItem(storageUrl, containerName, storageItemName, storageToken, requestHeaderFields);
+            
             try
             {
-                 getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem, userCredentials.ProxyCredentials));
-                storageItem = new StorageItem(storageItemName, null, getStorageItemResponse.ContentType, getStorageItemResponse.ContentStream, long.Parse(getStorageItemResponse.ContentLength));
-                
+                var getStorageItem = new GetStorageItem(storageUrl, containerName, storageItemName, storageToken, requestHeaderFields);
+                 var getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem, userCredentials.ProxyCredentials));
+                var storageItem = new StorageItem(storageItemName, null, getStorageItemResponse.ContentType, getStorageItemResponse.ContentStream, long.Parse(getStorageItemResponse.ContentLength));
+                return storageItem;
             }
             catch (WebException we)
             {
-                HttpWebResponse response = (HttpWebResponse)we.Response;
+                var response = (HttpWebResponse)we.Response;
                 response.Close();
                 if (response.StatusCode == HttpStatusCode.NotFound)
                     throw new StorageItemNotFoundException("The requested storage object does not exist");
 
                 throw;
             }
-            return storageItem;
         }
 
 
@@ -630,15 +701,15 @@ namespace com.mosso.cloudfiles.services
                 string.IsNullOrEmpty(localFileName))
                 throw new ArgumentNullException();
 
-            GetStorageItem getStorageItem = new GetStorageItem(storageUrl, containerName, storageItemName, storageToken, requestHeaderFields);
+            var getStorageItem = new GetStorageItem(storageUrl, containerName, storageItemName, storageToken, requestHeaderFields);
             try
             {
-                GetStorageItemResponse getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem, userCredentials.ProxyCredentials));
+                var getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem, userCredentials.ProxyCredentials));
                 getStorageItemResponse.SaveStreamToDisk(localFileName);
             }
             catch (WebException we)
             {
-                HttpWebResponse response = (HttpWebResponse)we.Response;
+                var response = (HttpWebResponse)we.Response;
                 response.Close();
                 if (response.StatusCode == HttpStatusCode.NotFound)
                     throw new StorageItemNotFoundException("The requested storage object does not exist");
@@ -670,14 +741,14 @@ namespace com.mosso.cloudfiles.services
                string.IsNullOrEmpty(storageItemName))
                 throw new ArgumentNullException();
 
-            SetStorageItemMetaInformation setStorageItemInformation = new SetStorageItemMetaInformation(storageUrl, containerName, storageItemName, metadata, storageToken);
             try
             {
-                SetStorageItemMetaInformationResponse response = new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemInformation, userCredentials.ProxyCredentials));
+                var setStorageItemInformation = new SetStorageItemMetaInformation(storageUrl, containerName, storageItemName, metadata, storageToken);
+                new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemInformation, userCredentials.ProxyCredentials));
             }
             catch (WebException we)
             {
-                HttpWebResponse response = (HttpWebResponse)we.Response;
+                var response = (HttpWebResponse)we.Response;
                 if (response != null && response.StatusCode == HttpStatusCode.NotFound)
                     throw new StorageItemNotFoundException("The requested storage object does not exist");
 
@@ -704,18 +775,18 @@ namespace com.mosso.cloudfiles.services
                string.IsNullOrEmpty(storageItemName))
                 throw new ArgumentNullException();
 
-            StorageItem storageItem = null;
-            GetStorageItemInformation getStorageItemInformation = new GetStorageItemInformation(storageUrl, containerName, storageItemName, storageToken);
+            var getStorageItemInformation = new GetStorageItemInformation(storageUrl, containerName, storageItemName, storageToken);
             try
             {
-                GetStorageItemInformationResponse getStorageItemResponse = new ResponseFactory<GetStorageItemInformationResponse>().Create(new CloudFilesRequest(getStorageItemInformation, userCredentials.ProxyCredentials));
-                storageItem = new StorageItem(storageItemName, getStorageItemResponse.Metadata, getStorageItemResponse.ContentType, long.Parse(getStorageItemResponse.ContentLength));
+                var getStorageItemResponse = new ResponseFactory<GetStorageItemInformationResponse>().Create(new CloudFilesRequest(getStorageItemInformation, userCredentials.ProxyCredentials));
+                var storageItem = new StorageItem(storageItemName, getStorageItemResponse.Metadata, getStorageItemResponse.ContentType, long.Parse(getStorageItemResponse.ContentLength));
+
+                return storageItem;
             }
             catch (WebException)
             {
                 throw new StorageItemNotFoundException("The requested storage object does not exist");
             }
-            return storageItem;
         }
 
         /// <summary>
@@ -731,8 +802,8 @@ namespace com.mosso.cloudfiles.services
         /// <returns>A list of the public containers</returns>
         public List<string> GetPublicContainers()
         {
-            GetPublicContainersRequest request = new GetPublicContainersRequest(cdnManagementUrl, authToken);
-            GetPublicContainersResponse response =
+            var request = new GetPublicContainersRequest(cdnManagementUrl, authToken);
+            var response =
                 new ResponseFactoryWithContentBody<GetPublicContainersResponse>().Create(new CloudFilesRequest(request));
 
             if (response.Status == HttpStatusCode.Unauthorized)
@@ -762,7 +833,7 @@ namespace com.mosso.cloudfiles.services
             if (string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            SetContainerAsPublicRequest request = new SetContainerAsPublicRequest(cdnManagementUrl, authToken, containerName);
+            var request = new SetContainerAsPublicRequest(cdnManagementUrl, authToken, containerName);
             return new Uri(MarkContainerAsPublic(request));
         }
 
@@ -785,7 +856,7 @@ namespace com.mosso.cloudfiles.services
             if (string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            SetPublicContainerDetailsRequest request = 
+            var request = 
                 new SetPublicContainerDetailsRequest(cdnManagementUrl, authToken, containerName, isCdnEnabled, "", "", "");
             return new Uri(SetPublicContainerDetails(request));
         }
@@ -807,7 +878,7 @@ namespace com.mosso.cloudfiles.services
             if (string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            GetPublicContainerInformationRequest request = new GetPublicContainerInformationRequest(cdnManagementUrl, authToken, containerName);
+            var request = new GetPublicContainerInformationRequest(cdnManagementUrl, authToken, containerName);
             GetPublicContainerInformationResponse response = null;
             try
             {
@@ -815,14 +886,14 @@ namespace com.mosso.cloudfiles.services
             }
             catch (WebException ex)
             {
-                HttpWebResponse webResponse = (HttpWebResponse)ex.Response;
+                var webResponse = (HttpWebResponse)ex.Response;
                 if (webResponse.StatusCode == HttpStatusCode.Unauthorized)
                     throw new UnauthorizedAccessException("Your authorization credentials are invalid or have expired.");
                 if (webResponse.StatusCode == HttpStatusCode.NotFound)
                     throw new ContainerNotFoundException("The specified container does not exist.");
             }
 
-            Container container = new Container(containerName);
+            var container = new Container(containerName);
             if (response == null) return null;
             container.CdnUri = response.Headers[Constants.X_CDN_URI];
             return container;
@@ -837,7 +908,7 @@ namespace com.mosso.cloudfiles.services
             }
             catch (WebException ex)
             {
-                HttpWebResponse webResponse = (HttpWebResponse)ex.Response;
+                var webResponse = (HttpWebResponse)ex.Response;
                 if (webResponse.StatusCode == HttpStatusCode.Unauthorized)
                     throw new UnauthorizedAccessException("Your access credentials are invalid or have expired. ");
                 if (webResponse.StatusCode == HttpStatusCode.NotFound)
@@ -859,7 +930,7 @@ namespace com.mosso.cloudfiles.services
             {
                 //It's a protocol error that is usually a result of a 401 (Unauthorized)
                 //Still trying to figure way to get specific httpstatuscode
-                HttpWebResponse webResponse = (HttpWebResponse)we.Response;
+                var webResponse = (HttpWebResponse)we.Response;
                 if (webResponse.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     throw new InvalidCredentialException("You do not have permission to mark this container as public.");

@@ -58,8 +58,8 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteStorageObjectSpecs
             }
             catch (Exception ex)
             {
-                Assert.That(ex, Is.TypeOf(typeof (ContainerNameLengthException)));
-                Assert.That(ex, Is.TypeOf(typeof (ContainerNameLengthException)));
+                Assert.That(ex, Is.TypeOf(typeof (ContainerNameException)));
+                Assert.That(ex, Is.TypeOf(typeof (ContainerNameException)));
             }
         }
 

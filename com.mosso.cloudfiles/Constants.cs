@@ -33,8 +33,6 @@ namespace com.mosso.cloudfiles
         public const int MAXIMUM_META_VALUE_LENGTH = 256;
         public const string CONTENT_LENGTH_HEADER = "Content-Length";
         public const string CONTENT_TYPE_HEADER = "Content-Type";
-        public const int MAXIMUM_CONTAINER_NAME_LENGTH = 256;
-        public const int MAXIMUM_OBJECT_NAME_LENGTH = 1024;
         public const string MOSSO_AUTH_URL = "https://api.mosso.com/auth";
     }
 }

@@ -181,4 +181,54 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ContainerSpecs
             Assert.That(objectNames[0], Is.EqualTo(Constants.StorageItemName));
         }
     }
+
+    [TestFixture]
+    public class When_getting_a_json_serialized_version_of_a_container_and_objects_exist : ContainerIntegrationTestBase
+    {
+        [Test]
+        public void should_return_json_string_with_object_names_and_hash_and_bytes_and_content_type_and_last_modified_date()
+        {
+            container.AddObject(Constants.StorageItemName);
+            var expectedJson = "[{\"name\": \"" + Constants.StorageItemName + "\", \"hash\": \"5c66108b7543c6f16145e25df9849f7f\", \"bytes\": 34, \"content_type\": \"text\\u002fplain\", \"last_modified\": \"" + String.Format("{0:yyyy-MM}", DateTime.Now);
+
+            Assert.That(container.JSON.IndexOf(expectedJson) == 0, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_a_json_serialized_version_of_a_container_and_no_objects_exist : ContainerIntegrationTestBase
+    {
+        [Test]
+        public void should_return_json_string_emptry_brackets()
+        {
+            var expectedJson = "[]";
+
+            Assert.That(container.JSON, Is.EqualTo(expectedJson));
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_a_xml_serialized_version_of_a_container_and_objects_exist : ContainerIntegrationTestBase
+    {
+        [Test]
+        public void should_return_xml_document_with_objects_names_and_hash_and_bytes_and_content_type_and_last_modified_date()
+        {
+            container.AddObject(Constants.StorageItemName);
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><container name=\"" + containerName + "\"><object><name>" + Constants.StorageItemName + "</name><hash>5c66108b7543c6f16145e25df9849f7f</hash><bytes>34</bytes><content_type>text/plain</content_type><last_modified>" + String.Format("{0:yyyy-MM}", DateTime.Now);
+
+            Assert.That(container.XML.InnerXml.IndexOf(expectedXml) > -1, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_a_xml_serialized_version_of_a_container_and_no_objects_exist : ContainerIntegrationTestBase
+    {
+        [Test]
+        public void should_return_xml_document_with_xxxxx()
+        {
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><container name=\"" + containerName + "\"></container>";
+
+            Assert.That(container.XML.InnerXml, Is.EqualTo(expectedXml));
+        }
+    }
 }
