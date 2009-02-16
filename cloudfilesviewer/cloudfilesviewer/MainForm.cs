@@ -268,6 +268,7 @@ namespace CloudFSViewer
                     {
                         DeleteAllItemsFromContainer(selectedContainerNode.Text);
                         Connection.DeleteContainer(selectedContainerNode.Text);
+                        textBoxContainerInfo.Text = "";
                         //"Refresh" the container list
                         RetrieveContainers();
                     }
@@ -290,6 +291,7 @@ namespace CloudFSViewer
                     MessageBox.Show(ex.Message);
                 }
             }
+            textBoxStorageObjectInformation.Text = "";
         }
 
         private void uploadFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -317,10 +319,7 @@ namespace CloudFSViewer
                 control.Enabled = EnableControls;
             }
 
-            var imgUploadingControl = Controls["imgUploading"];
             var lblUploadingControl = Controls["lblUploading"];
-
-            imgUploadingControl.Enabled = imgUploadingControl.Visible = !EnableControls;
             lblUploadingControl.Enabled = lblUploadingControl.Visible = !EnableControls;
         }
 

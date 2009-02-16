@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.readOnlyContainerInformationGroup = new System.Windows.Forms.GroupBox();
             this.textBoxContainerInfo = new System.Windows.Forms.TextBox();
@@ -62,7 +61,6 @@
             this.downloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadAsStreamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.assignMetadataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.imgUploading = new System.Windows.Forms.PictureBox();
             this.lblUploading = new System.Windows.Forms.Label();
             this.readOnlyContainerInformationGroup.SuspendLayout();
             this.readOnlyFileInformationGroup.SuspendLayout();
@@ -72,7 +70,6 @@
             this.groupBox5.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.cmObject.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgUploading)).BeginInit();
             this.SuspendLayout();
             // 
             // treeView1
@@ -382,25 +379,15 @@
             this.assignMetadataToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.assignMetadataToolStripMenuItem.Text = "Assign Metadata";
             // 
-            // imgUploading
-            // 
-            this.imgUploading.Image = ((System.Drawing.Image)(resources.GetObject("imgUploading.Image")));
-            this.imgUploading.Location = new System.Drawing.Point(39, 400);
-            this.imgUploading.Name = "imgUploading";
-            this.imgUploading.Size = new System.Drawing.Size(37, 37);
-            this.imgUploading.TabIndex = 12;
-            this.imgUploading.TabStop = false;
-            this.imgUploading.Visible = false;
-            // 
             // lblUploading
             // 
             this.lblUploading.AutoSize = true;
             this.lblUploading.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUploading.Location = new System.Drawing.Point(82, 401);
+            this.lblUploading.Location = new System.Drawing.Point(13, 401);
             this.lblUploading.Name = "lblUploading";
-            this.lblUploading.Size = new System.Drawing.Size(201, 31);
+            this.lblUploading.Size = new System.Drawing.Size(403, 31);
             this.lblUploading.TabIndex = 13;
-            this.lblUploading.Text = "Uploading File";
+            this.lblUploading.Text = "Uploading File.  Please wait...";
             this.lblUploading.Visible = false;
             // 
             // MainForm
@@ -408,9 +395,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(602, 462);
-            this.Controls.Add(this.lblUploading);
-            this.Controls.Add(this.imgUploading);
             this.Controls.Add(this.groupBox5);
+            this.Controls.Add(this.lblUploading);
             this.Controls.Add(this.deleteAllContainersButton);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
@@ -432,7 +418,6 @@
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.cmObject.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.imgUploading)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -472,7 +457,6 @@
         private System.Windows.Forms.ToolStripMenuItem downloadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem downloadAsStreamToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem assignMetadataToolStripMenuItem;
-        private System.Windows.Forms.PictureBox imgUploading;
         private System.Windows.Forms.Label lblUploading;
     }
 }
