@@ -29,7 +29,7 @@
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -69,6 +69,9 @@
       <HintPath>..\lib\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
@@ -133,6 +136,7 @@
     <Compile Include="Exceptions\ContainerAlreadyExistsException.cs" />
     <Compile Include="Exceptions\ContainerNotFoundException.cs" />
     <Compile Include="Exceptions\InvalidETagException.cs" />
+    <Compile Include="Exceptions\PreconditionFailedException.cs" />
     <Compile Include="Exceptions\StorageItemNotFoundException.cs" />
     <Compile Include="ObjectNameValidator.cs" />
     <Compile Include="Services\IConnection.cs" />

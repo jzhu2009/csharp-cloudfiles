@@ -335,7 +335,8 @@ namespace com.mosso.cloudfiles.services
                 var response = (HttpWebResponse)we.Response;
                 if (response != null && response.StatusCode == HttpStatusCode.NotFound)
                     throw new ContainerNotFoundException("The requested container does not exist");
-
+                if (response != null && response.StatusCode == HttpStatusCode.Unauthorized)
+                    throw new AuthenticationFailedException(we.Message);
                 throw;
             }
         }
@@ -456,10 +457,17 @@ namespace com.mosso.cloudfiles.services
             }
             catch (WebException webException)
             {
+                
                 var webResponse = (HttpWebResponse)webException.Response;
+                if (webResponse == null) throw;
                 if (webResponse.StatusCode == HttpStatusCode.BadRequest)
                     throw new ContainerNotFoundException("The requested container does not exist");
-                throw new InvalidETagException("The ETag supplied in the request does not match the ETag calculated by the server");
+                if (webResponse.StatusCode == HttpStatusCode.PreconditionFailed)
+                    throw new PreconditionFailedException(webException.Message);
+            }
+            catch(Exception exception)
+            {
+                Console.WriteLine(exception.Message, exception.InnerException);
             }
         }
 
@@ -542,9 +550,16 @@ namespace com.mosso.cloudfiles.services
             catch (WebException webException)
             {
                 var webResponse = (HttpWebResponse)webException.Response;
+                if (webResponse == null) throw;
                 if (webResponse.StatusCode == HttpStatusCode.BadRequest)
                     throw new ContainerNotFoundException("The requested container does not exist");
-                throw new InvalidETagException("The ETag supplied in the request does not match the ETag calculated by the server");
+                if (webResponse.StatusCode == HttpStatusCode.PreconditionFailed)
+                    throw new PreconditionFailedException(webException.Message);
+                //throw new InvalidETagException("The ETag supplied in the request does not match the ETag calculated by the server");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message, exception.InnerException);
             }
         }
 
@@ -909,9 +924,9 @@ namespace com.mosso.cloudfiles.services
             catch (WebException ex)
             {
                 var webResponse = (HttpWebResponse)ex.Response;
-                if (webResponse.StatusCode == HttpStatusCode.Unauthorized)
+                if (webResponse != null && webResponse.StatusCode == HttpStatusCode.Unauthorized)
                     throw new UnauthorizedAccessException("Your access credentials are invalid or have expired. ");
-                if (webResponse.StatusCode == HttpStatusCode.NotFound)
+                if (webResponse != null && webResponse.StatusCode == HttpStatusCode.NotFound)
                     throw new ContainerNotFoundException("The specified container does not exist.");
             }
 
@@ -931,11 +946,11 @@ namespace com.mosso.cloudfiles.services
                 //It's a protocol error that is usually a result of a 401 (Unauthorized)
                 //Still trying to figure way to get specific httpstatuscode
                 var webResponse = (HttpWebResponse)we.Response;
-                if (webResponse.StatusCode == HttpStatusCode.Unauthorized)
+                if (webResponse != null && webResponse.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     throw new InvalidCredentialException("You do not have permission to mark this container as public.");
                 }
-                if (webResponse.StatusCode == HttpStatusCode.Accepted)
+                if (webResponse != null && webResponse.StatusCode == HttpStatusCode.Accepted)
                 {
                     throw new ContainerAlreadyPublicException("The specified container is already marked as public.");
                 }

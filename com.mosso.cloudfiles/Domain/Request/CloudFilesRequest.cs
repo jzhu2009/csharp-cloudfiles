@@ -3,6 +3,7 @@
 ///
 
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -108,13 +109,14 @@ namespace com.mosso.cloudfiles.domain.request
 
             IRequestWithContentBody requestWithContentBody = (IRequestWithContentBody) request;
             httpWebRequest.ContentLength = requestWithContentBody.ContentLength;
-            var requestMimeType = request.ContentType;
-            if (!String.IsNullOrEmpty(requestMimeType))
-                httpWebRequest.ContentType = requestMimeType;
-            else
-                httpWebRequest.ContentType = "application/octet-stream";
+            httpWebRequest.AllowWriteStreamBuffering = false;
 
-            requestWithContentBody.ReadFileIntoRequest(httpWebRequest.GetRequestStream());
+            var requestMimeType = request.ContentType;
+            httpWebRequest.ContentType = String.IsNullOrEmpty(requestMimeType) 
+                ? "application/octet-stream" : requestMimeType;
+
+            var stream = httpWebRequest.GetRequestStream();
+            requestWithContentBody.ReadFileIntoRequest(stream);
         }
 
         /// <summary>

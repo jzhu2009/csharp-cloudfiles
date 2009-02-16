@@ -125,4 +125,29 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.PutStorageItemS
         }
 
     }
+
+//    [TestFixture]
+//    public class When_putting_a_object_greater_than_2_GB_into_cloud_files : TestBase
+//    {
+//        [Test]
+//        public void Should_upload_the_file_successfully()
+//        {
+//            string containerName = Guid.NewGuid().ToString();
+//            connection.CreateContainer(containerName);
+//
+//            try
+//            {
+//                connection.PutStorageItem(containerName, @"C:\TestStorageItem.iso");
+//
+//                var items = connection.GetContainerItemList(containerName);
+//                Assert.That(items.Contains("TestStorageItem.iso"), Is.True);
+//            }
+//            finally
+//            {
+//                if(connection.GetContainerItemList(containerName).Contains("TestStorageItem.iso"))
+//                    connection.DeleteStorageItem(containerName, "TestStorageItem.iso");
+//                connection.DeleteContainer(containerName);
+//            }
+//        }
+//    }
 }

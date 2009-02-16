@@ -1,5 +1,3 @@
-using System.Net;
-
 namespace com.mosso.cloudfiles.integration.tests
 {
     internal static class Constants

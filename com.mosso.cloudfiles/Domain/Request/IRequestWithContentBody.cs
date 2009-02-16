@@ -13,5 +13,6 @@ namespace com.mosso.cloudfiles.domain.request
     {
         long ContentLength { get; }
         void ReadFileIntoRequest(Stream httpWebRequestFileStream);
+        string FileUri { get; }
     }
 }

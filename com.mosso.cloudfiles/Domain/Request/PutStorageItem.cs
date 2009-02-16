@@ -18,9 +18,7 @@ namespace com.mosso.cloudfiles.domain.request
     /// </summary>
     public class PutStorageItem : IRequestWithContentBody
     {
-        private string fileUri;
         private Stream stream;
-        private const int MAXIMUM_OBJECT_NAME_LENGTH = 1024;
 
         /// <summary>
         /// PutStorageItem constructor
@@ -76,7 +74,7 @@ namespace com.mosso.cloudfiles.domain.request
             if (!ContainerNameValidator.Validate(containerName)) throw new ContainerNameException();
             if (!ObjectNameValidator.Validate(storageItemName)) throw new StorageItemNameException();
 
-            this.fileUri = CleanUpFileUri(storageItemName);
+            FileUri = CleanUpFileUri(storageItemName);
             this.stream = stream;
             Headers = new NameValueCollection();
             ContentLength = this.stream.Length;
@@ -129,11 +127,11 @@ namespace com.mosso.cloudfiles.domain.request
             if (!ContainerNameValidator.Validate(containerName)) throw new ContainerNameException();
             if (!ObjectNameValidator.Validate(storageItemName))throw new StorageItemNameException();
             
-            this.fileUri = CleanUpFileUri(fileUri);
+            FileUri = CleanUpFileUri(fileUri);
             Headers = new NameValueCollection();
 
             
-            using (FileStream file = new FileStream(this.fileUri, FileMode.Open))
+            using (FileStream file = new FileStream(FileUri, FileMode.Open))
             {
                 ContentLength = file.Length;
                 ETag = StringifyMD5(new MD5CryptoServiceProvider().ComputeHash(file));
@@ -154,6 +152,12 @@ namespace com.mosso.cloudfiles.domain.request
             Method = "PUT";
         }
 
+        public string FileUri
+        {
+            get;
+            private set;
+        }
+
         private string CleanUpFileUri(string fileUri)
         {
             return fileUri.Replace(@"file:\\\", "");
@@ -163,7 +167,7 @@ namespace com.mosso.cloudfiles.domain.request
         {
             byte[] buffer = new byte[Constants.CHUNK_SIZE];
 
-            int amt = 0;
+            var amt = 0;
             while ((amt = stream.Read(buffer, 0, buffer.Length)) != 0)
             {
                 httpWebRequestFileStream.Write(buffer, 0, amt);
@@ -181,7 +185,7 @@ namespace com.mosso.cloudfiles.domain.request
         public void ReadFileIntoRequest(Stream httpWebRequestFileStream)
         {
             if (stream == null)
-                stream = new FileStream(fileUri, FileMode.Open);
+                stream = new FileStream(FileUri, FileMode.Open);
 
             ReadStreamIntoRequest(httpWebRequestFileStream);
             stream.Close();
@@ -205,8 +209,8 @@ namespace com.mosso.cloudfiles.domain.request
         {
             get
             {
-                if (String.IsNullOrEmpty(fileUri) || fileUri.IndexOf(".") < 0) return "application/octet-stream";
-                return MimeType(fileUri);
+                if (String.IsNullOrEmpty(FileUri) || FileUri.IndexOf(".") < 0) return "application/octet-stream";
+                return MimeType(FileUri);
             }
         }
 

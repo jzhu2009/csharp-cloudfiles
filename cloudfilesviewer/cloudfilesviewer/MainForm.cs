@@ -490,7 +490,7 @@ namespace CloudFSViewer
                 TreeNode node = treeView1.GetNodeAt(e.X, e.Y);
                 if (node == null)
                 {
-                    MenuItem[] items = new MenuItem[4];
+                    MenuItem[] items = new MenuItem[1];
                     items[0] = new MenuItem("Create Container");
                     items[0].Click += createContainerToolStripMenuItem_Click;
 
