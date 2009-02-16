@@ -93,6 +93,7 @@
             this.Controls.Add(this.textBoxNumContainers);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "AccountInformationDialog";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Account Information";
             this.Load += new System.EventHandler(this.AccountInformationDialog_Load);
             this.ResumeLayout(false);

@@ -13,8 +13,6 @@ namespace CloudFSViewer
     public partial class MainForm : Form
     {
         private string username, api_access_key;
-        private Connection connection;
-        private const string AUTH_URL = "https://api.mosso.com/auth";
 
         public MainForm()
         {
@@ -57,13 +55,13 @@ namespace CloudFSViewer
 
                 try
                 {
-                    connection = new Connection(new UserCredentials(username, api_access_key));
+                    Connection = new Connection(new UserCredentials(username, api_access_key));
                     RetrieveContainers();
                 }
                 catch
                 {
                     MessageBox.Show("Authentication failed");
-                    ResetUsernameAndApiKey();
+                    Form1_Load(this, new EventArgs());
                 }
             }
         }
@@ -79,7 +77,7 @@ namespace CloudFSViewer
             ClearStatusBar();
             treeView1.Nodes.Clear();
             treeViewStorageObjects.Nodes.Clear();
-            List<string> containerList = connection.GetContainers();
+            List<string> containerList = Connection.GetContainers();
             if (containerList != null && containerList.Count > 0)
             {
                 PopulateTree(containerList);
@@ -137,7 +135,7 @@ namespace CloudFSViewer
 
         private void PopulateContainerInfo(string containerName)
         {
-            Container container = connection.GetContainerInformation(containerName); 
+            Container container = Connection.GetContainerInformation(containerName); 
             if (container != null)
             {
                 textBoxContainerInfo.Text =
@@ -154,7 +152,7 @@ namespace CloudFSViewer
             TreeNode selectedNode = treeView1.SelectedNode;
             if (selectedNode != null)
             {
-                List<string> containerList = connection.GetContainerItemList(selectedNode.Text);
+                List<string> containerList = Connection.GetContainerItemList(selectedNode.Text);
                 SetSuccessfulMessageInStatusBar();
                 PopulateStorageObjectList(containerList);
             }
@@ -189,7 +187,7 @@ namespace CloudFSViewer
 
         private void PopulateObjectInfo(string containerName, string objectName)
         {
-            StorageItem storageObject = connection.GetStorageItemInformation(containerName, objectName);
+            StorageItem storageObject = Connection.GetStorageItemInformation(containerName, objectName);
             if (storageObject != null)
             {
                 StringBuilder stringBuilder = new StringBuilder();
@@ -241,7 +239,7 @@ namespace CloudFSViewer
 
             if (selectedContainerNode != null && selectedTreeNode != null)
             {
-                connection.DeleteStorageItem(selectedContainerNode.Text, selectedTreeNode.Text);
+                Connection.DeleteStorageItem(selectedContainerNode.Text, selectedTreeNode.Text);
                 PopulateContainerInfo(selectedContainerNode.Text);
                 textBoxStorageObjectInformation.Text = "";
                 SetSuccessfulMessageInStatusBar();
@@ -258,8 +256,9 @@ namespace CloudFSViewer
             {
                 try
                 {
-                    connection.DeleteContainer(selectedContainerNode.Text);
+                    Connection.DeleteContainer(selectedContainerNode.Text);
                     SetSuccessfulMessageInStatusBar();
+                    textBoxContainerInfo.Text = "";
                     //"Refresh" the container list
                     RetrieveContainers();
                 }
@@ -268,7 +267,7 @@ namespace CloudFSViewer
                     if (MessageBox.Show("Container has storage objects inside of it.  Are you sure you want to delete it?", "Confirm Delete Container", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         DeleteAllItemsFromContainer(selectedContainerNode.Text);
-                        connection.DeleteContainer(selectedContainerNode.Text);
+                        Connection.DeleteContainer(selectedContainerNode.Text);
                         //"Refresh" the container list
                         RetrieveContainers();
                     }
@@ -279,12 +278,12 @@ namespace CloudFSViewer
         private void DeleteAllItemsFromContainer(string containerName)
         {
             ClearStatusBar();
-            List<string> storageObjects = connection.GetContainerItemList(containerName);
+            List<string> storageObjects = Connection.GetContainerItemList(containerName);
             foreach (string storageObjectName in storageObjects)
             {
                 try
                 {
-                    connection.DeleteStorageItem(containerName, storageObjectName);
+                    Connection.DeleteStorageItem(containerName, storageObjectName);
                 }
                 catch (Exception ex)
                 {
@@ -300,12 +299,34 @@ namespace CloudFSViewer
             openFileDialog1.RestoreDirectory = true;
             if (selectedContainerNode != null && openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                connection.PutStorageItem(selectedContainerNode.Text, openFileDialog1.FileName);
+                EnableControls = false;
+                HandleControlsAndShowUploadingFileInfo();
+                Connection.PutStorageItem(selectedContainerNode.Text, openFileDialog1.FileName);
+                EnableControls = true;
+                HandleControlsAndShowUploadingFileInfo();
                 SetSuccessfulMessageInStatusBar();
                 //Refresh the container
                 RetrieveContainerItemList();
             }
         }
+
+        private void HandleControlsAndShowUploadingFileInfo()
+        {
+            foreach(Control control in Controls)
+            {
+                control.Enabled = EnableControls;
+            }
+
+            var imgUploadingControl = Controls["imgUploading"];
+            var lblUploadingControl = Controls["lblUploading"];
+
+            imgUploadingControl.Enabled = imgUploadingControl.Visible = !EnableControls;
+            lblUploadingControl.Enabled = lblUploadingControl.Visible = !EnableControls;
+        }
+
+
+        public bool EnableControls { get; private set; }
+        public Connection Connection { get; private set; }
 
         private void createContainerToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -316,7 +337,7 @@ namespace CloudFSViewer
             {
                 try
                 {
-                    connection.CreateContainer(containerNameDialog.ContainerName);
+                    Connection.CreateContainer(containerNameDialog.ContainerName);
                     SetSuccessfulMessageInStatusBar();
                 }
                 catch (ContainerAlreadyExistsException caee)
@@ -338,7 +359,7 @@ namespace CloudFSViewer
             {
                 if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
                 {
-                    connection.GetStorageItem(selectedContainerNode.Text, selectedTreeNode.Text);
+                    Connection.GetStorageItem(selectedContainerNode.Text, selectedTreeNode.Text);
                     SetSuccessfulMessageInStatusBar();
                 }
             }
@@ -356,7 +377,7 @@ namespace CloudFSViewer
                 {
                     try
                     {
-                        connection.SetStorageItemMetaInformation(selectedContainerNode.Text,
+                        Connection.SetStorageItemMetaInformation(selectedContainerNode.Text,
                                                                  selectedTreeNode.Text,
                                                                  metaInformationDialog.MetaKeyCollection);
                         RetrieveStorageObjectInfo();
@@ -376,56 +397,50 @@ namespace CloudFSViewer
 
         private void dowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TreeNode selectedContainerNode = treeView1.SelectedNode;
-            TreeNode selectedTreeNode = treeViewStorageObjects.SelectedNode;
+            var selectedContainerNode = treeView1.SelectedNode;
+            var selectedTreeNode = treeViewStorageObjects.SelectedNode;
 
             saveFileDialog1.RestoreDirectory = true;
-            if (selectedContainerNode != null && selectedTreeNode != null)
+            if (selectedContainerNode == null || selectedTreeNode == null) return;
+            if (saveFileDialog1.ShowDialog(this) != DialogResult.OK) return;
+            
+            StorageItem storageObject =
+                Connection.GetStorageItem(selectedContainerNode.Text, selectedTreeNode.Text);
+            FileStream fs = new FileStream(saveFileDialog1.FileName, FileMode.Create);
+
+            byte[] buffer = new byte[4096];
+            int amt;
+            while ((amt = storageObject.ObjectStream.Read(buffer, 0, buffer.Length)) != 0)
             {
-                if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
-                {
-                    StorageItem storageObject =
-                        connection.GetStorageItem(selectedContainerNode.Text, selectedTreeNode.Text);
-                    FileStream fs = new FileStream(saveFileDialog1.FileName, FileMode.Create);
-
-                    byte[] buffer = new byte[4096];
-                    int amt = 0;
-                    while ((amt = storageObject.ObjectStream.Read(buffer, 0, buffer.Length)) != 0)
-                    {
-                        fs.Write(buffer, 0, amt);
-                    }
-
-                    //This is REQUIRED!
-                    fs.Flush();
-                    fs.Close();
-                    storageObject.Dispose();
-                }
+                fs.Write(buffer, 0, amt);
             }
+
+            //This is REQUIRED!
+            fs.Flush();
+            fs.Close();
+            storageObject.Dispose();
         }
 
         private void uploadFileAsStreamToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TreeNode selectedContainerNode = treeView1.SelectedNode;
             openFileDialog1.RestoreDirectory = true;
-            if (selectedContainerNode != null && openFileDialog1.ShowDialog(this) == DialogResult.OK)
-            {
-                FileStream fileStream = new FileStream(openFileDialog1.FileName, FileMode.Open);
-                connection.PutStorageItem(selectedContainerNode.Text, fileStream,
-                                          openFileDialog1.SafeFileName);
+            if (selectedContainerNode == null || openFileDialog1.ShowDialog(this) != DialogResult.OK) return;
+            
+            FileStream fileStream = new FileStream(openFileDialog1.FileName, FileMode.Open);
+            EnableControls = false;
+            HandleControlsAndShowUploadingFileInfo();
+            Connection.PutStorageItem(selectedContainerNode.Text, fileStream,openFileDialog1.SafeFileName);
+            EnableControls = true;
+            HandleControlsAndShowUploadingFileInfo();
 
-                //Refresh the container
-                RetrieveContainerItemList();
-            }
+            //Refresh the container
+            RetrieveContainerItemList();
         }
 
         private void SetSuccessfulMessageInStatusBar()
         {
             statusStrip1.Items[0].Text = "Successful!";
-        }
-
-        private void SetMessageInStatusBar(string message)
-        {
-            statusStrip1.Items[0].Text = message;
         }
 
         private void ClearStatusBar()
@@ -438,20 +453,20 @@ namespace CloudFSViewer
             ClearStatusBar();
             try
             {
-                List<string> containers = connection.GetContainers();
+                List<string> containers = Connection.GetContainers();
                 foreach (string container in containers)
                 {
                     if (container == "aruby123") continue;
                     try
                     {
-                        connection.DeleteContainer(container);
+                        Connection.DeleteContainer(container);
                         SetSuccessfulMessageInStatusBar();
                     }
                     catch (ContainerNotEmptyException notEmptyException)
                     {
                         Console.WriteLine(notEmptyException.Message);
                         DeleteAllItemsFromContainer(container);
-                        connection.DeleteContainer(container);
+                        Connection.DeleteContainer(container);
                     }
                     catch (Exception ex)
                     {
@@ -474,7 +489,7 @@ namespace CloudFSViewer
 
         private void getAccountInformationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AccountInformation accountInformation = connection.GetAccountInformation();
+            AccountInformation accountInformation = Connection.GetAccountInformation();
             if (accountInformation != null)
             {
                 AccountInformationDialog accountInformationDialog = new AccountInformationDialog(accountInformation.BytesUsed.ToString(), accountInformation.ContainerCount.ToString());
@@ -490,9 +505,11 @@ namespace CloudFSViewer
                 TreeNode node = treeView1.GetNodeAt(e.X, e.Y);
                 if (node == null)
                 {
-                    MenuItem[] items = new MenuItem[1];
-                    items[0] = new MenuItem("Create Container");
-                    items[0].Click += createContainerToolStripMenuItem_Click;
+                    MenuItem[] items = new MenuItem[2];
+                    items[0] = new MenuItem("Get Information");
+                    items[0].Click += getAccountInformationToolStripMenuItem_Click;
+                    items[1] = new MenuItem("Create Container");
+                    items[1].Click += createContainerToolStripMenuItem_Click;
 
                     ContextMenu cmMenu = new ContextMenu(items);
                     cmMenu.Show(this, new Point(e.X, e.Y));

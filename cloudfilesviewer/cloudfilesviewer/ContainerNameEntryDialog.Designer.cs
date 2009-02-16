@@ -85,6 +85,7 @@ namespace CloudFSViewer
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ContainerNameEntryDialog";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Enter Container Name";
             this.Load += new System.EventHandler(this.ContainerNameEntryDialog_Load);
             this.groupBox1.ResumeLayout(false);
