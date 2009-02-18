@@ -1,7 +1,6 @@
 using System;
 using System.Xml;
 using com.mosso.cloudfiles.domain;
-using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.exceptions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -251,7 +250,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
     public class MockCFContainer : CF_Container
     {
 
-        public MockCFContainer(string containerName) : base(containerName)
+        public MockCFContainer(string containerName) : base(null, containerName)
         {
         }
 
@@ -314,7 +313,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
             return objectNames.ToArray();
         }
 
-        protected override string CloudFileAccountInformationJson()
+        protected override string CloudFileContainerInformationJson()
         {
             if (objects.Count > 0)
                 return "[{\"name\":\"test_object_1\",\"hash\":\"4281c348eaf83e70ddce0e07221c3d28\",\"bytes\":14,\"content_type\":\"application\\/octet-stream\",\"last_modified\":\"2009-02-03T05:26:32.612278\"}]";
@@ -322,7 +321,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
             return "[]";
         }
 
-        protected override XmlDocument CloudFileAccountInformationXml()
+        protected override XmlDocument CloudFileContainerInformationXml()
         {
             XmlDocument xmlDocument = new XmlDocument();
             if (objects.Count > 0)

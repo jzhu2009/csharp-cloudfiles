@@ -4,10 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Xml;
-using com.mosso.cloudfiles.domain.request;
-using com.mosso.cloudfiles.domain.response;
 using com.mosso.cloudfiles.exceptions;
 
 namespace com.mosso.cloudfiles.domain
@@ -16,42 +13,35 @@ namespace com.mosso.cloudfiles.domain
     {
         int ContainerCount { get; }
         long BytesUsed { get; }
-        Uri StorageUrl { get; }
-        string StorageToken { get; }
-        string AuthToken { get; set; }
-        Uri CDNManagementUrl { get; set; }
         IContainer CreateContainer(string containerName);
         void DeleteContainer(string containerName);
         IContainer GetContainer(string containerName);
         bool ContainerExists(string containerName);
-        UserCredentials UserCredentials { get; set; }
         string JSON { get; }
         XmlDocument XML { get; }
     }
 
     public class CF_Account : IAccount
     {
+        private readonly IConnection connection;
         protected List<IContainer> containers;
-        protected string storageToken;
-        protected Uri storageUrl;
         protected int containerCount;
         protected long bytesUsed;
 
-        public CF_Account(string storageToken, Uri storageUrl)
+        public CF_Account(IConnection connection)
         {
-            this.storageToken = storageToken;
-            this.storageUrl = storageUrl;
+            this.connection = connection;
             containers = new List<IContainer>();
         }
 
         public Uri StorageUrl
         {
-            get { return storageUrl; }
+            get { return new Uri(connection.StorageUrl); }
         }
 
         public string StorageToken
         {
-            get { return storageToken; }
+            get { return connection.StorageToken; }
         }
 
         public int ContainerCount
@@ -98,12 +88,7 @@ namespace com.mosso.cloudfiles.domain
         {
             CloudFileCreateContainer(containerName);
 
-            IContainer container = new CF_Container(containerName);
-            container.CDNManagementUrl = CDNManagementUrl;
-            container.AuthToken = AuthToken;
-            container.StorageToken = StorageToken;
-            container.StorageUrl = StorageUrl;
-            container.UserCredentials = UserCredentials;
+            IContainer container = new CF_Container(connection, containerName);
             containers.Add(container);
 
             return container;
@@ -134,108 +119,43 @@ namespace com.mosso.cloudfiles.domain
 
         protected virtual string CloudFileAccountInformationJson()
         {
-            var getAccountInformationJson = new GetAccountInformationSerialized(storageUrl.ToString(), storageToken, Format.JSON);
-            var getAccountInformationJsonResponse
-                = new ResponseFactoryWithContentBody<GetSerializedResponse>()
-                .Create(new CloudFilesRequest(getAccountInformationJson));
-
-            if (getAccountInformationJsonResponse.ContentBody.Count == 0) return "";
-
-            var jsonReturnValue = "";
-            foreach (string s in getAccountInformationJsonResponse.ContentBody)
-            {
-                jsonReturnValue += s;
-            }
-            getAccountInformationJsonResponse.Dispose();
-            return jsonReturnValue;
+            return connection.GetAccountInformationJson();
         }
 
         protected virtual XmlDocument CloudFileAccountInformationXml()
         {
-            var accountInformationXml = new GetAccountInformationSerialized(storageUrl.ToString(), storageToken, Format.XML);
-            var getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(accountInformationXml));
-
-            if (getAccountInformationXmlResponse.ContentBody.Count == 0) return new XmlDocument();
-
-            string contentBody = "";
-            foreach (string s in getAccountInformationXmlResponse.ContentBody)
-            {
-                contentBody += s;
-            }
-
-            getAccountInformationXmlResponse.Dispose();
-            XmlDocument xmlDocument = new XmlDocument();
-            try
-            {
-                xmlDocument.LoadXml(contentBody);
-            }
-            catch (XmlException)
-            {
-                return null;
-            }
-
-            return xmlDocument;
+            return connection.GetAccountInformationXml();
         }
 
         protected virtual void CloudFileCreateContainer(string containerName)
         {
-            if (string.IsNullOrEmpty(containerName))
-                throw new ArgumentNullException();
-
-            CreateContainer createContainer = new CreateContainer(StorageUrl.ToString(), StorageToken, containerName);
-            CreateContainerResponse createContainerResponse =
-                new ResponseFactory<CreateContainerResponse>().Create(new CloudFilesRequest(createContainer));
-            if (createContainerResponse.Status == HttpStatusCode.Accepted)
-                throw new ContainerAlreadyExistsException("The container already exists");
+            connection.CreateContainer(containerName);
         }
 
         protected virtual void CloudFilesHeadAccount()
         {
-            GetAccountInformation getAccountInformation = new GetAccountInformation(StorageUrl.ToString(), StorageToken);
-            GetAccountInformationResponse getAccountInformationResponse =
-                new ResponseFactory<GetAccountInformationResponse>().Create(new CloudFilesRequest(getAccountInformation));
-            containerCount = Int32.Parse(getAccountInformationResponse.Headers[Constants.X_ACCOUNT_CONTAINER_COUNT]);
-            bytesUsed = Convert.ToInt64(getAccountInformationResponse.Headers[Constants.X_ACCOUNT_BYTES_USED]);
+            var accountInformation = connection.GetAccountInformation();
+            
+            containerCount = accountInformation.ContainerCount;
+            bytesUsed = accountInformation.BytesUsed;
         }
 
         protected virtual bool CloudFilesHeadContainer(string containerName)
         {
-            GetContainerInformation getContainerInformation = new GetContainerInformation(StorageUrl.ToString(), containerName, StorageToken);
-
             try
             {
-                new ResponseFactory<GetContainerInformationResponse>().Create(new CloudFilesRequest(getContainerInformation, UserCredentials.ProxyCredentials));
+                return connection.GetContainerInformation(containerName) != null;
+                
             }
-            catch (WebException we)
+            catch(ContainerNotFoundException)
             {
-                HttpStatusCode code = ((HttpWebResponse) we.Response).StatusCode;
-                if (we.Response != null && code == HttpStatusCode.NotFound)
-                    return false;
+                return false;
             }
-            return true;
         }
 
         protected virtual void CloudFilesDeleteContainer(string containerName)
         {
-            if (string.IsNullOrEmpty(containerName))
-                throw new ArgumentNullException();
-
-            DeleteContainer deleteContainer = new DeleteContainer(StorageUrl.ToString(), containerName, StorageToken);
-            try
-            {
-                new ResponseFactory<DeleteContainerResponse>().Create(new CloudFilesRequest(deleteContainer));
-            }
-            catch (WebException ex)
-            {
-                HttpWebResponse response = ((HttpWebResponse) ex.Response);
-                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
-                    throw new ContainerNotFoundException("The requested container does not exist");
-
-                if (response != null && response.StatusCode == HttpStatusCode.Conflict)
-                {
-                    throw new ContainerNotEmptyException("The container you are trying to delete is not empty");
-                }
-            }
+            connection.DeleteContainer(containerName);
         }
 
         protected virtual void CloudFilesGetContainer(string containerName)

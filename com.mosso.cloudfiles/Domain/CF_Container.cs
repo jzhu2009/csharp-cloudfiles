@@ -5,11 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
-using System.Security.Authentication;
 using System.Xml;
-using com.mosso.cloudfiles.domain.request;
-using com.mosso.cloudfiles.domain.response;
 using com.mosso.cloudfiles.exceptions;
 
 namespace com.mosso.cloudfiles.domain
@@ -29,32 +25,25 @@ namespace com.mosso.cloudfiles.domain
         string[] GetObjectNames();
         string[] GetObjectNames(Dictionary<GetItemListParameters, string> parameters);
         Uri PublicUrl { get; set; }
-        Uri CDNManagementUrl { get; set; }
-        string AuthToken { get; set; }
-        Uri StorageUrl { get; set; }
-        string StorageToken { get; set; }
-        UserCredentials UserCredentials { get; set; }
         string JSON { get; }
         XmlDocument XML { get; }
     }
 
     public class CF_Container : IContainer
     {
-        private string containerName;
+        private readonly IConnection connection;
         protected List<IObject> objects;
         protected int objectCount;
         protected long bytesUsed;
 
-        public CF_Container(string containerName)
+        public CF_Container(IConnection connection, string containerName)
         {
             objects = new List<IObject>();
-            this.containerName = containerName;
+            Name = containerName;
+            this.connection = connection;
         }
 
-        public string Name
-        {
-            get { return containerName; }
-        }
+        public string Name { get; private set; }
 
         public int ObjectCount
         {
@@ -78,7 +67,7 @@ namespace com.mosso.cloudfiles.domain
         {
             get
             {
-                return CloudFileAccountInformationJson();
+                return CloudFileContainerInformationJson();
             }
         }
 
@@ -86,7 +75,7 @@ namespace com.mosso.cloudfiles.domain
         {
             get
             {
-                return CloudFileAccountInformationXml();
+                return CloudFileContainerInformationXml();
             }
         }
 
@@ -100,12 +89,7 @@ namespace com.mosso.cloudfiles.domain
             return CloudFilesGetContainer(parameters);
         }
 
-        public string AuthToken { get; set; }
         public Uri PublicUrl { get; set; }
-        public Uri CDNManagementUrl { get; set; }
-        public Uri StorageUrl { get; set; }
-        public string StorageToken { get; set; }
-        public UserCredentials UserCredentials { get; set; }
 
         public IObject AddObject(string objectName)
         {
@@ -148,14 +132,9 @@ namespace com.mosso.cloudfiles.domain
 
         private CF_Object PopulateObjectProperties(string objectName, Dictionary<string, string> metadata)
         {
-            CF_Object @object = new CF_Object(objectName, metadata);
+            CF_Object @object = new CF_Object(connection, objectName, metadata);            
+            @object.ContainerName = Name;
             @object.PublicUrl = PublicUrl;
-            @object.CDNManagementUrl = CDNManagementUrl;
-            @object.StorageUrl = StorageUrl;
-            @object.StorageToken = StorageToken;
-            @object.AuthToken = AuthToken;
-            @object.ContainerName = containerName;
-            @object.UserCredentials = UserCredentials;
             return @object;
         }
 
@@ -186,213 +165,60 @@ namespace com.mosso.cloudfiles.domain
         }
 
 
-        protected virtual string CloudFileAccountInformationJson()
+        protected virtual string CloudFileContainerInformationJson()
         {
-            try
-            {
-                var getContainerInformation = new GetContainerInformationSerialized(StorageUrl.ToString(), StorageToken, containerName, Format.JSON);
-                var getSerializedResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(getContainerInformation, UserCredentials.ProxyCredentials));
-                if (getSerializedResponse.ContentBody.Count == 0) return "";
-
-                var jsonResponse = String.Join("", getSerializedResponse.ContentBody.ToArray());
-                getSerializedResponse.Dispose();
-                return jsonResponse;
-            }
-            catch (WebException we)
-            {
-                var response = (HttpWebResponse)we.Response;
-                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
-                    throw new ContainerNotFoundException("The requested container does not exist");
-            }
-            return "";
+            return connection.GetContainerInformationJson(Name);
         }
 
-        protected virtual XmlDocument CloudFileAccountInformationXml()
+        protected virtual XmlDocument CloudFileContainerInformationXml()
         {
-            try
-            {
-                var getContainerInformation = new GetContainerInformationSerialized(StorageUrl.ToString(), StorageToken, containerName, Format.XML);
-                var getSerializedResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(getContainerInformation, UserCredentials.ProxyCredentials));
-                var xmlResponse = String.Join("", getSerializedResponse.ContentBody.ToArray());
-                getSerializedResponse.Dispose();
-
-                if (xmlResponse == null) return new XmlDocument();
-
-                var xmlDocument = new XmlDocument();
-                try
-                {
-                    xmlDocument.LoadXml(xmlResponse);
-
-                }
-                catch (XmlException)
-                {
-                    return xmlDocument;
-                }
-
-                return xmlDocument;
-            }
-            catch (WebException we)
-            {
-                var response = (HttpWebResponse)we.Response;
-                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
-                    throw new ContainerNotFoundException("The requested container does not exist");
-
-                throw;
-            }
+            return connection.GetContainerInformationXml(Name);
         }
 
         protected virtual string[] CloudFilesGetContainer(Dictionary<GetItemListParameters, string> parameters)
         {
-            List<string> containerItemList = new List<string>();
-            try
-            {
-                GetContainerItemList getContainerItemList = new GetContainerItemList(StorageUrl.ToString(), containerName,StorageToken, parameters);
-                IResponseWithContentBody getContainerItemListResponse = new ResponseFactoryWithContentBody<GetContainerItemListResponse>().Create(
-                        new CloudFilesRequest(getContainerItemList, UserCredentials.ProxyCredentials));
-                
-                if (getContainerItemListResponse.Status == HttpStatusCode.OK)
-                {
-                    containerItemList.AddRange(getContainerItemListResponse.ContentBody);
-                }
-            }
-            catch (WebException we)
-            {
-                HttpWebResponse response = (HttpWebResponse)we.Response;
-                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
-                    throw new ContainerNotFoundException("The requested container does not exist!");
-            }
-            return containerItemList.ToArray();
+            return connection.GetContainerItemList(Name, parameters).ToArray();
         }
 
         protected virtual void CloudFilesHeadContainer()
         {
-            if (string.IsNullOrEmpty(containerName))
-                throw new ArgumentNullException();
-
-            GetContainerInformation getContainerInformation = new GetContainerInformation(StorageUrl.ToString(), containerName, StorageToken);
-
-            try
-            {
-                GetContainerInformationResponse getContainerInformationResponse = new ResponseFactory<GetContainerInformationResponse>().Create(new CloudFilesRequest(getContainerInformation, UserCredentials.ProxyCredentials));
-                bytesUsed = long.Parse(getContainerInformationResponse.Headers[Constants.X_CONTAINER_BYTES_USED]);
-                objectCount = int.Parse(getContainerInformationResponse.Headers[Constants.X_CONTAINER_STORAGE_OBJECT_COUNT]);
-            }
-            catch (WebException we)
-            {
-                HttpWebResponse response = (HttpWebResponse)we.Response;
-                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
-                    throw new ContainerNotFoundException("The requested container does not exist");
-            }
+            var containerInformation = connection.GetContainerInformation(Name);
+            bytesUsed = containerInformation.ByteCount;
+            objectCount = int.Parse(containerInformation.ObjectCount.ToString());
         }
 
         protected virtual void CloudFilesPutObject(string objectName, Dictionary<string, string> metadata)
         {
-            if (string.IsNullOrEmpty(containerName) ||
-                string.IsNullOrEmpty(objectName))
-                throw new ArgumentNullException();
-
-            string remoteName = Path.GetFileName(objectName);
-            string localName = objectName.Replace("/", "\\");
-            try
-            {
-                PutStorageItem putStorageItem = new PutStorageItem(StorageUrl.ToString(), containerName, remoteName, localName, StorageToken, metadata);
-                PutStorageItemResponse putStorageItemResponse = new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem, UserCredentials.ProxyCredentials));
-            }
-            catch (WebException webException)
-            {
-                HttpWebResponse webResponse = (HttpWebResponse)webException.Response;
-                if (webResponse.StatusCode == HttpStatusCode.BadRequest)
-                    throw new ContainerNotFoundException("The requested container does not exist");
-                if (webResponse.StatusDescription == "422")
-                    throw new InvalidETagException("The ETag supplied in the request does not match the ETag calculated by the server");
-            }
+            connection.PutStorageItem(Name, objectName, metadata);
         }
 
         protected virtual void CloudFilesPutObject(Stream localObjectStream, string remoteObjectName, Dictionary<string, string> metadata)
         {
-            if (string.IsNullOrEmpty(containerName) ||
-                string.IsNullOrEmpty(remoteObjectName))
-                throw new ArgumentNullException();
-
-
-            string remoteName = Path.GetFileName(remoteObjectName);
-            try
-            {
-                PutStorageItem putStorageItem = new PutStorageItem(StorageUrl.ToString(), containerName, remoteName, localObjectStream, StorageToken, metadata);
-                PutStorageItemResponse putStorageItemResponse = new ResponseFactory<PutStorageItemResponse>().Create(new CloudFilesRequest(putStorageItem, UserCredentials.ProxyCredentials));
-            }
-            catch (WebException webException)
-            {
-                HttpWebResponse webResponse = (HttpWebResponse)webException.Response;
-                if (webResponse.StatusCode == HttpStatusCode.BadRequest)
-                    throw new ContainerNotFoundException("The requested container does not exist");
-                if (webResponse.StatusDescription == "422")
-                    throw new InvalidETagException("The ETag supplied in the request does not match the ETag calculated by the server");
-            }
+            connection.PutStorageItem(Name, localObjectStream, remoteObjectName, metadata);
         }
 
         protected virtual void CloudFilesDeleteObject(string objectName)
         {
-            if (string.IsNullOrEmpty(containerName) ||
-                string.IsNullOrEmpty(objectName))
-                throw new ArgumentNullException();
-
-            DeleteStorageItem deleteStorageItem = new DeleteStorageItem(StorageUrl.ToString(), containerName, objectName, StorageToken);
-            try
-            {
-                new ResponseFactory<DeleteStorageItemResponse>().Create(new CloudFilesRequest(deleteStorageItem));
-            }
-            catch (WebException we)
-            {
-                HttpWebResponse response = (HttpWebResponse)we.Response;
-                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
-                    throw new StorageItemNotFoundException("The requested storage object for deletion does not exist");
-            }
+            connection.DeleteStorageItem(Name, objectName);
         }
 
         protected virtual bool CloudFilesHeadObject(string objectName)
         {
-            if (string.IsNullOrEmpty(containerName) ||
-               string.IsNullOrEmpty(objectName))
-                throw new ArgumentNullException();
-
-            GetStorageItemInformation getStorageItemInformation = new GetStorageItemInformation(StorageUrl.ToString(), containerName, objectName, StorageToken);
             try
             {
-                GetStorageItemInformationResponse getStorageItemResponse = new ResponseFactory<GetStorageItemInformationResponse>().Create(new CloudFilesRequest(getStorageItemInformation, UserCredentials.ProxyCredentials));
+                var @object = connection.GetStorageItem(Name, objectName);
+                @object.Dispose();
+                return @object != null;
             }
-            catch (WebException we)
+            catch (StorageItemNotFoundException)
             {
-                HttpWebResponse response = (HttpWebResponse)we.Response;
-                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
-                    return false;
+                return false;
             }
-            return true;
         }
 
         protected virtual void CloudFilesMarkContainerPublic()
         {
-            MarkContainerAsPublic request = new MarkContainerAsPublic(CDNManagementUrl.ToString(), AuthToken, Name);
-            MarkContainerAsPublic(request);
-        }
-
-        private void MarkContainerAsPublic(MarkContainerAsPublic request)
-        {
-            SetContainerAsPublicResponse response = null;
-            try
-            {
-                response = new ResponseFactory<SetContainerAsPublicResponse>().Create(new CloudFilesRequest(request));
-            }
-            catch (WebException we)
-            {
-                HttpStatusCode code = ((HttpWebResponse) we.Response).StatusCode;
-                if (code == HttpStatusCode.Unauthorized)
-                {
-                    throw new InvalidCredentialException("You do not have permission to mark this container as public.");
-                }
-            }
-
-            PublicUrl = (response == null ? null : new Uri(response.Headers[Constants.X_CDN_URI]));
+            PublicUrl = connection.MarkContainerAsPublic(Name);
         }
     }
 }

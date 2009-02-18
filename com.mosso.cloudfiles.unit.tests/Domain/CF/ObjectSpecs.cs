@@ -98,8 +98,8 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ObjectSpecs
 
     public class MockCFObject : CF_Object
     {
-        public MockCFObject(string objectName) : base(objectName, new Dictionary<string, string>()){}
-        public MockCFObject(string objectName, Dictionary<string, string> metadata) : base(objectName, metadata){}
+        public MockCFObject(string objectName) : base(null, objectName, new Dictionary<string, string>()){}
+        public MockCFObject(string objectName, Dictionary<string, string> metadata) : base(null, objectName, metadata){}
 
         protected override void CloudFilesHeadObject()
         {
@@ -108,7 +108,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ObjectSpecs
             etag = "etag";
         }
 
-        protected override void CloudFilesPostObject(Dictionary<string, string> meta)
+        protected override void CloudFilesPostObject()
         {
         }
     }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using com.mosso.cloudfiles.domain;
-using com.mosso.cloudfiles.domain.request;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
@@ -10,20 +9,17 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ContainerSpecs
     [TestFixture]
     public class ContainerIntegrationTestBase
     {
-        protected string containerName;
         protected IAccount account;
         protected IContainer container;
 
         [SetUp]
         public void Setup()
         {
-            containerName = Guid.NewGuid().ToString();
-
             var userCredentials = new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY);
-            var authentication = new CF_Authentication(userCredentials);
+            IConnection connection = new Connection(userCredentials);
 
-            account = authentication.Authenticate();
-            container = account.CreateContainer(containerName);
+            account = connection.Account;
+            container = account.CreateContainer(Constants.CONTAINER_NAME);
         }
 
         [TearDown]
@@ -35,8 +31,8 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ContainerSpecs
             if (container.ObjectExists(Constants.HeadStorageItemName))
                 container.DeleteObject(Constants.HeadStorageItemName);
 
-            if (containerName != null && container != null)
-                account.DeleteContainer(containerName);
+            if (account.ContainerExists(Constants.CONTAINER_NAME))
+                account.DeleteContainer(Constants.CONTAINER_NAME);
         } 
     }
 
@@ -214,7 +210,7 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ContainerSpecs
         public void should_return_xml_document_with_objects_names_and_hash_and_bytes_and_content_type_and_last_modified_date()
         {
             container.AddObject(Constants.StorageItemName);
-            var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><container name=\"" + containerName + "\"><object><name>" + Constants.StorageItemName + "</name><hash>5c66108b7543c6f16145e25df9849f7f</hash><bytes>34</bytes><content_type>text/plain</content_type><last_modified>" + String.Format("{0:yyyy-MM}", DateTime.Now);
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><container name=\"" + Constants.CONTAINER_NAME + "\"><object><name>" + Constants.StorageItemName + "</name><hash>5c66108b7543c6f16145e25df9849f7f</hash><bytes>34</bytes><content_type>text/plain</content_type><last_modified>" + String.Format("{0:yyyy-MM}", DateTime.Now);
 
             Assert.That(container.XML.InnerXml.IndexOf(expectedXml) > -1, Is.True);
         }
@@ -226,7 +222,7 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ContainerSpecs
         [Test]
         public void should_return_xml_document_with_xxxxx()
         {
-            var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><container name=\"" + containerName + "\"></container>";
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><container name=\"" + Constants.CONTAINER_NAME + "\"></container>";
 
             Assert.That(container.XML.InnerXml, Is.EqualTo(expectedXml));
         }

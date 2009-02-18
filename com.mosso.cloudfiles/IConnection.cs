@@ -9,7 +9,7 @@ using System.Xml;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.domain.request;
 
-namespace com.mosso.cloudfiles.services
+namespace com.mosso.cloudfiles
 {
     /// <summary>
     /// The interface dictating the required methods for all implementing classes
@@ -50,5 +50,12 @@ namespace com.mosso.cloudfiles.services
         Uri MarkContainerAsPublic(string containerName);
         void MarkContainerAsPrivate(string containerName);
         Container GetPublicContainerInformation(string containerName);
+
+        IAccount Account { get; }
+        string StorageToken { get; }
+        string StorageUrl { get; }
+        string CdnManagementUrl { get; }
+        string AuthToken { get; }
+        UserCredentials UserCredentials { get; }
     }
 }

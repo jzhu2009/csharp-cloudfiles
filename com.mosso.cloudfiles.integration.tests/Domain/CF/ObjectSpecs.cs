@@ -9,7 +9,6 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ObjectSpecs
     [TestFixture]
     public class ObjectIntegrationTestBase
     {
-        protected string containerName;
         protected IAccount account;
         protected IContainer container;
         protected IObject @object;
@@ -17,13 +16,11 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ObjectSpecs
         [SetUp]
         public void Setup()
         {
-            containerName = Guid.NewGuid().ToString();
-
             var userCredentials = new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY);
-            var authentication = new CF_Authentication(userCredentials);
+            IConnection connection = new Connection(userCredentials);
 
-            account = authentication.Authenticate();
-            container = account.CreateContainer(containerName);
+            account = connection.Account;
+            container = account.CreateContainer(Constants.CONTAINER_NAME);
         }
 
         [TearDown]
@@ -32,8 +29,8 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ObjectSpecs
             if (container.ObjectExists(Constants.StorageItemName))
                 container.DeleteObject(Constants.StorageItemName);
 
-            if (containerName != null && container != null)
-                account.DeleteContainer(containerName);
+            if (account.ContainerExists(Constants.CONTAINER_NAME))
+                account.DeleteContainer(Constants.CONTAINER_NAME);
         }
     }
 

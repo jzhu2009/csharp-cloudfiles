@@ -152,11 +152,7 @@ namespace com.mosso.cloudfiles.domain.request
             Method = "PUT";
         }
 
-        public string FileUri
-        {
-            get;
-            private set;
-        }
+        public string FileUri { get; private set; }
 
         private string CleanUpFileUri(string fileUri)
         {

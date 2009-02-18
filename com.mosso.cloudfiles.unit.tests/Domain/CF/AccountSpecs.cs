@@ -19,8 +19,6 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.AccountSpecs
 
             Assert.That(account.ContainerExists("testcontainername"), Is.True);
             Assert.That(container.Name, Is.EqualTo("testcontainername"));
-            Assert.That(container.CDNManagementUrl, Is.EqualTo(account.CDNManagementUrl));
-            Assert.That(container.AuthToken, Is.EqualTo(account.AuthToken));
             Assert.That(account.ContainerCount, Is.EqualTo(1));
             Assert.That(account.BytesUsed, Is.EqualTo(34));
         }
@@ -154,7 +152,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.AccountSpecs
 
     public class MockCFAccount : CF_Account
     {
-        public MockCFAccount() : base(null, null){}
+        public MockCFAccount() : base(null){}
 
         protected override void CloudFileCreateContainer(string containerName)
         {
@@ -173,7 +171,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.AccountSpecs
             if (container != null)
             {
                 containers.Remove(container);
-                containers.Add(new CF_Container(containerName));                
+                containers.Add(new CF_Container(null, containerName));                
             }
         }
 

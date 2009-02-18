@@ -81,7 +81,6 @@
     <Compile Include="ContainerNameValidator.cs" />
     <Compile Include="Domain\AccountInformation.cs" />
     <Compile Include="Domain\CF_Account.cs" />
-    <Compile Include="Domain\CF_Authentication.cs" />
     <Compile Include="Domain\CF_Container.cs" />
     <Compile Include="Domain\CF_Object.cs" />
     <Compile Include="Domain\Request\BaseRequest.cs" />
@@ -139,8 +138,8 @@
     <Compile Include="Exceptions\PublicContainerNotFoundException.cs" />
     <Compile Include="Exceptions\StorageItemNotFoundException.cs" />
     <Compile Include="ObjectNameValidator.cs" />
-    <Compile Include="Services\IConnection.cs" />
-    <Compile Include="Services\Connection.cs" />
+    <Compile Include="IConnection.cs" />
+    <Compile Include="Connection.cs" />
     <Compile Include="Domain\StorageItem.cs" />
     <Compile Include="Domain\UserCredentials.cs" />
     <Compile Include="Exceptions\ContainerNameException.cs" />

@@ -4,23 +4,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Text;
 using System.Web;
 using com.mosso.cloudfiles.exceptions;
 
 namespace com.mosso.cloudfiles.domain.request
 {
-    /// <summary>
-    /// enumeration of filters to place on the request url
-    /// </summary>
-    public enum GetItemListParameters
-    {
-        Limit,
-        Offset,
-        Prefix
-    }
-
     /// <summary>
     /// GetContainerItemList
     /// </summary>

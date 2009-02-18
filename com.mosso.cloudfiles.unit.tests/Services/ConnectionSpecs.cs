@@ -1,6 +1,6 @@
 using System;
 using com.mosso.cloudfiles.domain;
-using com.mosso.cloudfiles.services;
+using com.mosso.cloudfiles;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
