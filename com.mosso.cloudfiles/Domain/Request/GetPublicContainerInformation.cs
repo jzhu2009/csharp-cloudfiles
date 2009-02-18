@@ -4,9 +4,9 @@ using System.Web;
 
 namespace com.mosso.cloudfiles.domain.request
 {
-    public class GetPublicContainerInformationRequest : BaseRequest
+    public class GetPublicContainerInformation : BaseRequest
     {
-        public GetPublicContainerInformationRequest(string cdnManagementUrl, string authToken, string containerName)
+        public GetPublicContainerInformation(string cdnManagementUrl, string authToken, string containerName)
         {
             if (String.IsNullOrEmpty(cdnManagementUrl) ||
                 String.IsNullOrEmpty(authToken) ||

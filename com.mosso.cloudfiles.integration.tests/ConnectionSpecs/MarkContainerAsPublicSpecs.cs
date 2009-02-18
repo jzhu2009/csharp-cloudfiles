@@ -1,61 +1,53 @@
 using System;
-using com.mosso.cloudfiles.exceptions;
-using com.mosso.cloudfiles.services;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
 namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.MarkContainerAsPublicSpecs
 {
     [TestFixture]
-    public class When_marking_a_container_as_public : TestBase
+    public class When_marking_a_container_as_public_and_it_is_not_public_already : TestBase
     {
         [Test]
-        public void Should_return_a_public_uri_when_the_container_is_successfully_marked_public()
+        public void Should_return_a_public_cdn_uri()
         {
-            string containerName = Guid.NewGuid().ToString();
-            connection.CreateContainer(containerName);
             try
             {
-                Uri cdnUrl = connection.MarkContainerAsPublic(containerName);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                Uri cdnUrl = connection.MarkContainerAsPublic(Constants.CONTAINER_NAME);
                 Assert.That(cdnUrl, Is.Not.Null);
                 Assert.That(cdnUrl.ToString().Length, Is.GreaterThan(0));
             }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
             finally
             {
-                connection.DeleteContainer(containerName);
+                connection.MarkContainerAsPrivate(Constants.CONTAINER_NAME);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
+    }
 
-        private void MarkContainerPublic(IConnection conn, string containerName)
+    [TestFixture]
+    public class When_marking_a_container_as_public_and_it_is_public_already : TestBase
+    {
+        [Test]
+        public void should_allow_redundant_setting_of_public_status()
         {
             try
             {
-                conn.MarkContainerAsPublic(containerName);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                Uri cdnUrl = connection.MarkContainerAsPublic(Constants.CONTAINER_NAME);
+                Assert.That(cdnUrl, Is.Not.Null);
+                Assert.That(cdnUrl.ToString().Length, Is.GreaterThan(0));
+
+                connection.MarkContainerAsPublic(Constants.CONTAINER_NAME);
+
+                Assert.That(cdnUrl, Is.Not.Null);
+                Assert.That(cdnUrl.ToString().Length, Is.GreaterThan(0));
             }
             finally
             {
-                conn.DeleteContainer(containerName);
+                connection.MarkContainerAsPrivate(Constants.CONTAINER_NAME);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
-        }
-
-        [Test]
-        [ExpectedException(typeof(ContainerAlreadyPublicException))]
-        [Ignore("Currently not able to test this")]
-        public void Should_fail_when_the_container_is_already_marked_public()
-        {
-            string containerName = Guid.NewGuid().ToString();
-            connection.CreateContainer(containerName);
-            MarkContainerPublic(connection, containerName);
-
-            connection.MarkContainerAsPublic(containerName);
         }
     }
 }

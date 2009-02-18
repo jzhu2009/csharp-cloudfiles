@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Security.Authentication;
 using System.Xml;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.domain.request;
@@ -171,6 +170,7 @@ namespace com.mosso.cloudfiles.services
         /// <param name="containerName">The desired name of the container</param>
         public void CreateContainer(string containerName)
         {
+            //TODO: refactor to match other method flows
             if (string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
@@ -206,11 +206,9 @@ namespace com.mosso.cloudfiles.services
                 var response = ((HttpWebResponse)ex.Response);
                 if (response != null && response.StatusCode == HttpStatusCode.NotFound)
                     throw new ContainerNotFoundException("The requested container does not exist");
-
                 if (response != null && response.StatusCode == HttpStatusCode.Conflict)
-                {
                     throw new ContainerNotEmptyException("The container you are trying to delete is not empty");
-                }
+                throw;
             }
         }
 
@@ -227,6 +225,7 @@ namespace com.mosso.cloudfiles.services
         /// <returns>An instance of List, containing the names of the containers this account owns</returns>
         public List<string> GetContainers()
         {
+            //TODO: try/catch
             List<string> containerList = null;
             var getContainers = new GetContainers(storageUrl, storageToken);
             var getContainersResponse = new ResponseFactoryWithContentBody<GetContainersResponse>().Create(new CloudFilesRequest(getContainers, userCredentials.ProxyCredentials));
@@ -464,10 +463,8 @@ namespace com.mosso.cloudfiles.services
                     throw new ContainerNotFoundException("The requested container does not exist");
                 if (webResponse.StatusCode == HttpStatusCode.PreconditionFailed)
                     throw new PreconditionFailedException(webException.Message);
-            }
-            catch(Exception exception)
-            {
-                Console.WriteLine(exception.Message, exception.InnerException);
+
+                throw;
             }
         }
 
@@ -555,11 +552,11 @@ namespace com.mosso.cloudfiles.services
                     throw new ContainerNotFoundException("The requested container does not exist");
                 if (webResponse.StatusCode == HttpStatusCode.PreconditionFailed)
                     throw new PreconditionFailedException(webException.Message);
+
+                throw;
+                //following exception is cause when status code is 422 (unprocessable entity)
+                //unfortunately, the HttpStatusCode enum does not have that value
                 //throw new InvalidETagException("The ETag supplied in the request does not match the ETag calculated by the server");
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message, exception.InnerException);
             }
         }
 
@@ -784,7 +781,7 @@ namespace com.mosso.cloudfiles.services
         /// <param name="containerName">The name of the container that contains the storage object</param>
         /// <param name="storageItemName">The name of the storage object</param>
         /// <returns>An instance of StorageItem containing the byte size and meta information associated with the container</returns>
-        public StorageItem GetStorageItemInformation(string containerName, string storageItemName)
+        public StorageItemInformation GetStorageItemInformation(string containerName, string storageItemName)
         {
             if (string.IsNullOrEmpty(containerName) ||
                string.IsNullOrEmpty(storageItemName))
@@ -793,14 +790,20 @@ namespace com.mosso.cloudfiles.services
             var getStorageItemInformation = new GetStorageItemInformation(storageUrl, containerName, storageItemName, storageToken);
             try
             {
-                var getStorageItemResponse = new ResponseFactory<GetStorageItemInformationResponse>().Create(new CloudFilesRequest(getStorageItemInformation, userCredentials.ProxyCredentials));
-                var storageItem = new StorageItem(storageItemName, getStorageItemResponse.Metadata, getStorageItemResponse.ContentType, long.Parse(getStorageItemResponse.ContentLength));
+                var getStorageItemInformationResponse = 
+                    new ResponseFactory<GetStorageItemInformationResponse>()
+                    .Create(new CloudFilesRequest(getStorageItemInformation, userCredentials.ProxyCredentials));
+                var storageItemInformation = new StorageItemInformation(getStorageItemInformationResponse.Headers);
 
-                return storageItem;
+                return storageItemInformation;
             }
-            catch (WebException)
+            catch (WebException we)
             {
-                throw new StorageItemNotFoundException("The requested storage object does not exist");
+                var response = (HttpWebResponse)we.Response;
+                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
+                    throw new StorageItemNotFoundException("The requested storage object does not exist");
+
+                throw;
             }
         }
 
@@ -817,18 +820,23 @@ namespace com.mosso.cloudfiles.services
         /// <returns>A list of the public containers</returns>
         public List<string> GetPublicContainers()
         {
-            var request = new GetPublicContainersRequest(cdnManagementUrl, authToken);
-            var response =
-                new ResponseFactoryWithContentBody<GetPublicContainersResponse>().Create(new CloudFilesRequest(request));
+            try
+            {
+                var getPublicContainers = new GetPublicContainers(cdnManagementUrl, authToken);
+                var getPublicContainersResponse =
+                    new ResponseFactoryWithContentBody<GetPublicContainersResponse>().Create(new CloudFilesRequest(getPublicContainers));
+                List<string> containerList = getPublicContainersResponse.ContentBody;
+                getPublicContainersResponse.Dispose();
 
-            if (response.Status == HttpStatusCode.Unauthorized)
-                throw new AuthenticationFailedException(
-                    "You do not have permission to request the list of public containers.");
-            List<string> containerList = response.ContentBody;
-            response.Dispose();
-
-
-            return containerList;
+                return containerList;
+            }
+            catch(WebException we)
+            {
+                var response = (HttpWebResponse)we.Response;
+                if (response != null && response.StatusCode == HttpStatusCode.Unauthorized)
+                    throw new AuthenticationFailedException("You do not have permission to request the list of public containers.");
+                throw;
+            }
         }
 
         /// <summary>
@@ -848,32 +856,53 @@ namespace com.mosso.cloudfiles.services
             if (string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            var request = new SetContainerAsPublicRequest(cdnManagementUrl, authToken, containerName);
-            return new Uri(MarkContainerAsPublic(request));
+            try
+            {
+                var request = new MarkContainerAsPublic(cdnManagementUrl, authToken, containerName);
+                var response = new ResponseFactory<SetContainerAsPublicResponse>().Create(new CloudFilesRequest(request));
+                
+                return response == null ? null : new Uri(response.Headers[Constants.X_CDN_URI]);
+            }
+            catch(WebException we)
+            {
+                var response = (HttpWebResponse)we.Response;
+                if (response != null && response.StatusCode == HttpStatusCode.Unauthorized)
+                    throw new AuthenticationFailedException("You do not have permission to request the list of public containers.");
+                throw;
+            }
         }
 
-        //TODO:  Change to MarkContainerAsPrivate
         /// <summary>
-        /// Updates the details associated with the container on the cdn
+        /// This method sets a container as private on the CDN
         /// </summary>
         /// <example>
         /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
-        /// Uri containerPublicUrl = connection.SetPublicContainerDetails("copntainer name", true);
+        /// Uri containerPublicUrl = connection.MarkContainerAsPublic("copntainer name");
         /// </code>
         /// </example>
-        /// <param name="containerName">The name of the container to update</param>
-        /// <param name="isCdnEnabled">Enables/Disables the public status of the container</param>
-        /// <returns>A string containing the CDN URI for this container or null</returns>
-        public Uri SetPublicContainerDetails(string containerName, bool isCdnEnabled)
+        /// <param name="containerName">The name of the container to mark public</param>
+        public void MarkContainerAsPrivate(string containerName)
         {
             if (string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            var request = 
-                new SetPublicContainerDetailsRequest(cdnManagementUrl, authToken, containerName, isCdnEnabled, "", "", "");
-            return new Uri(SetPublicContainerDetails(request));
+            try
+            {
+                var request = new SetPublicContainerDetails(cdnManagementUrl, authToken, containerName, false);
+                new ResponseFactory<SetPublicContainerDetailsResponse>().Create(new CloudFilesRequest(request));
+            }
+            catch(WebException we)
+            {
+                var response = (HttpWebResponse)we.Response;
+                if (response != null && response.StatusCode == HttpStatusCode.Unauthorized)
+                    throw new UnauthorizedAccessException("Your access credentials are invalid or have expired. ");
+                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
+                    throw new PublicContainerNotFoundException("The specified container does not exist.");
+                throw;
+            }
+
         }
 
         /// <summary>
@@ -893,70 +922,23 @@ namespace com.mosso.cloudfiles.services
             if (string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            var request = new GetPublicContainerInformationRequest(cdnManagementUrl, authToken, containerName);
-            GetPublicContainerInformationResponse response = null;
             try
             {
-                response = new ResponseFactory<GetPublicContainerInformationResponse>().Create(new CloudFilesRequest(request));
-            }
-            catch (WebException ex)
-            {
-                var webResponse = (HttpWebResponse)ex.Response;
-                if (webResponse.StatusCode == HttpStatusCode.Unauthorized)
-                    throw new UnauthorizedAccessException("Your authorization credentials are invalid or have expired.");
-                if (webResponse.StatusCode == HttpStatusCode.NotFound)
-                    throw new ContainerNotFoundException("The specified container does not exist.");
-            }
+                var request = new GetPublicContainerInformation(cdnManagementUrl, authToken, containerName);
+                var response = new ResponseFactory<GetPublicContainerInformationResponse>().Create(new CloudFilesRequest(request));
+                if (response == null) return null;
 
-            var container = new Container(containerName);
-            if (response == null) return null;
-            container.CdnUri = response.Headers[Constants.X_CDN_URI];
-            return container;
-        }
-
-        private string SetPublicContainerDetails(SetPublicContainerDetailsRequest request)
-        {
-            SetPublicContainerDetailsResponse response = null;
-            try
-            {
-                response = new ResponseFactory<SetPublicContainerDetailsResponse>().Create(new CloudFilesRequest(request));
+                return new Container(containerName) { CdnUri = response.Headers[Constants.X_CDN_URI]};
             }
             catch (WebException ex)
             {
                 var webResponse = (HttpWebResponse)ex.Response;
                 if (webResponse != null && webResponse.StatusCode == HttpStatusCode.Unauthorized)
-                    throw new UnauthorizedAccessException("Your access credentials are invalid or have expired. ");
+                    throw new UnauthorizedAccessException("Your authorization credentials are invalid or have expired.");
                 if (webResponse != null && webResponse.StatusCode == HttpStatusCode.NotFound)
                     throw new ContainerNotFoundException("The specified container does not exist.");
+                throw;
             }
-
-            return response == null ? null : response.Headers[Constants.X_CDN_URI];
-        }
-
-
-        private string MarkContainerAsPublic(SetContainerAsPublicRequest request)
-        {
-            SetContainerAsPublicResponse response = null;
-            try
-            {
-                response = new ResponseFactory<SetContainerAsPublicResponse>().Create(new CloudFilesRequest(request));
-            }
-            catch (WebException we)
-            {
-                //It's a protocol error that is usually a result of a 401 (Unauthorized)
-                //Still trying to figure way to get specific httpstatuscode
-                var webResponse = (HttpWebResponse)we.Response;
-                if (webResponse != null && webResponse.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    throw new InvalidCredentialException("You do not have permission to mark this container as public.");
-                }
-                if (webResponse != null && webResponse.StatusCode == HttpStatusCode.Accepted)
-                {
-                    throw new ContainerAlreadyPublicException("The specified container is already marked as public.");
-                }
-            }
-
-            return response == null ? null : response.Headers[Constants.X_CDN_URI];
         }
     }
 }

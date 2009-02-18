@@ -39,22 +39,16 @@ namespace com.mosso.cloudfiles.services
         void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName, Dictionary<string, string> metadata);
         
         void DeleteStorageItem(string containerName, string storageItemname);
-
         StorageItem GetStorageItem(string containerName, string storageItemName);
         void GetStorageItem(string containerName, string storageItemName, string localFileName);
         StorageItem GetStorageItem(string containerName, string storageItemName, Dictionary<RequestHeaderFields, string> requestHeaderFields);
         void GetStorageItem(string containerName, string storageItemName, string localFileName, Dictionary<RequestHeaderFields, string> requestHeaderFields);
-        
-        
-        StorageItem GetStorageItemInformation(string containerName, string storageItemName);
-        
+        StorageItemInformation GetStorageItemInformation(string containerName, string storageItemName);
         void SetStorageItemMetaInformation(string containerName, string storageItemName, Dictionary<string, string> metadata);
         
         List<string> GetPublicContainers();
-        
         Uri MarkContainerAsPublic(string containerName);
-        Uri SetPublicContainerDetails(string containerName, bool isCdnEnabled);
-        
+        void MarkContainerAsPrivate(string containerName);
         Container GetPublicContainerInformation(string containerName);
     }
 }

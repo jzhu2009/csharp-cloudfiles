@@ -14,6 +14,8 @@ namespace com.mosso.cloudfiles.integration.tests
         public static string XCdnManagementUrl = "X-CDN-Management-URL";
         public static string XAuthToken = "X-Auth-Token";
 
+        public const string CONTAINER_NAME = "com.mosso.cloudfiles.integration.tests.container";
+
         //Authentication constants
 //        public const string Account = "Persistent";
 //        public const string UserName = "dev";

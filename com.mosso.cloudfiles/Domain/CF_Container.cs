@@ -372,11 +372,11 @@ namespace com.mosso.cloudfiles.domain
 
         protected virtual void CloudFilesMarkContainerPublic()
         {
-            SetContainerAsPublicRequest request = new SetContainerAsPublicRequest(CDNManagementUrl.ToString(), AuthToken, Name);
+            MarkContainerAsPublic request = new MarkContainerAsPublic(CDNManagementUrl.ToString(), AuthToken, Name);
             MarkContainerAsPublic(request);
         }
 
-        private void MarkContainerAsPublic(SetContainerAsPublicRequest request)
+        private void MarkContainerAsPublic(MarkContainerAsPublic request)
         {
             SetContainerAsPublicResponse response = null;
             try
@@ -389,10 +389,6 @@ namespace com.mosso.cloudfiles.domain
                 if (code == HttpStatusCode.Unauthorized)
                 {
                     throw new InvalidCredentialException("You do not have permission to mark this container as public.");
-                }
-                if (code == HttpStatusCode.Accepted)
-                {
-                    throw new ContainerAlreadyPublicException("The specified container is already marked as public.");
                 }
             }
 

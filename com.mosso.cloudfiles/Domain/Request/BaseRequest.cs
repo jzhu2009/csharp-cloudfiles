@@ -14,6 +14,9 @@ namespace com.mosso.cloudfiles.domain.request
     {
         protected NameValueCollection headers = new NameValueCollection();
 
+        /// <summary>
+        /// HTTP Headers collection
+        /// </summary>
         public NameValueCollection Headers
         {
             get
@@ -26,9 +29,24 @@ namespace com.mosso.cloudfiles.domain.request
             }
         }
 
+        /// <summary>
+        /// The content-type of the http request
+        /// </summary>
         public string ContentType { get; set; }
+        
+        /// <summary>
+        /// The uri to use in the http request
+        /// </summary>
         public Uri Uri { get; protected set; }
+        
+        /// <summary>
+        /// The ACL based on user-agent to be passed in the request
+        /// </summary>
         public string UserAgent { get; set; }
+        
+        /// <summary>
+        /// The http method (GET,PUT,HEAD,POST, DELETE) of the request
+        /// </summary>
         public string Method { get; protected set; }
     }
 }

@@ -86,10 +86,10 @@
     <Compile Include="Domain\CF_Object.cs" />
     <Compile Include="Domain\Request\BaseRequest.cs" />
     <Compile Include="Domain\Request\GetAccountInformation.cs" />
-    <Compile Include="Domain\Request\GetPublicContainerInformationRequest.cs" />
-    <Compile Include="Domain\Request\GetPublicContainersRequest.cs" />
-    <Compile Include="Domain\Request\SetContainerAsPublicRequest.cs" />
-    <Compile Include="Domain\Request\SetPublicContainerDetailsRequest.cs" />
+    <Compile Include="Domain\Request\GetPublicContainerInformation.cs" />
+    <Compile Include="Domain\Request\GetPublicContainers.cs" />
+    <Compile Include="Domain\Request\MarkContainerAsPublic.cs" />
+    <Compile Include="Domain\Request\SetPublicContainerDetails.cs" />
     <Compile Include="Domain\Response\GetAccountInformationResponse.cs" />
     <Compile Include="Domain\Response\GetPublicContainerInformationResponse.cs" />
     <Compile Include="Domain\Response\GetPublicContainersResponse.cs" />
@@ -98,7 +98,6 @@
     <Compile Include="Domain\Response\SetPublicContainerDetailsResponse.cs" />
     <Compile Include="Domain\StorageItemInformation.cs" />
     <Compile Include="EnumHelper.cs" />
-    <Compile Include="Exceptions\ContainerAlreadyPublicException.cs" />
     <Compile Include="Exceptions\ContainerNotEmptyException.cs" />
     <Compile Include="Exceptions\InvalidRangeHeaderException.cs" />
     <Compile Include="Exceptions\DateTimeHttpHeaderFormatException.cs" />
@@ -137,6 +136,7 @@
     <Compile Include="Exceptions\ContainerNotFoundException.cs" />
     <Compile Include="Exceptions\InvalidETagException.cs" />
     <Compile Include="Exceptions\PreconditionFailedException.cs" />
+    <Compile Include="Exceptions\PublicContainerNotFoundException.cs" />
     <Compile Include="Exceptions\StorageItemNotFoundException.cs" />
     <Compile Include="ObjectNameValidator.cs" />
     <Compile Include="Services\IConnection.cs" />
@@ -153,6 +153,7 @@
     <Compile Include="Exceptions\AuthenticationFailedException.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Log4Net.config">

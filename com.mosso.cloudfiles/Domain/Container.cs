@@ -10,9 +10,6 @@ namespace com.mosso.cloudfiles.domain
     public class Container
     {
         public string CdnUri { get; set; }
-        public string ReferrerAcl { get; set; }
-        public string UserAgentAcl { get; set; }
-        public string TTL { get; set; }
 
         /// <summary>
         /// 
