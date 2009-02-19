@@ -12,8 +12,8 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetContainersSp
         [Test]
         public void Should_return_a_list_of_containers()
         {
-            string containerName = Guid.NewGuid().ToString();
-            using (new tests.TestHelper(storageToken, storageUrl, containerName))
+            
+            using (new tests.TestHelper(storageToken, storageUrl))
             {
                 List<string> containerList = connection.GetContainers();
                 Assert.That(containerList.Count, Is.GreaterThan(0));

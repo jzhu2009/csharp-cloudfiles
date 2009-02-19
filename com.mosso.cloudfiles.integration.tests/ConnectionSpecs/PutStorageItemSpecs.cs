@@ -15,59 +15,59 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.PutStorageItemS
         [Test]
         public void Should_return_nothing_when_the_file_is_uploaded_successfully()
         {
-            string containerName = Guid.NewGuid().ToString();
-            connection.CreateContainer(containerName);
-            connection.PutStorageItem(containerName, Constants.StorageItemName);
-            connection.DeleteStorageItem(containerName, Constants.StorageItemName);
-            connection.DeleteContainer(containerName);
+            
+            connection.CreateContainer(Constants.CONTAINER_NAME);
+            connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+            connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+            connection.DeleteContainer(Constants.CONTAINER_NAME);
         }
 
         [Test]
         [ExpectedException(typeof(ContainerNotFoundException))]
         public void Should_throw_an_exception_when_the_container_does_not_exist()
         {
-            string containerName = Guid.NewGuid().ToString();
-            connection.PutStorageItem(containerName, Constants.StorageItemName);
+            
+            connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
         }
 
         [Test]
         public void Should_upload_file_with_the_file_name_minus_the_file_path_in_uri_format()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
             try
             {
-                connection.CreateContainer(containerName);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
 
                 string executingPath = Assembly.GetExecutingAssembly().CodeBase.Replace(@"com.mosso.cloudfiles.integration.tests.DLL", "") + Constants.StorageItemName;
-                connection.PutStorageItem(containerName, executingPath);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, executingPath);
 
-                List<string> containerList = connection.GetContainerItemList(containerName);
+                List<string> containerList = connection.GetContainerItemList(Constants.CONTAINER_NAME);
                 Assert.That(containerList.Contains(Constants.StorageItemName), Is.True);
             }
             finally
             {
-                connection.DeleteStorageItem(containerName, Constants.StorageItemName);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
 
         [Test]
         public void Should_upload_file_with_the_file_name_minus_the_file_path_in_windows_path_format()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
 
             try
             {
-                connection.CreateContainer(containerName);
-                connection.PutStorageItem(containerName, Path.GetFullPath(Constants.StorageItemName));
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, Path.GetFullPath(Constants.StorageItemName));
 
-                List<string> containerList = connection.GetContainerItemList(containerName);
+                List<string> containerList = connection.GetContainerItemList(Constants.CONTAINER_NAME);
                 Assert.That(containerList.Contains(Constants.StorageItemName), Is.True);
             }
             finally
             {
-                connection.DeleteStorageItem(containerName, Constants.StorageItemName);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
     }
@@ -79,30 +79,30 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.PutStorageItemS
         [Test]
         public void Should_upload_the_content_type()
         {
-            string containerName = Guid.NewGuid().ToString();
-            connection.CreateContainer(containerName);
+            
+            connection.CreateContainer(Constants.CONTAINER_NAME);
 
             StorageItem storageItem = null;
             try
             {
-                connection.PutStorageItem(containerName, Constants.StorageItemNameJpg);
-                storageItem = connection.GetStorageItem(containerName, Constants.StorageItemNameJpg);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNameJpg);
+                storageItem = connection.GetStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNameJpg);
                 Assert.That(storageItem.ContentType, Is.EqualTo("image/jpeg"));
 
             }
             finally
             {
                 if (storageItem != null && storageItem.ObjectStream.CanRead) storageItem.ObjectStream.Close();
-                connection.DeleteStorageItem(containerName, Constants.StorageItemNameJpg);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNameJpg);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
 
         [Test]
         public void Should_upload_the_content_type_when_using_dotnet_fileinfo_type()
         {
-            string containerName = Guid.NewGuid().ToString();
-            connection.CreateContainer(containerName);
+            
+            connection.CreateContainer(Constants.CONTAINER_NAME);
 
             StorageItem storageItem = null;
             try
@@ -112,15 +112,15 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.PutStorageItemS
                 metadata.Add("Source", "1");
                 metadata.Add("Note", "2");
 
-                connection.PutStorageItem(containerName, file.Open(FileMode.Open), file.Name, metadata);
-                storageItem = connection.GetStorageItem(containerName, Constants.StorageItemNamePdf);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, file.Open(FileMode.Open), file.Name, metadata);
+                storageItem = connection.GetStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNamePdf);
                 Assert.That(storageItem.ContentType, Is.EqualTo("application/pdf"));
             }
             finally
             {
                 if (storageItem != null && storageItem.ObjectStream.CanRead) storageItem.ObjectStream.Close();
-                connection.DeleteStorageItem(containerName, Constants.StorageItemNamePdf);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNamePdf);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
 
@@ -132,21 +132,21 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.PutStorageItemS
 //        [Test]
 //        public void Should_upload_the_file_successfully()
 //        {
-//            string containerName = Guid.NewGuid().ToString();
-//            connection.CreateContainer(containerName);
+//            
+//            connection.CreateContainer(Constants.CONTAINER_NAME);
 //
 //            try
 //            {
-//                connection.PutStorageItem(containerName, @"C:\TestStorageItem.iso");
+//                connection.PutStorageItem(Constants.CONTAINER_NAME, @"C:\TestStorageItem.iso");
 //
-//                var items = connection.GetContainerItemList(containerName);
+//                var items = connection.GetContainerItemList(Constants.CONTAINER_NAME);
 //                Assert.That(items.Contains("TestStorageItem.iso"), Is.True);
 //            }
 //            finally
 //            {
-//                if(connection.GetContainerItemList(containerName).Contains("TestStorageItem.iso"))
-//                    connection.DeleteStorageItem(containerName, "TestStorageItem.iso");
-//                connection.DeleteContainer(containerName);
+//                if(connection.GetContainerItemList(Constants.CONTAINER_NAME).Contains("TestStorageItem.iso"))
+//                    connection.DeleteStorageItem(Constants.CONTAINER_NAME, "TestStorageItem.iso");
+//                connection.DeleteContainer(Constants.CONTAINER_NAME);
 //            }
 //        }
 //    }

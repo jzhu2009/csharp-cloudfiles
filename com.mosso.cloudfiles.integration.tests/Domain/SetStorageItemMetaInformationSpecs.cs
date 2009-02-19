@@ -16,13 +16,13 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
         [Test]
         public void Should_throw_exception_when_meta_key_exceeds_128_characters()
         {
-            string containerName = Guid.NewGuid().ToString();
-            using (new TestHelper(storageToken, storageUrl, containerName))
+
+            using (new TestHelper(storageToken, storageUrl))
             {
                 try
                 {
                     Dictionary<string, string> metadata = new Dictionary<string, string> {{new string('a', 129), "test"}};
-                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, containerName, Guid.NewGuid().ToString(), metadata, storageToken);
+                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), metadata, storageToken);
                     new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
                 }
                 catch (Exception ex)
@@ -35,13 +35,13 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
         [Test]
         public void Should_throw_exception_when_meta_value_exceeds_256_characters()
         {
-            string containerName = Guid.NewGuid().ToString();
-            using (new TestHelper(storageToken, storageUrl, containerName))
+            
+            using (new TestHelper(storageToken, storageUrl))
             {
                 try
                 {
                     Dictionary<string, string> metadata = new Dictionary<string, string> {{new string('a', 10), new string('f', 257)}};
-                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, containerName, Guid.NewGuid().ToString(), metadata, storageToken);
+                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), metadata, storageToken);
                     new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
                 }
                 catch (Exception ex)
@@ -54,9 +54,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
         [Test]
         public void Should_return_accepted_when_meta_information_is_supplied()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
 
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
             {
                 testHelper.PutItemInContainer();
 
@@ -64,7 +64,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
                 metadata.Add("Test", "test");
                 metadata.Add("Test2", "test2");
 
-                SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, containerName, Constants.StorageItemName, metadata, storageToken);
+                SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, metadata, storageToken);
 
                 SetStorageItemMetaInformationResponse metaInformationResponse = new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
 
@@ -78,13 +78,13 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
         [Test]
         public void Should_return_404_not_found_when_requested_object_does_not_exist()
         {
-            string containerName = Guid.NewGuid().ToString();
-            using (new TestHelper(storageToken, storageUrl, containerName))
+            
+            using (new TestHelper(storageToken, storageUrl))
             {
                 try
                 {
                     Dictionary<string, string> metadata = new Dictionary<string, string>();
-                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, containerName, Guid.NewGuid().ToString(), metadata, storageToken);
+                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), metadata, storageToken);
                     new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
                 }
                 catch (Exception ex)

@@ -15,8 +15,8 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
         [Test]
         public void Should_return_OK_status()
         {
-            string containerName = Guid.NewGuid().ToString();
-            using(new TestHelper(storageToken, storageUrl, containerName))
+            
+            using(new TestHelper(storageToken, storageUrl))
             {
                 GetContainersResponse response = null;
                 try
@@ -43,8 +43,8 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
         {
 //            Console.WriteLine("Begin listing containers");
 
-            string containerName = Guid.NewGuid().ToString();
-            using (new TestHelper(storageToken, storageUrl, containerName))
+            
+            using (new TestHelper(storageToken, storageUrl))
             {
                 IResponseWithContentBody response = null;
                 try

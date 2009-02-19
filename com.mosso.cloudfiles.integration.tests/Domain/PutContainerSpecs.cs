@@ -39,13 +39,13 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
         [Test]
         public void Should_return_created_status_when_the_container_does_not_exist()
         {
-            string containerName = Guid.NewGuid().ToString();
-            CreateContainer createContainer = new CreateContainer(storageUrl, storageToken, containerName);
+            
+            CreateContainer createContainer = new CreateContainer(storageUrl, storageToken, Constants.CONTAINER_NAME);
 
             IResponse response = new ResponseFactory<CreateContainerResponse>().Create(new CloudFilesRequest(createContainer));
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.Created));
 
-            DeleteContainer(storageUrl, containerName);
+            DeleteContainer(storageUrl, Constants.CONTAINER_NAME);
         }
 
         [Test]
@@ -73,18 +73,18 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
         [Test]
         public void Should_return_accepted_status_when_the_container_already_exists()
         {
-            string containerName = Guid.NewGuid().ToString();
-            CreateContainer createContainer = new CreateContainer(storageUrl, storageToken, containerName);
+            
+            CreateContainer createContainer = new CreateContainer(storageUrl, storageToken, Constants.CONTAINER_NAME);
 
             IResponse response = new ResponseFactory<CreateContainerResponse>().Create(new CloudFilesRequest(createContainer));
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.Created));
 
-            createContainer = new CreateContainer(storageUrl, storageToken, containerName);
+            createContainer = new CreateContainer(storageUrl, storageToken, Constants.CONTAINER_NAME);
 
             response = new ResponseFactory<CreateContainerResponse>().Create(new CloudFilesRequest(createContainer, null));
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.Accepted));
 
-            DeleteContainer(storageUrl, containerName);
+            DeleteContainer(storageUrl, Constants.CONTAINER_NAME);
         }
 
         private void DeleteContainer(string storageUri, string containerName)

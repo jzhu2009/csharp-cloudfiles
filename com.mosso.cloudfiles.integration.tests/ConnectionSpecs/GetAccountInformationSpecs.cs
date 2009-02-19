@@ -12,12 +12,12 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetAccountInfor
         [Test]
         public void Should_return_the_size_and_quantity_of_items_in_the_account()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
 
             try
             {
-                connection.CreateContainer(containerName);
-                connection.PutStorageItem(containerName, Constants.StorageItemName);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
 
                 AccountInformation account = connection.GetAccountInformation();
 
@@ -26,8 +26,8 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetAccountInfor
             }
             finally
             {
-                connection.DeleteStorageItem(containerName, Constants.StorageItemName);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
     }
@@ -38,21 +38,21 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetAccountInfor
         [Test]
         public void Should_get_serialized_json_format()
         {
-            string containerName = Guid.NewGuid().ToString();
-            connection.CreateContainer(containerName);
+            
+            connection.CreateContainer(Constants.CONTAINER_NAME);
 
             try
             {
-                connection.PutStorageItem(containerName, Constants.StorageItemNameJpg);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNameJpg);
                 string jsonReturnValue = connection.GetAccountInformationJson();
-                string expectedSubString = "[{\"name\": \"" + containerName + "\", \"count\": 1, \"bytes\": 105542}]";
+                string expectedSubString = "[{\"name\": \"" + Constants.CONTAINER_NAME + "\", \"count\": 1, \"bytes\": 105542}]";
 
                 Assert.That(jsonReturnValue, Is.EqualTo(expectedSubString));
             }
             finally
             {
-                connection.DeleteStorageItem(containerName, Constants.StorageItemNameJpg);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNameJpg);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
     }
@@ -63,21 +63,21 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetAccountInfor
         [Test]
         public void Should_get_serialized_xml_format()
         {
-            string containerName = Guid.NewGuid().ToString();
-            connection.CreateContainer(containerName);
+            
+            connection.CreateContainer(Constants.CONTAINER_NAME);
 
             try
             {
-                connection.PutStorageItem(containerName, Constants.StorageItemNameJpg);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNameJpg);
                 XmlDocument xmlReturnValue = connection.GetAccountInformationXml();
 
-                string expectedSubString = "<container><name>" + containerName + "</name><count>1</count><bytes>105542</bytes></container>";
+                string expectedSubString = "<container><name>" + Constants.CONTAINER_NAME + "</name><count>1</count><bytes>105542</bytes></container>";
                 Assert.That(xmlReturnValue.InnerXml.IndexOf(expectedSubString) > 0, Is.True);
             }
             finally
             {
-                connection.DeleteStorageItem(containerName, Constants.StorageItemNameJpg);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNameJpg);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
     }

@@ -15,18 +15,18 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
         [Test]
         public void should_return_number_of_containers_and_bytes_used()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
             try
             {
-                connection.CreateContainer(containerName);
-                connection.PutStorageItem(containerName, Constants.StorageItemName);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
             }
             finally
             {
-                connection.DeleteStorageItem(containerName, Constants.StorageItemName);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
             {
                 testHelper.PutItemInContainer(Constants.StorageItemName, Constants.StorageItemName);
                 GetAccountInformation getAccountInformation = new GetAccountInformation(storageUrl, storageToken);
@@ -82,8 +82,8 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
         [Test]
         public void should_return_account_information_in_json_format_including_name_count_and_bytes()
         {
-            string containerName = Guid.NewGuid().ToString();
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            
+            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
             {
                 try
                 {
@@ -101,7 +101,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
 //                    }
 
                     
-                    string expectedSubString = "{\"name\": \"" + containerName + "\", \"count\": 1, \"bytes\": 34}";
+                    string expectedSubString = "{\"name\": \"" + Constants.CONTAINER_NAME + "\", \"count\": 1, \"bytes\": 34}";
                     System.Collections.Generic.List<string> contentBody = getAccountInformationJsonResponse.ContentBody;
                     getAccountInformationJsonResponse.Dispose();
                     foreach (string s in contentBody)
@@ -144,8 +144,8 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
         [Test]
         public void should_return_account_information_in_xml_format_including_name_count_and_size()
         {
-            string containerName = Guid.NewGuid().ToString();
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            
+            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
             {
                 try
                 {
@@ -175,7 +175,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
                     }
 
 //                    Console.WriteLine(xmlDocument.InnerXml);
-                    string expectedSubString = "<container><name>"+ containerName +"</name><count>1</count><bytes>34</bytes></container>";
+                    string expectedSubString = "<container><name>"+ Constants.CONTAINER_NAME +"</name><count>1</count><bytes>34</bytes></container>";
                     Assert.That(contentBody.IndexOf(expectedSubString) > 0, Is.True);
                 }
                 finally

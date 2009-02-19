@@ -14,35 +14,35 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetStorageItemS
         [Test]
         public void Should_return_nothing_if_a_local_file_name_is_supplied_and_the_download_is_successful()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
             try
             {
-                connection.CreateContainer(containerName);
-                connection.PutStorageItem(containerName, Constants.StorageItemName);
-                connection.GetStorageItem(containerName, Constants.StorageItemName, Constants.StorageItemName);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.GetStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName);
             }
             finally
             {
-                connection.DeleteStorageItem(containerName, Constants.StorageItemName);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
 
         [Test]
         public void Should_return_a_non_null_storage_object_when_no_local_file_name_is_supplied_and_the_download_is_successful()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
             StorageItem storageItem;
             try
             {
-                connection.CreateContainer(containerName);
-                connection.PutStorageItem(containerName, Constants.StorageItemName);
-                storageItem = connection.GetStorageItem(containerName, Constants.StorageItemName);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                storageItem = connection.GetStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
             }
             finally
             {
-                connection.DeleteStorageItem(containerName, Constants.StorageItemName);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
 
             Assert.That(storageItem, Is.Not.Null);
@@ -54,13 +54,13 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetStorageItemS
         [Test]
         public void Should_throw_an_exception_when_the_file_does_not_exist()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
             bool exceptionWasThrown = false;
 
             try
             {
-                connection.CreateContainer(containerName);
-                connection.GetStorageItem(containerName, Constants.StorageItemName);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                connection.GetStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
             }
             catch (Exception exception)
             {
@@ -69,7 +69,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetStorageItemS
             }
             finally
             {
-                connection.DeleteContainer(containerName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
             Assert.That(exceptionWasThrown, Is.True);
         }
@@ -77,21 +77,21 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetStorageItemS
         [Test]
         public void Should_return_partial_content_when_optional_range_header_is_specified()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
             StorageItem si = null;
             try
             {
                 Dictionary<RequestHeaderFields, string> requestHeaders = new Dictionary<RequestHeaderFields, string>();
                 requestHeaders.Add(RequestHeaderFields.Range, "0-5");
-                connection.CreateContainer(containerName);
-                connection.PutStorageItem(containerName, Constants.StorageItemName);
-                si = connection.GetStorageItem(containerName, Constants.StorageItemName, requestHeaders);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                si = connection.GetStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName, requestHeaders);
             }
             finally
             {
                 if (si != null) si.Dispose();
-                connection.DeleteStorageItem(containerName, Constants.StorageItemName);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
     }
@@ -102,7 +102,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetStorageItemS
         [Test, Ignore]
         public void Should_return_a_storage_item()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
 
             Dictionary<string, string> metadata = new Dictionary<string, string>
                                                       {
@@ -112,15 +112,15 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetStorageItemS
             StorageItem storageItem;
             try
             {
-                connection.CreateContainer(containerName);
-                connection.PutStorageItem(containerName, Constants.StorageItemName);
-                connection.SetStorageItemMetaInformation(containerName, Constants.StorageItemName, metadata);
-                storageItem = connection.GetStorageItem(containerName, Constants.StorageItemName);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.SetStorageItemMetaInformation(Constants.CONTAINER_NAME, Constants.StorageItemName, metadata);
+                storageItem = connection.GetStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
             }
             finally
             {
-                connection.DeleteStorageItem(containerName, Constants.StorageItemName);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
 
             Assert.That(storageItem, Is.Not.Null);
@@ -136,12 +136,12 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetStorageItemS
         [Test]
         public void Should_throw_a__storage_item_not_found_exception()
         {
-            string containerName = Guid.NewGuid().ToString();
-            connection.CreateContainer(containerName);
+            
+            connection.CreateContainer(Constants.CONTAINER_NAME);
 
             try
             {
-                connection.GetStorageItem(containerName, Constants.StorageItemName);
+                connection.GetStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
             }
             catch (Exception ex)
             {
@@ -149,7 +149,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetStorageItemS
             }
             finally
             {
-                connection.DeleteContainer(containerName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
     }

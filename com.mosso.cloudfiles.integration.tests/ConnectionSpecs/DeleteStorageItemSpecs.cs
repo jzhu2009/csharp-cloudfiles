@@ -11,29 +11,29 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.DeleteStorageIt
         [Test]
         public void Should_return_nothing_when_successful()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
             try
             {
-                connection.CreateContainer(containerName);
-                connection.PutStorageItem(containerName, Constants.StorageItemName);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
             }
             finally
             {
-                connection.DeleteStorageItem(containerName, Constants.StorageItemName);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
 
         [Test]
         public void Should_throw_an_exception_when_the_file_does_not_exist()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
             bool exceptionWasThrown = false;
 
             try
             {
-                connection.CreateContainer(containerName);
-                connection.DeleteStorageItem(containerName, Constants.StorageItemName);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
             }
             catch (Exception exception)
             {
@@ -42,7 +42,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.DeleteStorageIt
             }
             finally
             {
-                connection.DeleteContainer(containerName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
 
             Assert.That(exceptionWasThrown, Is.True);

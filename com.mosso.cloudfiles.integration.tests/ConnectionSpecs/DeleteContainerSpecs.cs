@@ -11,29 +11,29 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.DeleteContainer
         [Test]
         public void Should_return_nothing_when_delete_is_successful()
         {
-            string containerName = Guid.NewGuid().ToString();
-            connection.CreateContainer(containerName);
-            connection.DeleteContainer(containerName);
+            
+            connection.CreateContainer(Constants.CONTAINER_NAME);
+            connection.DeleteContainer(Constants.CONTAINER_NAME);
         }
 
         [Test]
         [ExpectedException(typeof (ContainerNotFoundException))]
         public void Should_throw_exception_when_the_container_does_not_exist()
         {
-            string containerName = Guid.NewGuid().ToString();
-            connection.DeleteContainer(containerName);
+            
+            connection.DeleteContainer(Constants.CONTAINER_NAME);
         }
 
         [Test]
         public void Should_throw_exception_when_the_container_exists_but_is_not_empty()
         {
-            string containerName = Guid.NewGuid().ToString();
-            connection.CreateContainer(containerName);
-            connection.PutStorageItem(containerName, Constants.StorageItemName);
+            
+            connection.CreateContainer(Constants.CONTAINER_NAME);
+            connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
 
             try
             {
-                connection.DeleteContainer(containerName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
             catch (Exception ex)
             {
@@ -41,8 +41,8 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.DeleteContainer
             }
             finally
             {
-                connection.DeleteStorageItem(containerName, Constants.StorageItemName);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
     }

@@ -28,6 +28,9 @@ namespace com.mosso.cloudfiles.integration.tests
             CreateContainer();
         }
 
+        public TestHelper(string storageToken, string storageUrl) : this(storageToken, storageUrl, Constants.CONTAINER_NAME)
+        {} 
+
         public void DeleteItemFromContainer()
         {
             DeleteItemFromContainer(Constants.StorageItemName);

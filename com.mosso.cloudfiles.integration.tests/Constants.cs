@@ -88,5 +88,7 @@ namespace com.mosso.cloudfiles.integration.tests
 
         public const string CloudVersion = "v1";
         public const int MaximumContainerNameLength = 256;
+
+        public const string USER_AGENT = "csharp-cloudfiles";
     }
 }

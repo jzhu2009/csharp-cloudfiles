@@ -15,12 +15,12 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteStorageObjectSpecs
         [Test]
         public void should_return_204_no_content_when_the_item_exists()
         {
-            string containerName = Guid.NewGuid().ToString();
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            
+            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
             {
                 testHelper.PutItemInContainer();
 
-                DeleteStorageItem deleteStorageItem = new DeleteStorageItem(storageUrl, containerName, Constants.StorageItemName, storageToken);
+                DeleteStorageItem deleteStorageItem = new DeleteStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken);
                 IResponse response = new ResponseFactory<DeleteStorageItemResponse>().Create(new CloudFilesRequest(deleteStorageItem));
 
                 Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));
@@ -31,10 +31,10 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteStorageObjectSpecs
         [Test]
         public void Shoulds_return_404_when_the_item_does_not_exist()
         {
-            string containerName = Guid.NewGuid().ToString();
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            
+            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
             {
-                DeleteStorageItem deleteStorageItem = new DeleteStorageItem(storageUrl, containerName, Guid.NewGuid().ToString(), storageToken);
+                DeleteStorageItem deleteStorageItem = new DeleteStorageItem(storageUrl, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), storageToken);
                 try
                 {
                     IResponse response = new ResponseFactory<DeleteStorageItemResponse>().Create(new CloudFilesRequest(deleteStorageItem));

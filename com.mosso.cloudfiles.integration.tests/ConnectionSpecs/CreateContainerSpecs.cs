@@ -11,14 +11,14 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.CreateContainer
         [Test]
         public void Should_return_nothing_when_a_new_container_is_created()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
             try
             {
-                connection.CreateContainer(containerName);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
             }
             finally
             {
-                connection.DeleteContainer(containerName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
     }
@@ -29,13 +29,13 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.CreateContainer
         [Test]
         public void Should_throw_a_container_already_exists_exception()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
             bool exceptionWasThrown = false;
 
             try
             {
-                connection.CreateContainer(containerName);
-                connection.CreateContainer(containerName);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
             }
             catch (Exception exception)
             {
@@ -44,7 +44,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.CreateContainer
             }
             finally
             {
-                connection.DeleteContainer(containerName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
 
             Assert.That(exceptionWasThrown, Is.True);

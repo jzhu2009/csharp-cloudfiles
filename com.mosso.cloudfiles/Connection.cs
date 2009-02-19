@@ -21,7 +21,8 @@ namespace com.mosso.cloudfiles
     {
         Limit,
         Offset,
-        Prefix
+        Prefix,
+        Path
     }
 
     /// <summary>

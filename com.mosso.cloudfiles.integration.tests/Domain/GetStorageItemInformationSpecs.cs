@@ -16,13 +16,13 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemInformatio
         [Test]
         public void Should_get_204_No_Content_when_item_exists()
         {
-            string containerName = Guid.NewGuid().ToString();
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+            
+            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
             {
                 testHelper.PutItemInContainer(Constants.HeadStorageItemName);
                 testHelper.AddMetadataToItem(Constants.HeadStorageItemName);
 
-                GetStorageItemInformation getStorageItemInformation = new GetStorageItemInformation(storageUrl, containerName, Constants.HeadStorageItemName, storageToken);
+                GetStorageItemInformation getStorageItemInformation = new GetStorageItemInformation(storageUrl, Constants.CONTAINER_NAME, Constants.HeadStorageItemName, storageToken);
                 GetStorageItemInformationResponse getStorageItemInformationResponse = new ResponseFactory<GetStorageItemInformationResponse>().Create(new CloudFilesRequest(getStorageItemInformation));
                 Assert.That(getStorageItemInformationResponse.Status, Is.EqualTo(HttpStatusCode.NoContent));
 
@@ -38,11 +38,11 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemInformatio
         [Test]
         public void Should_get_404_when_item_does_not_existt()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
 
-            using (new TestHelper(storageToken, storageUrl, containerName))
+            using (new TestHelper(storageToken, storageUrl))
             {
-                GetStorageItemInformation getStorageItemInformation = new GetStorageItemInformation(storageUrl, containerName, Constants.StorageItemName, storageToken);
+                GetStorageItemInformation getStorageItemInformation = new GetStorageItemInformation(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken);
                 try
                 {
                     new ResponseFactory<GetStorageItemInformationResponse>().Create(new CloudFilesRequest(getStorageItemInformation));

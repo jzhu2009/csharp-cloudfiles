@@ -15,10 +15,10 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteContainerSpecs
         [Test]
         public void Should_return_no_content_when_the_container_exists()
         {
-            string containerName = Guid.NewGuid().ToString();
-            PutContainer(storageUrl, containerName);
+            
+            PutContainer(storageUrl, Constants.CONTAINER_NAME);
 
-            DeleteContainer deleteContainer = new DeleteContainer(storageUrl, containerName, storageToken);
+            DeleteContainer deleteContainer = new DeleteContainer(storageUrl, Constants.CONTAINER_NAME, storageToken);
 
             IResponse response = new ResponseFactory<DeleteContainerResponse>().Create(new CloudFilesRequest(deleteContainer));
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));
@@ -37,12 +37,12 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteContainerSpecs
         [Test]
         public void Should_return_conflict_status_when_the_container_exists_and_is_not_empty()
         {
-            string containerName = Guid.NewGuid().ToString();
+            
             try
             {
-                using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+                using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
                 {
-                    PutStorageItem putStorageItem = new PutStorageItem(storageUrl, containerName, Constants.StorageItemName, Constants.StorageItemName, storageToken);
+                    PutStorageItem putStorageItem = new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName, storageToken);
                     Assert.That(putStorageItem.ContentLength, Is.GreaterThan(0));
 
                     IResponse putStorageItemResponse = new ResponseFactory<DeleteContainerResponse>().Create(new CloudFilesRequest(putStorageItem));
@@ -58,9 +58,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteContainerSpecs
             finally
             {
                 new ResponseFactory<DeleteContainerResponse>().Create(new CloudFilesRequest(
-                    new DeleteStorageItem(storageUrl, containerName, Constants.StorageItemName, storageToken)));
+                    new DeleteStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken)));
                 new ResponseFactory<DeleteContainerResponse>().Create(new CloudFilesRequest(
-                    new DeleteContainer(storageUrl, containerName, storageToken)));
+                    new DeleteContainer(storageUrl, Constants.CONTAINER_NAME, storageToken)));
             }
         }
 

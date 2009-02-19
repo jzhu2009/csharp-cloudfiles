@@ -13,17 +13,16 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetContainerIte
         {
             List<string> containerItems;
 
-            string containerName = Guid.NewGuid().ToString();
             try
             {
-                connection.CreateContainer(containerName);
-                connection.PutStorageItem(containerName, Constants.StorageItemName);
-                containerItems = connection.GetContainerItemList(containerName);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                containerItems = connection.GetContainerItemList(Constants.CONTAINER_NAME);
             }
             finally
             {
-                connection.DeleteStorageItem(containerName, Constants.StorageItemName);
-                connection.DeleteContainer(containerName);
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
 
             Assert.That(containerItems.Count, Is.EqualTo(1));
@@ -34,15 +33,14 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetContainerIte
         {
             List<string> containerItems;
 
-            string containerName = Guid.NewGuid().ToString();
             try
             {
-                connection.CreateContainer(containerName);
-                containerItems = connection.GetContainerItemList(containerName);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                containerItems = connection.GetContainerItemList(Constants.CONTAINER_NAME);
             }
             finally
             {
-                connection.DeleteContainer(containerName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
 
             Assert.That(containerItems.Count, Is.EqualTo(0));
