@@ -20,11 +20,11 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteStorageObjectSpecs
             {
                 testHelper.PutItemInContainer();
 
-                DeleteStorageItem deleteStorageItem = new DeleteStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken);
+                var deleteStorageItem = new DeleteStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken);
                 IResponse response = new ResponseFactory<DeleteStorageItemResponse>().Create(new CloudFilesRequest(deleteStorageItem));
 
                 Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));
-                Assert.That(response.Headers["Content-Type"], Is.EqualTo("text/plain; charset=UTF-8"));
+                Assert.That(response.Headers["Content-Type"].Contains("text/plain"), Is.True);
             }
         }
 
@@ -32,12 +32,12 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteStorageObjectSpecs
         public void Shoulds_return_404_when_the_item_does_not_exist()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (new TestHelper(storageToken, storageUrl))
             {
-                DeleteStorageItem deleteStorageItem = new DeleteStorageItem(storageUrl, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), storageToken);
+                var deleteStorageItem = new DeleteStorageItem(storageUrl, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), storageToken);
                 try
                 {
-                    IResponse response = new ResponseFactory<DeleteStorageItemResponse>().Create(new CloudFilesRequest(deleteStorageItem));
+                    new ResponseFactory<DeleteStorageItemResponse>().Create(new CloudFilesRequest(deleteStorageItem));
                 }
                 catch (Exception ex)
                 {
@@ -52,7 +52,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteStorageObjectSpecs
             string containerName = new string('a', Constants.MaximumContainerNameLength + 1);
             try
             {
-                using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
+                using (new TestHelper(storageToken, storageUrl, containerName))
                 {
                 }
             }
@@ -67,28 +67,28 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteStorageObjectSpecs
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_the_container_name_is_null()
         {
-            DeleteStorageItem deleteStorageItem = new DeleteStorageItem("a", null, "a", "a");
+            new DeleteStorageItem("a", null, "a", "a");
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_the_storage_url_name_is_null()
         {
-            DeleteStorageItem deleteStorageItem = new DeleteStorageItem(null, "a", "a", "a");
+            new DeleteStorageItem(null, "a", "a", "a");
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_the_storage_object_name_is_null()
         {
-            DeleteStorageItem deleteStorageItem = new DeleteStorageItem("a", "a", null, "a");
+            new DeleteStorageItem("a", "a", null, "a");
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_the_storage_token_is_null()
         {
-            DeleteStorageItem deleteStorageItem = new DeleteStorageItem("a", "a", "a", null);
+            new DeleteStorageItem("a", "a", "a", null);
         }
     }
 }

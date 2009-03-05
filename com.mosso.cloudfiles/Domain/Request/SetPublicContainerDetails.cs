@@ -28,7 +28,7 @@ namespace com.mosso.cloudfiles.domain.request
             Uri = new Uri(cdnManagementUrl + "/" + containerName);
 
             Headers.Add(Constants.X_AUTH_TOKEN, HttpUtility.UrlEncode(authToken));
-            Headers.Add(Constants.X_CDN_ENABLED, StringHelper.Capitalize(isCdnEnabled));
+            Headers.Add(Constants.X_CDN_ENABLED, isCdnEnabled.Capitalize());
         }
     }
 }

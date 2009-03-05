@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.exceptions;
-using com.mosso.cloudfiles.services;
+using com.mosso.cloudfiles;
 
 namespace CloudFSViewer
 {

@@ -39,12 +39,10 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetPublicContai
         [Test]
         public void Should_retrieve_a_list_with_count_of_zero()
         {
-
-            Assert.Ignore("the get public containers method is still returning the private container, talk to lowell");
             try
             {
                 connection.CreateContainer(Constants.CONTAINER_NAME);
-                List<string> containerList = connection.GetPublicContainers();
+                var containerList = connection.GetPublicContainers();
                 Assert.That(containerList.Count, Is.EqualTo(0));
             }
             finally

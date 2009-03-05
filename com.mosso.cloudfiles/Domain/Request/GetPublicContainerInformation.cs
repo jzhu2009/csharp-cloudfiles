@@ -13,7 +13,7 @@ namespace com.mosso.cloudfiles.domain.request
                 String.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            this.Uri = new Uri(cdnManagementUrl+"/"+containerName);
+            this.Uri = new Uri(cdnManagementUrl + "/" + containerName + "?enabled_only=true");
             Method = "HEAD";
             Headers.Add(Constants.X_AUTH_TOKEN, HttpUtility.UrlEncode(authToken));
         }

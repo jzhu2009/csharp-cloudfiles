@@ -32,7 +32,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ObjectSpecs
         [Test]
         public void should_have_content_type()
         {
-            Assert.That(@object.ContentType, Is.EqualTo("text/plain"));
+            Assert.That(@object.ContentType.Contains("text/plain"), Is.True);
         }
 
         [Test]

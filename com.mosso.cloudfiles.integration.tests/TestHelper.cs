@@ -54,7 +54,7 @@ namespace com.mosso.cloudfiles.integration.tests
             IResponse postStorageItemResponse =
                 new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
             Assert.That(postStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.Accepted));
-            Assert.That(postStorageItemResponse.Headers["Content-Type"], Is.EqualTo("text/plain; charset=UTF-8"));
+            Assert.That(postStorageItemResponse.Headers["Content-Type"].Contains("text/plain"), Is.True);
             Assert.That(postStorageItemResponse.Headers["Content-Length"], Is.EqualTo("0"));
         }
 

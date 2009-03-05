@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Net;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.domain.request;
@@ -19,19 +18,23 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemInformatio
             
             using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
             {
-                testHelper.PutItemInContainer(Constants.HeadStorageItemName);
-                testHelper.AddMetadataToItem(Constants.HeadStorageItemName);
+                try
+                {
+                    testHelper.PutItemInContainer(Constants.HeadStorageItemName);
+                    testHelper.AddMetadataToItem(Constants.HeadStorageItemName);
 
-                GetStorageItemInformation getStorageItemInformation = new GetStorageItemInformation(storageUrl, Constants.CONTAINER_NAME, Constants.HeadStorageItemName, storageToken);
-                GetStorageItemInformationResponse getStorageItemInformationResponse = new ResponseFactory<GetStorageItemInformationResponse>().Create(new CloudFilesRequest(getStorageItemInformation));
-                Assert.That(getStorageItemInformationResponse.Status, Is.EqualTo(HttpStatusCode.NoContent));
+                    var getStorageItemInformation = new GetStorageItemInformation(storageUrl, Constants.CONTAINER_NAME, Constants.HeadStorageItemName, storageToken);
+                    var getStorageItemInformationResponse = new ResponseFactory<GetStorageItemInformationResponse>().Create(new CloudFilesRequest(getStorageItemInformation));
+                    Assert.That(getStorageItemInformationResponse.Status, Is.EqualTo(HttpStatusCode.NoContent));
 
-                Dictionary<string, string> metadata = getStorageItemInformationResponse.Metadata;
-
-                testHelper.DeleteItemFromContainer(Constants.HeadStorageItemName);
-
-                Assert.That(metadata["Test"], Is.EqualTo("test"));
-                Assert.That(metadata["Test2"], Is.EqualTo("test2"));
+                    var metadata = getStorageItemInformationResponse.Metadata;
+                    Assert.That(metadata["Test"], Is.EqualTo("test"));
+                    Assert.That(metadata["Test2"], Is.EqualTo("test2"));
+                }
+                finally
+                {
+                    testHelper.DeleteItemFromContainer(Constants.HeadStorageItemName);
+                }
             }
         }
 
@@ -42,7 +45,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemInformatio
 
             using (new TestHelper(storageToken, storageUrl))
             {
-                GetStorageItemInformation getStorageItemInformation = new GetStorageItemInformation(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken);
+                var getStorageItemInformation = new GetStorageItemInformation(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken);
                 try
                 {
                     new ResponseFactory<GetStorageItemInformationResponse>().Create(new CloudFilesRequest(getStorageItemInformation));

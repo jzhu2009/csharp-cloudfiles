@@ -69,7 +69,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
                 SetStorageItemMetaInformationResponse metaInformationResponse = new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
 
                 Assert.That(metaInformationResponse.Status, Is.EqualTo(HttpStatusCode.Accepted));
-                Assert.That(metaInformationResponse.ContentType, Is.EqualTo("text/plain; charset=UTF-8"));
+                Assert.That(metaInformationResponse.ContentType.Contains("text/plain"), Is.True);
                 Assert.That(metaInformationResponse.ContentLength, Is.EqualTo("0"));
                 testHelper.DeleteItemFromContainer();
             }

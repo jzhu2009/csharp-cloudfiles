@@ -42,11 +42,10 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetStorageItemI
             {
                 connection.CreateContainer(Constants.CONTAINER_NAME);
                 connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName, metadata);
-                StorageItemInformation storageItemInformation = 
-                    connection.GetStorageItemInformation(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                var storageItemInformation = connection.GetStorageItemInformation(Constants.CONTAINER_NAME, Constants.StorageItemName);
 
                 Assert.That(storageItemInformation.ContentLength, Is.EqualTo("34"));
-                Assert.That(storageItemInformation.ContentType, Is.EqualTo("text/plain; charset=UTF-8"));
+                Assert.That(storageItemInformation.ContentType.Contains("text/plain"), Is.True);
                 Assert.That(storageItemInformation.ETag, Is.EqualTo("5c66108b7543c6f16145e25df9849f7f"));
                 Assert.That(storageItemInformation.Metadata.Count, Is.EqualTo(1));
                 Assert.That(storageItemInformation.Metadata[Constants.MetadataKey], Is.EqualTo(Constants.MetadataValue));
@@ -69,11 +68,10 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetStorageItemI
             {
                 connection.CreateContainer(Constants.CONTAINER_NAME);
                 connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
-                StorageItemInformation storageItemInformation =
-                    connection.GetStorageItemInformation(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                var storageItemInformation = connection.GetStorageItemInformation(Constants.CONTAINER_NAME, Constants.StorageItemName);
 
                 Assert.That(storageItemInformation.ContentLength, Is.EqualTo("34"));
-                Assert.That(storageItemInformation.ContentType, Is.EqualTo("text/plain; charset=UTF-8"));
+                Assert.That(storageItemInformation.ContentType.Contains("text/plain"), Is.True);
                 Assert.That(storageItemInformation.ETag, Is.EqualTo("5c66108b7543c6f16145e25df9849f7f"));
                 Assert.That(storageItemInformation.Metadata.Count, Is.EqualTo(0));
             }

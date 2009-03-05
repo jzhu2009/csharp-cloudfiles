@@ -23,7 +23,7 @@ namespace com.mosso.cloudfiles.domain.request
             Method = "GET";
 
             Headers.Add(Constants.X_AUTH_TOKEN, HttpUtility.UrlEncode(authToken));
-            Uri = new Uri(cdnManagementUrl);
+            Uri = new Uri(cdnManagementUrl + "?enabled_only=true");
         }
     }
 }

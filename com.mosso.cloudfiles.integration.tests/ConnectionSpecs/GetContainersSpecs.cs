@@ -24,7 +24,6 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetContainersSp
     [TestFixture]
     public class When_retrieving_a_list_of_containers_with_connection_and_the_account_has_no_containers : TestBase
     {
-        [Test, Ignore("Need to delete all containers on account for exception to be thrown")]
         [ExpectedException(typeof (NoContainersFoundException))]
         public void Should_throw_no_containers_found_exception()
         {

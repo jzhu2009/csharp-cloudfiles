@@ -9,7 +9,8 @@ namespace com.mosso.cloudfiles.unit.tests.StringHelperSpecs
         [Test]
         public void should_capitalize_the_first_letter_and_lower_case_the_remainder_of_the_string()
         {
-            Assert.That(StringHelper.Capitalize("howdy"), Is.EqualTo("Howdy"));
+            var howdy = "howdy";
+            Assert.That(howdy.Capitalize(), Is.EqualTo("Howdy"));
         }
     }
 
@@ -19,7 +20,7 @@ namespace com.mosso.cloudfiles.unit.tests.StringHelperSpecs
         [Test]
         public void should_result_in_True()
         {
-            Assert.That(StringHelper.Capitalize(true), Is.EqualTo("True"));
+            Assert.That(true.Capitalize(), Is.EqualTo("True"));
         }
     }
 
@@ -29,7 +30,7 @@ namespace com.mosso.cloudfiles.unit.tests.StringHelperSpecs
         [Test]
         public void should_result_in_False()
         {
-            Assert.That(StringHelper.Capitalize(false), Is.EqualTo("False"));
+            Assert.That(false.Capitalize(), Is.EqualTo("False"));
         }
     }
 }

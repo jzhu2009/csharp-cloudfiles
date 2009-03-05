@@ -1,5 +1,4 @@
 using System;
-using com.mosso.cloudfiles.exceptions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
@@ -9,22 +8,18 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.SetPublicContai
     public class When_marking_a_container_as_private_and_the_container_does_not_exist : TestBase
     {
         [Test]
-        [ExpectedException(typeof(ContainerNotFoundException))]
-        public void Should_return_a_public_cdn_uri()
+        public void Should_fall_through_successfully()
         {
-            Assert.Ignore("the get public containers method is still returning the private container, talk to lowell");
+            var containerList = connection.GetPublicContainers();
+            Assert.That(containerList.Count, Is.EqualTo(0));
             connection.MarkContainerAsPrivate(Constants.CONTAINER_NAME);
-
-            Assert.Fail("Container should not exist");
         }
     }
 
     [TestFixture]
     public class When_marking_a_container_as_private_and_it_is_public_already : TestBase
     {
-        //todo: BECAUSE I SAID SO
         [Test]
-        [Ignore("the get public containers method is still returning the private container, talk to lowell")]
         public void should_remove_it_from_the_public_containers_list()
         {
             try

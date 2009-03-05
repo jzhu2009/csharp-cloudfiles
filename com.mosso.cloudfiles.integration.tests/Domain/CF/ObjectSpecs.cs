@@ -55,7 +55,7 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ObjectSpecs
         public void should_have_content_type()
         {
             @object = container.AddObject(Constants.StorageItemName);
-            Assert.That(@object.ContentType, Is.EqualTo("text/plain; charset=UTF-8"));
+            Assert.That(@object.ContentType.Contains("text/plain"), Is.True);
         }
 
         [Test]
