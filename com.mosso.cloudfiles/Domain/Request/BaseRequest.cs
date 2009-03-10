@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Specialized;
+using System.Web;
 
 namespace com.mosso.cloudfiles.domain.request
 {
@@ -48,5 +49,10 @@ namespace com.mosso.cloudfiles.domain.request
         /// The http method (GET,PUT,HEAD,POST, DELETE) of the request
         /// </summary>
         public string Method { get; protected set; }
+
+        protected void AddStorageOrAuthTokenToHeaders(string headerKey, string value)
+        {
+            Headers.Add(headerKey, HttpUtility.UrlEncode(value));
+        }
     }
 }

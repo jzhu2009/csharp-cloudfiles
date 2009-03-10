@@ -141,7 +141,7 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ContainerSpecs
             Assert.That(objectNames[1], Is.EqualTo(Constants.StorageItemName));
 
             Dictionary<GetItemListParameters, string> parameters = new Dictionary<GetItemListParameters, string>();
-            parameters.Add(GetItemListParameters.Offset, "1");
+            parameters.Add(GetItemListParameters.Marker, "1");
             objectNames = container.GetObjectNames(parameters);
             Assert.That(objectNames.Length, Is.EqualTo(1));
             Assert.That(objectNames[0], Is.EqualTo(Constants.StorageItemName));

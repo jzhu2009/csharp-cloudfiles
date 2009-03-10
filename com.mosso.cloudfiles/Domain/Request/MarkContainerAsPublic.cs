@@ -3,8 +3,6 @@
 ///
 
 using System;
-using System.Web;
-using ArgumentNullException=System.ArgumentNullException;
 
 namespace com.mosso.cloudfiles.domain.request
 {
@@ -31,8 +29,8 @@ namespace com.mosso.cloudfiles.domain.request
 
             Method = "PUT";
 
-            Uri = new Uri(cdnManagementUrl + "/" + HttpUtility.UrlEncode(containerName));
-            Headers.Add(Constants.X_AUTH_TOKEN, HttpUtility.UrlEncode(authToken));
+            Uri = new Uri(cdnManagementUrl + "/" + containerName.Encode());
+            AddStorageOrAuthTokenToHeaders(Constants.X_AUTH_TOKEN, authToken);
         }
     }
 }

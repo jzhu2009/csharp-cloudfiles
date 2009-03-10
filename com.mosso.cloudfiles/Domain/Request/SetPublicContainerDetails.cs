@@ -3,7 +3,6 @@
 ///
 
 using System;
-using System.Web;
 
 namespace com.mosso.cloudfiles.domain.request
 {
@@ -25,9 +24,9 @@ namespace com.mosso.cloudfiles.domain.request
 
             Method = "POST";
 
-            Uri = new Uri(cdnManagementUrl + "/" + containerName);
+            Uri = new Uri(cdnManagementUrl + "/" + containerName.Encode());
 
-            Headers.Add(Constants.X_AUTH_TOKEN, HttpUtility.UrlEncode(authToken));
+            AddStorageOrAuthTokenToHeaders(Constants.X_AUTH_TOKEN, authToken);
             Headers.Add(Constants.X_CDN_ENABLED, isCdnEnabled.Capitalize());
         }
     }

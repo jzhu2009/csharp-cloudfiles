@@ -53,7 +53,17 @@
     <Compile Include="Domain\CF\AccountSpecs.cs" />
     <Compile Include="Domain\CF\ContainerSpecs.cs" />
     <Compile Include="Domain\CF\ObjectSpecs.cs" />
+    <Compile Include="Domain\request\CreateContainerSpecs.cs" />
+    <Compile Include="Domain\request\DeleteContainerSpecs.cs" />
+    <Compile Include="Domain\request\DeleteStorageItemSpecs.cs" />
+    <Compile Include="Domain\request\GetAccountInformationSerializedSpecs.cs" />
+    <Compile Include="Domain\request\GetAccountInformationSpecs.cs" />
     <Compile Include="Domain\request\GetAuthenticationSpecs.cs" />
+    <Compile Include="Domain\request\GetContainerInformationSerializedSpecs.cs" />
+    <Compile Include="Domain\request\GetContainerInformationSpecs.cs" />
+    <Compile Include="Domain\request\GetContainerItemListSpecs.cs" />
+    <Compile Include="Domain\request\GetContainersSpecs.cs" />
+    <Compile Include="Domain\request\GetPublicContainerInformationSpecs.cs" />
     <Compile Include="Domain\request\GetStorageItemSpecs.cs" />
     <Compile Include="ObjectNameValidatorSpecs.cs" />
     <Compile Include="Services\ConnectionSpecs.cs" />

@@ -5,7 +5,7 @@ using com.mosso.cloudfiles.exceptions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetStorageItemSpecs
+namespace com.mosso.cloudfiles.unit.tests.Domain.request
 {
     [TestFixture]
     public class When_getting_a_storage_object

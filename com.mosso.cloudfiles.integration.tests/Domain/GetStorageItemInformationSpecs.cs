@@ -24,7 +24,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemInformatio
                     testHelper.AddMetadataToItem(Constants.HeadStorageItemName);
 
                     var getStorageItemInformation = new GetStorageItemInformation(storageUrl, Constants.CONTAINER_NAME, Constants.HeadStorageItemName, storageToken);
-                    var getStorageItemInformationResponse = new ResponseFactory<GetStorageItemInformationResponse>().Create(new CloudFilesRequest(getStorageItemInformation));
+                    var getStorageItemInformationResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(getStorageItemInformation));
                     Assert.That(getStorageItemInformationResponse.Status, Is.EqualTo(HttpStatusCode.NoContent));
 
                     var metadata = getStorageItemInformationResponse.Metadata;
@@ -48,7 +48,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemInformatio
                 var getStorageItemInformation = new GetStorageItemInformation(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken);
                 try
                 {
-                    new ResponseFactory<GetStorageItemInformationResponse>().Create(new CloudFilesRequest(getStorageItemInformation));
+                    new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(getStorageItemInformation));
                 }
                 catch (Exception ex)
                 {

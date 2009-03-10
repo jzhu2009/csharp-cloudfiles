@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Web;
 using com.mosso.cloudfiles.exceptions;
 
 namespace com.mosso.cloudfiles.domain.request
@@ -41,12 +39,10 @@ namespace com.mosso.cloudfiles.domain.request
 
             this.metadata = metadata;
 
-            Uri =
-                new Uri(storageUrl + "/" + HttpUtility.UrlEncode(containerName).Replace("+", "%20") + "/" +
-                        HttpUtility.UrlEncode(storageItemName).Replace("+", "%20"));
+            Uri = new Uri(storageUrl + "/" + containerName.Encode() + "/" + storageItemName.Encode());
             Method = "POST";
 
-            Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(storageToken));
+            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, storageToken);
 
             AttachMetadataToHeaders();
         }

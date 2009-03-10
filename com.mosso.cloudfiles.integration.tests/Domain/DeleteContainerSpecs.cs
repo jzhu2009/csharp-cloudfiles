@@ -16,7 +16,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteContainerSpecs
         public void Should_return_no_content_when_the_container_exists()
         {
             PutContainer(storageUrl, Constants.CONTAINER_NAME);
-            var deleteContainer = new DeleteContainer(storageUrl, Constants.CONTAINER_NAME, storageToken);
+            var deleteContainer = new DeleteContainer(storageUrl, storageToken, Constants.CONTAINER_NAME);
             var response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(deleteContainer));
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));
         }
@@ -25,7 +25,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteContainerSpecs
         [ExpectedException(typeof (WebException))]
         public void Should_return_404_when_container_does_not_exist()
         {
-            var deleteContainer = new DeleteContainer(storageUrl, Guid.NewGuid().ToString(), storageToken);
+            var deleteContainer = new DeleteContainer(storageUrl, storageToken, Guid.NewGuid().ToString());
 
             new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(deleteContainer));
             Assert.Fail("404 Not found exception expected");
@@ -57,7 +57,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteContainerSpecs
                 new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(
                     new DeleteStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken)));
                 new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(
-                    new DeleteContainer(storageUrl, Constants.CONTAINER_NAME, storageToken)));
+                    new DeleteContainer(storageUrl, storageToken, Constants.CONTAINER_NAME)));
             }
         }
 
@@ -94,14 +94,14 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteContainerSpecs
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_the_container_name_is_null()
         {
-            new DeleteContainer("a", null, "a");
+            new DeleteContainer("a", "a", null);
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_the_storage_token_is_null()
         {
-            new DeleteContainer("a", "a", null);
+            new DeleteContainer("a", null, "a");
         }
 
         private void PutContainer(string storageUri, String containerName)

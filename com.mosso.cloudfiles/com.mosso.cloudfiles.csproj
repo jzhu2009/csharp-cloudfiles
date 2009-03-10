@@ -105,7 +105,6 @@
     <Compile Include="Domain\Response\GetStorageItemResponse.cs" />
     <Compile Include="Domain\Request\GetContainerInformation.cs" />
     <Compile Include="Domain\Request\GetStorageItemInformation.cs" />
-    <Compile Include="Domain\Response\GetStorageItemInformationResponse.cs" />
     <Compile Include="Domain\Request\IRequestWithContentBody.cs" />
     <Compile Include="Domain\Response\IResponse.cs" />
     <Compile Include="Domain\Request\GetContainers.cs" />

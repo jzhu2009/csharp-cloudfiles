@@ -3,8 +3,6 @@
 ///
 
 using System;
-using System.Collections.Specialized;
-using System.Web;
 
 namespace com.mosso.cloudfiles.domain.request
 {
@@ -21,29 +19,14 @@ namespace com.mosso.cloudfiles.domain.request
         public GetAuthentication(UserCredentials userCredentials)
         {
             if (userCredentials == null) throw new ArgumentNullException();
-            if (string.IsNullOrEmpty(userCredentials.AccountName))
-            {
-                Uri = userCredentials.AuthUrl;
-            }
-            else
-            {
-                Uri =
-                    new Uri(userCredentials.AuthUrl + "/" + EncodeStringProperlyAccordingToCloudFiles(userCredentials.Cloudversion) + "/" +
-                            EncodeStringProperlyAccordingToCloudFiles(userCredentials.AccountName) + "/auth");
-            }
+            Uri = string.IsNullOrEmpty(userCredentials.AccountName) 
+                ? userCredentials.AuthUrl
+                : new Uri(userCredentials.AuthUrl + "/" 
+                    + userCredentials.Cloudversion.Encode() + "/" 
+                    + userCredentials.AccountName.Encode() + "/auth");
             Method = "GET";
-            Headers.Add(Constants.X_AUTH_USER, EncodeStringProperlyAccordingToCloudFiles(userCredentials.Username));
-            Headers.Add(Constants.X_AUTH_KEY, EncodeStringProperlyAccordingToCloudFiles(userCredentials.Api_access_key));
-        }
-
-        private string EncodeStringProperlyAccordingToCloudFiles(string itemToEncode)
-        {
-            return EncodePlusesIntoPercent20BecauseCloudFilesRequiresIt(HttpUtility.UrlEncode(itemToEncode));
-        }
-
-        private string EncodePlusesIntoPercent20BecauseCloudFilesRequiresIt(string itemToEncode)
-        {
-            return itemToEncode.Replace("+", "%20");
+            Headers.Add(Constants.X_AUTH_USER, userCredentials.Username.Encode());
+            Headers.Add(Constants.X_AUTH_KEY, userCredentials.Api_access_key.Encode());
         }
     }
 }

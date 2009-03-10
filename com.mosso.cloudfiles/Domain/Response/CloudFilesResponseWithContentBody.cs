@@ -9,7 +9,7 @@ using System.Net;
 namespace com.mosso.cloudfiles.domain.response
 {
     /// <summary>
-    /// This class wraps the response from the get container item list request
+    /// This class wraps the response from the cloud files request when expecting a content body
     /// </summary>
     public class CloudFilesResponseWithContentBody : IResponseWithContentBody
     {
@@ -35,7 +35,7 @@ namespace com.mosso.cloudfiles.domain.response
         }
 
         /// <summary>
-        /// A property containing the list of names of objects in the requested container
+        /// A property containing the list of lines from the content body
         /// </summary>
         public List<string> ContentBody
         {
@@ -70,7 +70,7 @@ namespace com.mosso.cloudfiles.domain.response
         /// <summary>
         /// A property representing the stream returned from the response
         /// </summary>
-        public Stream ContentStream
+        public virtual Stream ContentStream
         {
             get { return contentStream; }
             set
@@ -80,44 +80,18 @@ namespace com.mosso.cloudfiles.domain.response
             }
         }
 
-        /// <summary>
-        /// This method saves the stream from the response directly to a named file on disk
-        /// </summary>
-        /// <param name="filename">The file name to save the stream to locally</param>
-        public void SaveStreamToDisk(string filename)
-        {
-            StoreFile(filename);
-        }
-
-        private void StoreFile(string filename)
-        {
-            FileStream fs = new FileStream(filename, FileMode.Create);
-
-            byte[] buffer = new byte[4096];
-
-            int amt = 0;
-            while ((amt = contentStream.Read(buffer, 0, buffer.Length)) != 0)
-            {
-                fs.Write(buffer, 0, amt);
-            }
-            fs.Close();
-            contentStream.Close();
-        }
-
         private void ReadStream()
         {
-            string[] streamLines = new StreamReader(contentStream).ReadToEnd().Split('\n');
-            if (Status == HttpStatusCode.OK)
+            var streamLines = new StreamReader(contentStream).ReadToEnd().Split('\n');
+            if (Status != HttpStatusCode.OK) return;
+            //Because all HTTP requests end with \n\n the split at the end was appending an additional empty string container to the list
+            //which of course doesn't exist
+            foreach (var s in streamLines)
             {
-                //Because all HTTP requests end with \n\n the split at the end was appending an additional empty string container to the list
-                //which of course doesn't exist
-                foreach (string s in streamLines)
-                {
-                    if (s.Length > 0)
-                        contentBody.Add(s);
-                }
-                contentStream.Close();
+                if (s.Length > 0)
+                    contentBody.Add(s);
             }
+            contentStream.Close();
         }
     }
 }

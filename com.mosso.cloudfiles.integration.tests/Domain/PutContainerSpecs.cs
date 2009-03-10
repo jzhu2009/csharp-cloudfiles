@@ -89,7 +89,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
 
         private void DeleteContainer(string storageUri, string containerName)
         {
-            DeleteContainer deleteContainer = new DeleteContainer(storageUri, containerName, storageToken);
+            DeleteContainer deleteContainer = new DeleteContainer(storageUri, storageToken, containerName);
 
             IResponse response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(deleteContainer));
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));

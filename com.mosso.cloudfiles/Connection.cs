@@ -20,7 +20,7 @@ namespace com.mosso.cloudfiles
     public enum GetItemListParameters
     {
         Limit,
-        Offset,
+        Marker,
         Prefix,
         Path
     }
@@ -229,7 +229,7 @@ namespace com.mosso.cloudfiles
             if (string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            var deleteContainer = new DeleteContainer(StorageUrl, containerName, StorageToken);
+            var deleteContainer = new DeleteContainer(StorageUrl, StorageToken, containerName);
             try
             {
                 new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(deleteContainer, UserCredentials.ProxyCredentials));
@@ -298,7 +298,7 @@ namespace com.mosso.cloudfiles
         /// IConnection connection = new Connection(userCredentials);
         /// Dictionary{GetItemListParameters, string} parameters = new Dictionary{GetItemListParameters, string}();
         /// parameters.Add(GetItemListParameters.Limit, 2);
-        /// parameters.Add(GetItemListParameters.Offset, 1);
+        /// parameters.Add(GetItemListParameters.Marker, 1);
         /// parameters.Add(GetItemListParameters.Prefix, "a");
         /// List{string} containerItemList = connection.GetContainerItemList("container name", parameters);
         /// </code>
@@ -314,8 +314,8 @@ namespace com.mosso.cloudfiles
              List<string> containerItemList = new List<string>();
              try
              {
-                 var getContainerItemList = new GetContainerItemList(StorageUrl, containerName,
-                                                                                      StorageToken, parameters);
+                 var getContainerItemList = new GetContainerItemList(StorageUrl,
+                                                                                      StorageToken, containerName, parameters);
                  var getContainerItemListResponse =
                      new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(
                          new CloudFilesRequest(getContainerItemList, UserCredentials.ProxyCredentials));
@@ -352,7 +352,7 @@ namespace com.mosso.cloudfiles
             if (string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            var getContainerInformation = new GetContainerInformation(StorageUrl, containerName, StorageToken);
+            var getContainerInformation = new GetContainerInformation(StorageUrl, StorageToken, containerName);
 
             try
             {
@@ -825,7 +825,7 @@ namespace com.mosso.cloudfiles
             try
             {
                 var getStorageItemInformationResponse = 
-                    new ResponseFactory<GetStorageItemInformationResponse>()
+                    new ResponseFactory<CloudFilesResponse>()
                     .Create(new CloudFilesRequest(getStorageItemInformation, UserCredentials.ProxyCredentials));
                 var storageItemInformation = new StorageItemInformation(getStorageItemInformationResponse.Headers);
 

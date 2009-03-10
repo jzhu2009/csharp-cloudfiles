@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Web;
 using com.mosso.cloudfiles.exceptions;
 
 namespace com.mosso.cloudfiles.domain.request
@@ -24,8 +23,7 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         /// <exception cref="ContainerNameException">Thrown when the container name is invalid</exception>
-        public GetContainerItemList(string storageUrl, string containerName, string storageToken,
-                                    Dictionary<GetItemListParameters, string> requestParameters)
+        public GetContainerItemList(string storageUrl, string storageToken, string containerName, Dictionary<GetItemListParameters, string> requestParameters)
         {
             if (string.IsNullOrEmpty(storageUrl)
                 || string.IsNullOrEmpty(storageToken)
@@ -40,7 +38,7 @@ namespace com.mosso.cloudfiles.domain.request
             {
                 foreach (GetItemListParameters param in requestParameters.Keys)
                 {
-                    string paramName = param.ToString().ToLower();
+                    var paramName = param.ToString().ToLower();
                     if (param == GetItemListParameters.Limit)
                         int.Parse(requestParameters[param]);
 
@@ -48,12 +46,12 @@ namespace com.mosso.cloudfiles.domain.request
                         stringBuilder.Append("&");
                     else
                         stringBuilder.AppendFormat("?");
-                    stringBuilder.Append(paramName + "=" + HttpUtility.UrlEncode(requestParameters[param]).Replace("+", "%20"));
+                    stringBuilder.Append(paramName + "=" + requestParameters[param].Encode());
                 }
             }
-            Uri = new Uri(storageUrl + "/" + HttpUtility.UrlEncode(containerName).Replace("+", "%20") + stringBuilder);
+            Uri = new Uri(storageUrl + "/" + containerName.Encode() + stringBuilder);
             Method = "GET";
-            Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(storageToken));
+            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, storageToken);
         }
 
         /// <summary>
@@ -62,8 +60,8 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="storageUrl">the customer unique url to interact with cloudfiles</param>
         /// <param name="containerName">the name of the container where the storage item is located</param>
         /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
-        public GetContainerItemList(string storageUrl, string containerName, string storageToken)
-            : this(storageUrl, containerName, storageToken, null)
+        public GetContainerItemList(string storageUrl, string storageToken, string containerName)
+            : this(storageUrl, storageToken, containerName, null)
         {
         }
     }

@@ -1,6 +1,8 @@
+///
+/// See COPYING file for licensing information
+///
+
 using System;
-using System.Collections.Specialized;
-using System.Web;
 
 namespace com.mosso.cloudfiles.domain.request
 {
@@ -13,9 +15,9 @@ namespace com.mosso.cloudfiles.domain.request
                 String.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
-            this.Uri = new Uri(cdnManagementUrl + "/" + containerName + "?enabled_only=true");
+            Uri = new Uri(cdnManagementUrl + "/" + containerName.Encode() + "?enabled_only=true");
             Method = "HEAD";
-            Headers.Add(Constants.X_AUTH_TOKEN, HttpUtility.UrlEncode(authToken));
+            AddStorageOrAuthTokenToHeaders(Constants.X_AUTH_TOKEN, authToken);
         }
         
     }

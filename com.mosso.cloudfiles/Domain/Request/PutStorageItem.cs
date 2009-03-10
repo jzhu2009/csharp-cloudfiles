@@ -95,9 +95,7 @@ namespace com.mosso.cloudfiles.domain.request
                 stream.Seek(0, 0);
 
             Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(storageToken));
-            Uri =
-                new Uri(storageUrl + "/" + HttpUtility.UrlEncode(containerName).Replace("+", "%20") + "/" +
-                        HttpUtility.UrlEncode(storageItemName).Replace("+", "%20"));
+            Uri = new Uri(storageUrl + "/" + containerName.Encode() + "/" + storageItemName.Encode());
             Method = "PUT";
         }
 
@@ -146,9 +144,7 @@ namespace com.mosso.cloudfiles.domain.request
             }
 
             Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(storageToken));
-            Uri =
-                new Uri(storageUrl + "/" + HttpUtility.UrlEncode(containerName).Replace("+", "%20") + "/" +
-                        HttpUtility.UrlEncode(storageItemName).Replace("+", "%20"));
+            Uri = new Uri(storageUrl + "/" + containerName.Encode() + "/" + storageItemName.Encode());
             Method = "PUT";
         }
 

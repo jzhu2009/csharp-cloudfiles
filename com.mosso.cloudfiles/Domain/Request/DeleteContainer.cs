@@ -3,8 +3,6 @@
 ///
 
 using System;
-using System.Collections.Specialized;
-using System.Web;
 using com.mosso.cloudfiles.exceptions;
 
 namespace com.mosso.cloudfiles.domain.request
@@ -23,7 +21,7 @@ namespace com.mosso.cloudfiles.domain.request
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         /// <exception cref="ContainerNameException">Thrown when the container name is invalid</exception>
         /// <exception cref="StorageItemNameException">Thrown when the object name is invalid</exception>
-        public DeleteContainer(string storageUrl, string containerName, string storageToken)
+        public DeleteContainer(string storageUrl, string storageToken, string containerName)
         {
             if (string.IsNullOrEmpty(storageUrl)
                 || string.IsNullOrEmpty(storageToken)
@@ -33,10 +31,10 @@ namespace com.mosso.cloudfiles.domain.request
             if (!ContainerNameValidator.Validate(containerName)) throw new ContainerNameException();
 
 
-            Uri = new Uri(storageUrl + "/" + HttpUtility.UrlEncode(containerName).Replace("+", "%20"));
+            Uri = new Uri(storageUrl + "/" + containerName.Encode());
             Method = "DELETE";
 
-            Headers.Add("X-Storage-Token", HttpUtility.UrlEncode(storageToken));
+            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, storageToken);
         }
     }
 }

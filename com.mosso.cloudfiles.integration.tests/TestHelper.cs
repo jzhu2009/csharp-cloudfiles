@@ -84,7 +84,7 @@ namespace com.mosso.cloudfiles.integration.tests
 
         private void DeleteContainer()
         {
-            var deleteContainer = new DeleteContainer(storageUrl, containerName, storageToken);
+            var deleteContainer = new DeleteContainer(storageUrl, storageToken, containerName);
             var deleteContainerResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(deleteContainer));
             Assert.That(deleteContainerResponse.Status, Is.EqualTo(HttpStatusCode.NoContent));
         }

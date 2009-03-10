@@ -110,10 +110,10 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
     }
 
     [TestFixture]
-    public class When_getting_an_object_list_from_the_container_with_the_offset_query_parameter
+    public class When_getting_an_object_list_from_the_container_with_the_marker_query_parameter
     {
         [Test]
-        public void should_return_only_objects_starting_from_the_offset()
+        public void should_return_only_objects_greater_than_the_marker_value()
         {
             var container = new MockCFContainer("testcontainername");
             container.AddObject(Constants.STORAGE_ITEM_NAME);
@@ -127,7 +127,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
             Assert.That(objectNames[1], Is.EqualTo(Constants.HEAD_STORAGE_ITEM_NAME));
 
             Dictionary<GetItemListParameters, string> parameters = new Dictionary<GetItemListParameters, string>();
-            parameters.Add(GetItemListParameters.Offset, "1");
+            parameters.Add(GetItemListParameters.Marker, "1");
             objectNames = container.GetObjectNames(parameters);
             Assert.That(objectNames.Length, Is.EqualTo(1));
             Assert.That(objectNames[0], Is.EqualTo(Constants.HEAD_STORAGE_ITEM_NAME));
@@ -290,7 +290,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.CF.ContainerSpecs
         {
             List<string> objectNames = new List<string>();
             string limit = parameters.ContainsKey(GetItemListParameters.Limit) ? parameters[GetItemListParameters.Limit] : null;
-            string offset = parameters.ContainsKey(GetItemListParameters.Offset) ? parameters[GetItemListParameters.Offset] : null;
+            string offset = parameters.ContainsKey(GetItemListParameters.Marker) ? parameters[GetItemListParameters.Marker] : null;
             string prefix = parameters.ContainsKey(GetItemListParameters.Prefix) ? parameters[GetItemListParameters.Prefix] : null;
 
             int count = 0;

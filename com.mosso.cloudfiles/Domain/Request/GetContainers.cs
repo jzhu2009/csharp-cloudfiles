@@ -3,8 +3,6 @@
 ///
 
 using System;
-using System.Collections.Specialized;
-using System.Web;
 
 namespace com.mosso.cloudfiles.domain.request
 {
@@ -27,7 +25,7 @@ namespace com.mosso.cloudfiles.domain.request
 
             Uri = new Uri(storageUrl);
             Method = "GET";
-            Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(storageToken));
+            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, storageToken);
         }
     }
 }

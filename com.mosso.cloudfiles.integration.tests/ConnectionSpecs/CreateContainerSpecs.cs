@@ -30,7 +30,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.CreateContainer
         public void Should_throw_a_container_already_exists_exception()
         {
             
-            bool exceptionWasThrown = false;
+            var exceptionWasThrown = false;
 
             try
             {

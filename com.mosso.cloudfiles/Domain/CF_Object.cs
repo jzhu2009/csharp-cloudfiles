@@ -80,7 +80,7 @@ namespace com.mosso.cloudfiles.domain
         public Uri PublicUrl
         {
             get { return new Uri(publicUrl + Name); }
-            set { publicUrl = (value == null ? value : value); }
+            set { publicUrl = value; }
         }
 
         protected virtual void CloudFilesHeadObject()

@@ -3,7 +3,6 @@
 ///
 
 using System;
-using System.Web;
 using com.mosso.cloudfiles.exceptions;
 
 namespace com.mosso.cloudfiles.domain.request
@@ -21,7 +20,7 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         /// <exception cref="ContainerNameException">Thrown when the container name is invalid</exception>
-        public GetContainerInformation(string storageUrl, string containerName, string storageToken)
+        public GetContainerInformation(string storageUrl, string storageToken, string containerName)
         {
             if (string.IsNullOrEmpty(storageUrl)
                 || string.IsNullOrEmpty(storageToken)
@@ -30,9 +29,9 @@ namespace com.mosso.cloudfiles.domain.request
 
             if (!ContainerNameValidator.Validate(containerName)) throw new ContainerNameException();
 
-            Uri = new Uri(storageUrl + "/" + HttpUtility.UrlEncode(containerName).Replace("+", "%20"));
+            Uri = new Uri(storageUrl + "/" + containerName.Encode());
             Method = "HEAD";
-            Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(storageToken));
+            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, storageToken);
         }
     }
 
@@ -51,9 +50,9 @@ namespace com.mosso.cloudfiles.domain.request
 
             if (!ContainerNameValidator.Validate(containerName)) throw new ContainerNameException();
 
-            Uri = new Uri(storageUrl + "/" + HttpUtility.UrlEncode(containerName).Replace("+", "%20") + "?format=" + EnumHelper.GetDescription(format));
+            Uri = new Uri(storageUrl + "/" + containerName.Encode() + "?format=" + EnumHelper.GetDescription(format));
             Method = "GET";
-            Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(storageToken));
+            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, storageToken);
         }
     }
 }

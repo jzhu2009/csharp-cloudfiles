@@ -4,11 +4,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Web;
 using com.mosso.cloudfiles.exceptions;
 
 namespace com.mosso.cloudfiles.domain.request
@@ -88,10 +86,13 @@ namespace com.mosso.cloudfiles.domain.request
             if (!ObjectNameValidator.Validate(storageItemName)) throw new StorageItemNameException();
 
             Uri =
-                new Uri(storageUrl + "/" + HttpUtility.UrlEncode(containerName).Replace("+", "%20") + "/" +
-                        HttpUtility.UrlEncode(storageItemName).Replace("+", "%20"));
+                new Uri(string.Format("{0}/{1}/{2}", 
+                    storageUrl,
+                    containerName.Encode(), 
+                    storageItemName.Encode()));
+
             Method = "GET";
-            Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(storageToken));
+            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, storageToken);
             
             AddRequestFieldHeadersToRequestHeaders(requestHeaderFields);
         }
