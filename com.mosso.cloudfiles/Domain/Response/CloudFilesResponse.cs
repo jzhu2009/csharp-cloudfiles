@@ -7,17 +7,17 @@ using System.Net;
 namespace com.mosso.cloudfiles.domain.response
 {
     /// <summary>
-    /// This class wraps the response from a delete storage item request
+    /// Represents the response information from a CloudFiles request
     /// </summary>
-    public class DeleteStorageItemResponse : IResponse
+    public class CloudFilesResponse : IResponse
     {
         /// <summary>
-        /// A property containing the HTTP status code from the transaction
+        /// A property representing the HTTP Status code returned from cloudfiles
         /// </summary>
         public HttpStatusCode Status { get; set; }
 
         /// <summary>
-        /// A collection of key-value pairs representing the headers returned from the delete storage item request
+        /// A collection of key-value pairs representing the headers returned from the create container request
         /// </summary>
         public WebHeaderCollection Headers { get; set; }
     }

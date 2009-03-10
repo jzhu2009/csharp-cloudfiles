@@ -81,7 +81,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetStorageItemS
             StorageItem si = null;
             try
             {
-                Dictionary<RequestHeaderFields, string> requestHeaders = new Dictionary<RequestHeaderFields, string>();
+                var requestHeaders = new Dictionary<RequestHeaderFields, string>();
                 requestHeaders.Add(RequestHeaderFields.Range, "0-5");
                 connection.CreateContainer(Constants.CONTAINER_NAME);
                 connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);

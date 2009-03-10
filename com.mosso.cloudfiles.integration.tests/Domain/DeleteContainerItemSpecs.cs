@@ -21,7 +21,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteStorageObjectSpecs
                 testHelper.PutItemInContainer();
 
                 var deleteStorageItem = new DeleteStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken);
-                IResponse response = new ResponseFactory<DeleteStorageItemResponse>().Create(new CloudFilesRequest(deleteStorageItem));
+                var response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(deleteStorageItem));
 
                 Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));
                 Assert.That(response.Headers["Content-Type"].Contains("text/plain"), Is.True);
@@ -37,7 +37,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.DeleteStorageObjectSpecs
                 var deleteStorageItem = new DeleteStorageItem(storageUrl, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), storageToken);
                 try
                 {
-                    new ResponseFactory<DeleteStorageItemResponse>().Create(new CloudFilesRequest(deleteStorageItem));
+                    new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(deleteStorageItem));
                 }
                 catch (Exception ex)
                 {

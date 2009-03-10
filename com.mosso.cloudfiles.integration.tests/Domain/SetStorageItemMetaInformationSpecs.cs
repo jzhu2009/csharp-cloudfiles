@@ -23,7 +23,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
                 {
                     Dictionary<string, string> metadata = new Dictionary<string, string> {{new string('a', 129), "test"}};
                     SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), metadata, storageToken);
-                    new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
+                    new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
                 }
                 catch (Exception ex)
                 {
@@ -42,7 +42,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
                 {
                     Dictionary<string, string> metadata = new Dictionary<string, string> {{new string('a', 10), new string('f', 257)}};
                     SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), metadata, storageToken);
-                    new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
+                    new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
                 }
                 catch (Exception ex)
                 {
@@ -66,11 +66,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
 
                 SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, metadata, storageToken);
 
-                SetStorageItemMetaInformationResponse metaInformationResponse = new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
+                var metaInformationResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
 
                 Assert.That(metaInformationResponse.Status, Is.EqualTo(HttpStatusCode.Accepted));
-                Assert.That(metaInformationResponse.ContentType.Contains("text/plain"), Is.True);
-                Assert.That(metaInformationResponse.ContentLength, Is.EqualTo("0"));
                 testHelper.DeleteItemFromContainer();
             }
         }
@@ -85,7 +83,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
                 {
                     Dictionary<string, string> metadata = new Dictionary<string, string>();
                     SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), metadata, storageToken);
-                    new ResponseFactory<SetStorageItemMetaInformationResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
+                    new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
                 }
                 catch (Exception ex)
                 {

@@ -30,7 +30,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
             {
                 testHelper.PutItemInContainer(Constants.StorageItemName, Constants.StorageItemName);
                 GetAccountInformation getAccountInformation = new GetAccountInformation(storageUrl, storageToken);
-                GetAccountInformationResponse response = new ResponseFactory<GetAccountInformationResponse>().Create(new CloudFilesRequest(getAccountInformation));
+                var response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(getAccountInformation));
                 Assert.That(response.Headers[Constants.XAccountBytesUsed], Is.Not.Null);
                 Assert.That(response.Headers[Constants.XAccountContainerCount], Is.Not.Null);
                 testHelper.DeleteItemFromContainer(Constants.StorageItemName);
@@ -49,7 +49,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
             try
             {
                 GetAccountInformation getAccountInformation = new GetAccountInformation(storageUrl.Replace("_", "FAIL"), storageToken);
-                new ResponseFactory<GetAccountInformationResponse>().Create(new CloudFilesRequest(getAccountInformation));
+                new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(getAccountInformation));
             }
             catch (WebException we)
             {
@@ -71,7 +71,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
         public void should_return_204_no_content_when_the_account_has_no_containers()
         {
             GetAccountInformation getAccountInformation = new GetAccountInformation(storageUrl, storageToken);
-            GetAccountInformationResponse response = new ResponseFactory<GetAccountInformationResponse>().Create(new CloudFilesRequest(getAccountInformation));
+            var response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(getAccountInformation));
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));
         }
     }
@@ -90,7 +90,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
                     testHelper.PutItemInContainer(Constants.StorageItemName);
 
                     var getAccountInformationJson = new GetAccountInformationSerialized(storageUrl, storageToken, Format.JSON);
-                    var getAccountInformationJsonResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(getAccountInformationJson));
+                    var getAccountInformationJsonResponse = new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(new CloudFilesRequest(getAccountInformationJson));
 
                     if(getAccountInformationJsonResponse.ContentBody.Count == 0)
                         Assert.Fail("No content body returned in response");
@@ -101,10 +101,10 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
 //                    }
 
                     
-                    string expectedSubString = "{\"name\": \"" + Constants.CONTAINER_NAME + "\", \"count\": 1, \"bytes\": 34}";
-                    System.Collections.Generic.List<string> contentBody = getAccountInformationJsonResponse.ContentBody;
+                    var expectedSubString = "{\"name\": \"" + Constants.CONTAINER_NAME + "\", \"count\": 1, \"bytes\": 34}";
+                    var contentBody = getAccountInformationJsonResponse.ContentBody;
                     getAccountInformationJsonResponse.Dispose();
-                    foreach (string s in contentBody)
+                    foreach (var s in contentBody)
                     {
                         if (s.IndexOf(expectedSubString) > -1) return;  
                     }
@@ -128,10 +128,10 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
         [Test]
         public void should_return_empty_brackets_and_ok_status_200()
         {
-            GetAccountInformationSerialized getAccountInformationJson = new GetAccountInformationSerialized(storageUrl, storageToken, Format.JSON);
-            var getAccountInformationJsonResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(getAccountInformationJson));
+            var getAccountInformationJson = new GetAccountInformationSerialized(storageUrl, storageToken, Format.JSON);
+            var getAccountInformationJsonResponse = new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(new CloudFilesRequest(getAccountInformationJson));
             Assert.That(getAccountInformationJsonResponse.Status, Is.EqualTo(HttpStatusCode.OK));
-            string contentBody = String.Join("",getAccountInformationJsonResponse.ContentBody.ToArray());
+            var contentBody = String.Join("",getAccountInformationJsonResponse.ContentBody.ToArray());
             getAccountInformationJsonResponse.Dispose();
 
             Assert.That(contentBody, Is.EqualTo("[]"));        
@@ -151,20 +151,20 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
                 {
                     testHelper.PutItemInContainer(Constants.StorageItemName);
 
-                    GetAccountInformationSerialized accountInformationXml = new GetAccountInformationSerialized(storageUrl, storageToken, Format.XML);
-                    var getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(accountInformationXml));
+                    var accountInformationXml = new GetAccountInformationSerialized(storageUrl, storageToken, Format.XML);
+                    var getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(new CloudFilesRequest(accountInformationXml));
 
                     if (getAccountInformationXmlResponse.ContentBody.Count == 0)
                         Assert.Fail("No content body returned in response");
 
-                    string contentBody = "";
-                    foreach (string s in getAccountInformationXmlResponse.ContentBody)
+                    var contentBody = "";
+                    foreach (var s in getAccountInformationXmlResponse.ContentBody)
                     {
                         contentBody += s;
                     }
 
                     getAccountInformationXmlResponse.Dispose();
-                    XmlDocument xmlDocument = new XmlDocument();
+                    var xmlDocument = new XmlDocument();
                     try
                     {
                         xmlDocument.LoadXml(contentBody);
@@ -175,7 +175,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
                     }
 
 //                    Console.WriteLine(xmlDocument.InnerXml);
-                    string expectedSubString = "<container><name>"+ Constants.CONTAINER_NAME +"</name><count>1</count><bytes>34</bytes></container>";
+                    var expectedSubString = "<container><name>"+ Constants.CONTAINER_NAME +"</name><count>1</count><bytes>34</bytes></container>";
                     Assert.That(contentBody.IndexOf(expectedSubString) > 0, Is.True);
                 }
                 finally
@@ -192,12 +192,12 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetAccountSpecs
         [Test]
         public void should_return_account_name_and_ok_status_200()
         {
-            GetAccountInformationSerialized accountInformationXml = new GetAccountInformationSerialized(storageUrl, storageToken, Format.XML);
-            var getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(accountInformationXml));
+            var accountInformationXml = new GetAccountInformationSerialized(storageUrl, storageToken, Format.XML);
+            var getAccountInformationXmlResponse = new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(new CloudFilesRequest(accountInformationXml));
             Assert.That(getAccountInformationXmlResponse.Status, Is.EqualTo(HttpStatusCode.OK));
 
-            string contentBody = "";
-            foreach (string s in getAccountInformationXmlResponse.ContentBody)
+            var contentBody = "";
+            foreach (var s in getAccountInformationXmlResponse.ContentBody)
             {
                 contentBody += s;
             }

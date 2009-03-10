@@ -11,7 +11,7 @@ namespace com.mosso.cloudfiles.domain.response
     /// <summary>
     /// This class wraps the response from the get container item list request
     /// </summary>
-    public class GetContainerItemListResponse : IResponseWithContentBody
+    public class CloudFilesResponseWithContentBody : IResponseWithContentBody
     {
         private readonly List<string> contentBody;
         private Stream contentStream;
@@ -29,7 +29,7 @@ namespace com.mosso.cloudfiles.domain.response
         /// <summary>
         /// The default constructor for creating this response
         /// </summary>
-        public GetContainerItemListResponse()
+        public CloudFilesResponseWithContentBody()
         {
             contentBody = new List<string>();
         }
@@ -79,7 +79,31 @@ namespace com.mosso.cloudfiles.domain.response
                 ReadStream();
             }
         }
-               
+
+        /// <summary>
+        /// This method saves the stream from the response directly to a named file on disk
+        /// </summary>
+        /// <param name="filename">The file name to save the stream to locally</param>
+        public void SaveStreamToDisk(string filename)
+        {
+            StoreFile(filename);
+        }
+
+        private void StoreFile(string filename)
+        {
+            FileStream fs = new FileStream(filename, FileMode.Create);
+
+            byte[] buffer = new byte[4096];
+
+            int amt = 0;
+            while ((amt = contentStream.Read(buffer, 0, buffer.Length)) != 0)
+            {
+                fs.Write(buffer, 0, amt);
+            }
+            fs.Close();
+            contentStream.Close();
+        }
+
         private void ReadStream()
         {
             string[] streamLines = new StreamReader(contentStream).ReadToEnd().Split('\n');

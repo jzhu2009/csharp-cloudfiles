@@ -24,25 +24,24 @@ namespace com.mosso.cloudfiles.integration.tests.domain.AuthenticationRequestSpe
         [Test]
         public void Should_get_204_response_when_authenticated_correctly()
         {
-            IResponse response = new ResponseFactory<GetAuthenticationResponse>().Create(new CloudFilesRequest(request, null));
+            IResponse response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(request, null));
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));
         }
 
         [Test]
         public void Should_get_storage_url_when_authenticated_correctly()
         {
-            GetAuthenticationResponse response = new ResponseFactory<GetAuthenticationResponse>().Create(new CloudFilesRequest(request, null));
+            var response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(request, null));
             Assert.That(response.Headers[Constants.XStorageUrl].Length, Is.GreaterThan(0));
-            Uri storageUri = new Uri(response.StorageUrl);
+            Uri storageUri = new Uri(response.Headers[Constants.XStorageUrl]);
             Assert.That(storageUri.AbsolutePath, Is.EqualTo("/v1/MossoCloudFS_" + STORAGE_TOKEN));
         }
 
         [Test]
         public void Should_get_storage_token_when_authenticated_correctly()
         {
-            //IResponse response = new ResponseFactory<GetAuthenticationResponse>().Create(new CloudFilesRequest(request, null));
-            GetAuthenticationResponse response = new ResponseFactory<GetAuthenticationResponse>().Create(new CloudFilesRequest(request));
-            string storageToken = response.StorageToken;
+            var response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(request));
+            var storageToken = response.Headers[Constants.XStorageToken];
             Assert.That(storageToken.Length, Is.GreaterThan(0));
             Assert.That(storageToken.Length, Is.EqualTo(STORAGE_TOKEN.Length));
         }
@@ -50,23 +49,23 @@ namespace com.mosso.cloudfiles.integration.tests.domain.AuthenticationRequestSpe
         [Test]
         public void Should_get_content_when_authenticated_correctly()
         {
-            IResponse response = new ResponseFactory<GetAuthenticationResponse>().Create(new CloudFilesRequest(request, null));
+            var response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(request, null));
             Assert.That(response.Headers["Content-Length"], Is.EqualTo("0"));
         }
 
         [Test]
         public void Should_return_a_cdn_management_url_header()
         {
-            IResponse response =
-                new ResponseFactory<GetAuthenticationResponse>().Create(new CloudFilesRequest(request, null));
+            var response =
+                new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(request, null));
             Assert.That(response.Headers[Constants.XCdnManagementUrl], Is.Not.Null);
         }
 
         [Test]
         public void Should_return_an_authorization_token_header()
         {
-            IResponse response =
-                new ResponseFactory<GetAuthenticationResponse>().Create(new CloudFilesRequest(request, null));
+            var response =
+                new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(request, null));
             Assert.That(response.Headers[Constants.XAuthToken], Is.Not.Null);
         }
 
@@ -78,7 +77,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.AuthenticationRequestSpe
 
             try
             {
-                new ResponseFactory<GetAuthenticationResponse>().Create(new CloudFilesRequest(request, null));
+                new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(request, null));
                 Assert.Fail("Should throw WebException");
             }
             catch (WebException we)

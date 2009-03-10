@@ -18,7 +18,7 @@ namespace com.mosso.cloudfiles.integration.tests
             GetAuthentication request =
                 new GetAuthentication(new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY));
 
-            IResponse response = new ResponseFactory<GetAuthenticationResponse>().Create(new CloudFilesRequest(request));
+            IResponse response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(request));
 
             storageUrl = response.Headers[Constants.XStorageUrl];
             storageToken = response.Headers[Constants.XStorageToken];

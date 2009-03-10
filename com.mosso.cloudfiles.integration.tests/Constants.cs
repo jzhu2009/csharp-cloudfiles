@@ -13,7 +13,7 @@ namespace com.mosso.cloudfiles.integration.tests
         public const string XAccountBytesUsed = "X-Account-Bytes-Used";
         public static string XCdnManagementUrl = "X-CDN-Management-URL";
         public static string XAuthToken = "X-Auth-Token";
-
+        public const string ETAG = "ETag";
         public const string CONTAINER_NAME = "integration.tests.container";
 
         //Authentication constants

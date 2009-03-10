@@ -21,10 +21,10 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetContainerInformationS
                 testHelper.PutItemInContainer(Constants.StorageItemName, Constants.StorageItemName);
                 GetContainerInformation getContainerInformation = new GetContainerInformation(storageUrl, Constants.CONTAINER_NAME, storageToken);
 
-                GetContainerInformationResponse informationResponse = new ResponseFactory<GetContainerInformationResponse>().Create(new CloudFilesRequest(getContainerInformation));
+                var informationResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(getContainerInformation));
                 Assert.That(informationResponse.Status, Is.EqualTo(HttpStatusCode.NoContent));
-                Assert.That(informationResponse.ObjectCount, Is.EqualTo("1"));
-                Assert.That(informationResponse.BytesUsed, (Is.Not.Null));
+                Assert.That(informationResponse.Headers[Constants.XContainerObjectCount], Is.EqualTo("1"));
+                Assert.That(informationResponse.Headers[Constants.XContainerBytesUsed], (Is.Not.Null));
                 testHelper.DeleteItemFromContainer(Constants.StorageItemName);
             }
         }
@@ -37,12 +37,12 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetContainerInformationS
             using (TestHelper testHelper = new TestHelper(storageToken, storageUrl, containerName))
             {
                 testHelper.PutItemInContainer(Constants.StorageItemName, Constants.StorageItemName);
-                GetContainerInformation getContainerInformation = new GetContainerInformation(storageUrl, containerName, storageToken);
+                var getContainerInformation = new GetContainerInformation(storageUrl, containerName, storageToken);
 
-                GetContainerInformationResponse informationResponse = new ResponseFactory<GetContainerInformationResponse>().Create(new CloudFilesRequest(getContainerInformation));
+                var informationResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(getContainerInformation));
                 Assert.That(informationResponse.Status, Is.EqualTo(HttpStatusCode.NoContent));
-                Assert.That(informationResponse.ObjectCount, Is.EqualTo("1"));
-                Assert.That(informationResponse.BytesUsed, (Is.Not.Null));
+                Assert.That(informationResponse.Headers[Constants.XContainerObjectCount], Is.EqualTo("1"));
+                Assert.That(informationResponse.Headers[Constants.XContainerBytesUsed], (Is.Not.Null));
                 testHelper.DeleteItemFromContainer(Constants.StorageItemName);
             }
         }
@@ -51,9 +51,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetContainerInformationS
         [ExpectedException(typeof (WebException))]
         public void Should_return_not_found_when_the_container_does_not_exist()
         {
-            GetContainerInformation getContainerInformation = new GetContainerInformation(storageUrl, "Idonthasacontainer", storageToken);
+            var getContainerInformation = new GetContainerInformation(storageUrl, "Idonthasacontainer", storageToken);
 
-            new ResponseFactory<GetContainerInformationResponse>().Create(new CloudFilesRequest(getContainerInformation));
+            new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(getContainerInformation));
             Assert.Fail("Expecting a 404 error when trying to retrieve data about a non-existent container");
         }
 
@@ -61,9 +61,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetContainerInformationS
         [ExpectedException(typeof (ContainerNameException))]
         public void Should_throw_an_exception_when_the_container_name_exceeds_the_maximum_allowed_length()
         {
-            GetContainerInformation getContainerInformation = new GetContainerInformation(storageUrl, new string('a', Constants.MaximumContainerNameLength + 1), storageToken);
+            var getContainerInformation = new GetContainerInformation(storageUrl, new string('a', Constants.MaximumContainerNameLength + 1), storageToken);
 
-            new ResponseFactory<GetContainerInformationResponse>().Create(new CloudFilesRequest(getContainerInformation));
+            new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(getContainerInformation));
             Assert.Fail("Expecting a ContainerNameException");
         }
 
@@ -102,7 +102,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetContainerInformationS
                 testHelper.PutItemInContainer(Constants.StorageItemNameJpg);
                 var getContainerInformation = new GetContainerInformationSerialized(storageUrl, storageToken, Constants.CONTAINER_NAME, Format.JSON);
 
-                var jsonResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(getContainerInformation));
+                var jsonResponse = new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(new CloudFilesRequest(getContainerInformation));
                 Assert.That(jsonResponse.Status, Is.EqualTo(HttpStatusCode.OK));
                 var jsonReturnValue = String.Join("", jsonResponse.ContentBody.ToArray());
                 jsonResponse.Dispose();
@@ -126,7 +126,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetContainerInformationS
                 testHelper.PutItemInContainer(Constants.StorageItemNameJpg);
                 var getContainerInformation = new GetContainerInformationSerialized(storageUrl, storageToken, Constants.CONTAINER_NAME, Format.XML);
 
-                var xmlResponse = new ResponseFactoryWithContentBody<GetSerializedResponse>().Create(new CloudFilesRequest(getContainerInformation));
+                var xmlResponse = new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(new CloudFilesRequest(getContainerInformation));
                 Assert.That(xmlResponse.Status, Is.EqualTo(HttpStatusCode.OK));
                 var xmlReturnValue = String.Join("", xmlResponse.ContentBody.ToArray());
                 xmlResponse.Dispose();

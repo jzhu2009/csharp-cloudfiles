@@ -18,13 +18,13 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
             
             using(new TestHelper(storageToken, storageUrl))
             {
-                GetContainersResponse response = null;
+                CloudFilesResponseWithContentBody response = null;
                 try
                 {
                     GetContainers request = new GetContainers(storageUrl, storageToken);
                     request.UserAgent = "NASTTestUserAgent";
 
-                    response = new ResponseFactoryWithContentBody<GetContainersResponse>().Create(new CloudFilesRequest(request));
+                    response = new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(new CloudFilesRequest(request));
 
                     Assert.That(response.Status, Is.EqualTo(HttpStatusCode.OK));
                     Assert.That(response.ContentBody, Is.Not.Null);
@@ -50,7 +50,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
                 try
                 {
                     GetContainers request = new GetContainers(storageUrl, storageToken);
-                    response = new ResponseFactoryWithContentBody<GetContainersResponse>().Create(new CloudFilesRequest(request));
+                    response = new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(new CloudFilesRequest(request));
                     Assert.That(response.ContentBody.Count, Is.GreaterThan(0));
 //                    foreach (string s in response.ContentBody)
 //                        Console.WriteLine(s);
@@ -90,7 +90,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
             GetContainers request = new GetContainers(storageUrl, storageToken);
             request.UserAgent = "NASTTestUserAgent";
 
-            var response = new ResponseFactoryWithContentBody<GetContainersResponse>().Create(new CloudFilesRequest(request));
+            var response = new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(new CloudFilesRequest(request));
 
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));
             if(response.ContentBody != null)
