@@ -23,7 +23,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemInformatio
                     testHelper.PutItemInContainer(Constants.HeadStorageItemName);
                     testHelper.AddMetadataToItem(Constants.HeadStorageItemName);
 
-                    var getStorageItemInformation = new GetStorageItemInformation(storageUrl, Constants.CONTAINER_NAME, Constants.HeadStorageItemName, storageToken);
+                    var getStorageItemInformation = new GetStorageItemInformation(storageUrl, storageToken, Constants.CONTAINER_NAME, Constants.HeadStorageItemName);
                     var getStorageItemInformationResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(getStorageItemInformation));
                     Assert.That(getStorageItemInformationResponse.Status, Is.EqualTo(HttpStatusCode.NoContent));
 
@@ -45,7 +45,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemInformatio
 
             using (new TestHelper(storageToken, storageUrl))
             {
-                var getStorageItemInformation = new GetStorageItemInformation(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken);
+                var getStorageItemInformation = new GetStorageItemInformation(storageUrl, storageToken, Constants.CONTAINER_NAME, Constants.StorageItemName);
                 try
                 {
                     new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(getStorageItemInformation));
@@ -61,7 +61,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemInformatio
         [ExpectedException(typeof (ContainerNameException))]
         public void Should_throw_an_exception_when_the_length_of_the_container_name_exceeds_the_maximum_allowed_length()
         {
-            new GetStorageItemInformation("a", new string('a', Constants.MaximumContainerNameLength + 1), "a", "a");
+            new GetStorageItemInformation("a", "a", new string('a', Constants.MaximumContainerNameLength + 1), "a");
         }
 
         [Test]
@@ -75,21 +75,21 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemInformatio
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_the_container_name_is_null()
         {
-            new GetStorageItemInformation("a", null, "a", "a");
+            new GetStorageItemInformation("a", "a", null, "a");
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_the_storage_object_name_is_null()
         {
-            new GetStorageItemInformation("a", "a", null, "a");
+            new GetStorageItemInformation("a", "a", "a", null);
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_when_the_storage_token_is_null()
         {
-            new GetStorageItemInformation("a", "a", "a", null);
+            new GetStorageItemInformation("a", null, "a", "a");
         }
     }
 }

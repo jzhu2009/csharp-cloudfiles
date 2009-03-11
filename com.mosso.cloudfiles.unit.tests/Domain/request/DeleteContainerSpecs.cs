@@ -89,7 +89,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.DeleteContainerSpecs
         }
 
         [Test]
-        public void should_have_a_http_put_method()
+        public void should_have_a_http_delete_method()
         {
             Assert.That(deleteContainer.Method, Is.EqualTo("DELETE"));
         }

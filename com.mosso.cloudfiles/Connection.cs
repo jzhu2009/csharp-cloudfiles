@@ -789,7 +789,7 @@ namespace com.mosso.cloudfiles
 
             try
             {
-                var setStorageItemInformation = new SetStorageItemMetaInformation(StorageUrl, containerName, storageItemName, metadata, StorageToken);
+                var setStorageItemInformation = new SetStorageItemMetaInformation(StorageUrl, StorageToken, containerName, storageItemName, metadata);
                 new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(setStorageItemInformation, UserCredentials.ProxyCredentials));
             }
             catch (WebException we)
@@ -821,7 +821,7 @@ namespace com.mosso.cloudfiles
                string.IsNullOrEmpty(storageItemName))
                 throw new ArgumentNullException();
 
-            var getStorageItemInformation = new GetStorageItemInformation(StorageUrl, containerName, storageItemName, StorageToken);
+            var getStorageItemInformation = new GetStorageItemInformation(StorageUrl, StorageToken, containerName, storageItemName);
             try
             {
                 var getStorageItemInformationResponse = 

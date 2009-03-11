@@ -46,7 +46,7 @@ namespace com.mosso.cloudfiles.integration.tests
         public void AddMetadataToItem(string storageItemName)
         {
             var metadata = new Dictionary<string, string> {{"Test", "test"}, {"Test2", "test2"}};
-            var setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, containerName, storageItemName, metadata, storageToken);
+            var setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, storageToken, containerName, storageItemName, metadata);
             var postStorageItemResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
             Assert.That(postStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.Accepted));
             Assert.That(postStorageItemResponse.Headers["Content-Type"].Contains("text/plain"), Is.True);

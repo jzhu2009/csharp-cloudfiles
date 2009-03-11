@@ -22,7 +22,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
                 try
                 {
                     Dictionary<string, string> metadata = new Dictionary<string, string> {{new string('a', 129), "test"}};
-                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), metadata, storageToken);
+                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, storageToken, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), metadata);
                     new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
                 }
                 catch (Exception ex)
@@ -41,7 +41,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
                 try
                 {
                     Dictionary<string, string> metadata = new Dictionary<string, string> {{new string('a', 10), new string('f', 257)}};
-                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), metadata, storageToken);
+                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, storageToken, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), metadata);
                     new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
                 }
                 catch (Exception ex)
@@ -64,7 +64,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
                 metadata.Add("Test", "test");
                 metadata.Add("Test2", "test2");
 
-                SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, metadata, storageToken);
+                SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, storageToken, Constants.CONTAINER_NAME, Constants.StorageItemName, metadata);
 
                 var metaInformationResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
 
@@ -82,7 +82,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
                 try
                 {
                     Dictionary<string, string> metadata = new Dictionary<string, string>();
-                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), metadata, storageToken);
+                    SetStorageItemMetaInformation setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, storageToken, Constants.CONTAINER_NAME, Guid.NewGuid().ToString(), metadata);
                     new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
                 }
                 catch (Exception ex)
@@ -96,35 +96,35 @@ namespace com.mosso.cloudfiles.integration.tests.domain.SetStorageItemMetaInform
         [ExpectedException(typeof (ContainerNameException))]
         public void Should_throw_an_exception_when_the_container_name_length_exceeds_the_maximum_characters_allowed()
         {
-            new SetStorageItemMetaInformation("a", new string('a', Constants.MaximumContainerNameLength + 1), "a", null, "a");
+            new SetStorageItemMetaInformation("a", "a", new string('a', Constants.MaximumContainerNameLength + 1), "a", null);
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_if_the_storage_url_is_null()
         {
-            new SetStorageItemMetaInformation(null, "a", "a", null, "a");
+            new SetStorageItemMetaInformation(null, "a", "a", "a", null);
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_if_the_container_name_is_null()
         {
-            new SetStorageItemMetaInformation("a", null, "a", null, "a");
+            new SetStorageItemMetaInformation("a", "a", null, "a", null);
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_if_the_storage_object_name_is_null()
         {
-            new SetStorageItemMetaInformation("a", "a", null, null, "a");
+            new SetStorageItemMetaInformation("a", "a", "a", null, null);
         }
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
         public void Should_throw_an_exception_if_the_storage_token_is_null()
         {
-            new SetStorageItemMetaInformation("a", "a", "a", null, null);
+            new SetStorageItemMetaInformation("a", null, "a", "a", null);
         }
     }
 }

@@ -24,8 +24,7 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="metadata">dictionary containing the meta tags on the storage item</param>
         /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
         /// <exception cref="System.ArgumentNullException">Thrown when any of the arguments are null</exception>
-        public SetStorageItemMetaInformation(string storageUrl, string containerName, string storageItemName,
-                                             Dictionary<string, string> metadata, string storageToken)
+        public SetStorageItemMetaInformation(string storageUrl, string storageToken, string containerName, string storageItemName, Dictionary<string, string> metadata)
         {
             if (string.IsNullOrEmpty(storageUrl)
                 || string.IsNullOrEmpty(storageToken)
@@ -49,7 +48,7 @@ namespace com.mosso.cloudfiles.domain.request
 
         private void AttachMetadataToHeaders()
         {
-            foreach (KeyValuePair<string, string> pair in metadata)
+            foreach (var pair in metadata)
             {
                 if (pair.Key.Length > Constants.MAXIMUM_META_KEY_LENGTH)
                     throw new MetaKeyLengthException("The meta key length exceeds the maximum length of " +

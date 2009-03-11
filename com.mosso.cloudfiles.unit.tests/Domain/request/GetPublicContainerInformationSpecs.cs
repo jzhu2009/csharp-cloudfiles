@@ -6,7 +6,7 @@ using NUnit.Framework.SyntaxHelpers;
 namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInformationSpecs
 {
     [TestFixture]
-    public class when_getting_list_of_public_containers_and_storage_url_is_null
+    public class when_getting_information_of_a_public_container_and_storage_url_is_null
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -17,7 +17,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInfor
     }
 
     [TestFixture]
-    public class when_getting_list_of_public_containers_and_storage_url_is_emptry_string
+    public class when_getting_information_of_a_public_container_and_storage_url_is_emptry_string
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -28,7 +28,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInfor
     }
 
     [TestFixture]
-    public class when_getting_list_of_public_containers_and_storage_token_is_null
+    public class when_getting_information_of_a_public_container_and_storage_token_is_null
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -39,7 +39,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInfor
     }
 
     [TestFixture]
-    public class when_getting_list_of_public_containers_and_storage_token_is_emptry_string
+    public class when_getting_information_of_a_public_container_and_storage_token_is_emptry_string
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -50,7 +50,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInfor
     }
 
     [TestFixture]
-    public class when_getting_list_of_public_containers_and_container_name_is_null
+    public class when_getting_information_of_a_public_container_and_container_name_is_null
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -61,7 +61,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInfor
     }
 
     [TestFixture]
-    public class when_getting_list_of_public_containers_and_container_name_is_emptry_string
+    public class when_getting_information_of_a_public_container_and_container_name_is_emptry_string
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -72,7 +72,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInfor
     }
 
     [TestFixture]
-    public class when_getting_list_of_public_containers
+    public class when_getting_information_of_a_public_container
     {
         private GetPublicContainerInformation getPublicContainerInformation;
 

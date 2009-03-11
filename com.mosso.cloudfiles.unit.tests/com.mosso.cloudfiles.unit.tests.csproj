@@ -64,7 +64,13 @@
     <Compile Include="Domain\request\GetContainerItemListSpecs.cs" />
     <Compile Include="Domain\request\GetContainersSpecs.cs" />
     <Compile Include="Domain\request\GetPublicContainerInformationSpecs.cs" />
+    <Compile Include="Domain\request\GetPublicContainersSpecs.cs" />
+    <Compile Include="Domain\request\GetStorageItemInformationSpecs.cs" />
     <Compile Include="Domain\request\GetStorageItemSpecs.cs" />
+    <Compile Include="Domain\request\MarkContainerAsPublicSpecs.cs" />
+    <Compile Include="Domain\request\PutStorageItemSpecs.cs" />
+    <Compile Include="Domain\request\SetPublicContainerDetailsSpecs.cs" />
+    <Compile Include="Domain\request\SetStorageItemMetaInformationSpecs.cs" />
     <Compile Include="ObjectNameValidatorSpecs.cs" />
     <Compile Include="Services\ConnectionSpecs.cs" />
     <Compile Include="Domain\ContainerSpecs.cs" />
