@@ -16,7 +16,7 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ContainerSpecs
         public void Setup()
         {
             var userCredentials = new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY);
-            IConnection connection = new Connection(userCredentials);
+            var connection = new Connection(userCredentials);
 
             account = connection.Account;
             container = account.CreateContainer(Constants.CONTAINER_NAME);
@@ -54,7 +54,7 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ContainerSpecs
         [Test]
         public void should_add_the_object()
         {
-            IObject @object = container.AddObject(Constants.StorageItemName);
+            var @object = container.AddObject(Constants.StorageItemName);
 
             Assert.That(@object.Name, Is.EqualTo(Constants.StorageItemName));
             Assert.That(container.ObjectExists(Constants.StorageItemName), Is.True);
@@ -69,13 +69,15 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ContainerSpecs
         [Test]
         public void should_add_the_object()
         {
-            Dictionary<string, string> metadata = new Dictionary<string, string>();
-            metadata.Add("key1", "value1");
-            metadata.Add("key2", "value2");
-            metadata.Add("key3", "value3");
-            metadata.Add("key4", "value4");
-            metadata.Add("key5", "value5");
-            IObject @object = container.AddObject(Constants.StorageItemName, metadata);
+            var metadata = new Dictionary<string, string>
+                               {
+                                   { "key1", "value1" }, 
+                                   { "key2", "value2" }, 
+                                   { "key3", "value3" }, 
+                                   { "key4", "value4" }, 
+                                   { "key5", "value5" }
+                               };
+            var @object = container.AddObject(Constants.StorageItemName, metadata);
 
             Assert.That(@object.Name, Is.EqualTo(Constants.StorageItemName));
             Assert.That(container.ObjectExists(Constants.StorageItemName), Is.True);
@@ -84,13 +86,15 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ContainerSpecs
         [Test]
         public void should_give_object_count_and_bytes_used()
         {
-            Dictionary<string, string> metadata = new Dictionary<string, string>();
-            metadata.Add("key1", "value1");
-            metadata.Add("key2", "value2");
-            metadata.Add("key3", "value3");
-            metadata.Add("key4", "value4");
-            metadata.Add("key5", "value5");
-            IObject @object = container.AddObject(Constants.StorageItemName, metadata);
+            var metadata = new Dictionary<string, string>
+                               {
+                                   { "key1", "value1" }, 
+                                   { "key2", "value2" }, 
+                                   { "key3", "value3" }, 
+                                   { "key4", "value4" }, 
+                                   { "key5", "value5" }
+                               };
+            var @object = container.AddObject(Constants.StorageItemName, metadata);
 
             Assert.That(@object.Name, Is.EqualTo(Constants.StorageItemName));
             Assert.That(container.ObjectExists(Constants.StorageItemName), Is.True);
@@ -111,13 +115,12 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ContainerSpecs
             container.AddObject(Constants.HeadStorageItemName);
             Assert.That(container.ObjectExists(Constants.HeadStorageItemName), Is.True);
 
-            string[] objectNames = container.GetObjectNames();
+            var objectNames = container.GetObjectNames();
             Assert.That(objectNames.Length, Is.EqualTo(2));
             Assert.That(objectNames[0], Is.EqualTo(Constants.HeadStorageItemName));
             Assert.That(objectNames[1], Is.EqualTo(Constants.StorageItemName));
 
-            Dictionary<GetItemListParameters, string> parameters = new Dictionary<GetItemListParameters, string>();
-            parameters.Add(GetItemListParameters.Limit, "1");
+            var parameters = new Dictionary<GetItemListParameters, string>{{GetItemListParameters.Limit, "1"}};
             objectNames = container.GetObjectNames(parameters);
             Assert.That(objectNames.Length, Is.EqualTo(1));
             Assert.That(objectNames[0], Is.EqualTo(Constants.HeadStorageItemName));
@@ -125,23 +128,22 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ContainerSpecs
     }
 
     [TestFixture]
-    public class When_getting_an_object_list_from_the_container_with_the_offset_query_parameter : ContainerIntegrationTestBase
+    public class When_getting_an_object_list_from_the_container_with_the_marker_query_parameter : ContainerIntegrationTestBase
     {
         [Test]
-        public void should_return_only_objects_starting_from_the_offset()
+        public void should_return_only_objects_greater_than_the_marker()
         {
             container.AddObject(Constants.StorageItemName);
             Assert.That(container.ObjectExists(Constants.StorageItemName), Is.True);
             container.AddObject(Constants.HeadStorageItemName);
             Assert.That(container.ObjectExists(Constants.HeadStorageItemName), Is.True);
 
-            string[] objectNames = container.GetObjectNames();
+            var objectNames = container.GetObjectNames();
             Assert.That(objectNames.Length, Is.EqualTo(2));
             Assert.That(objectNames[0], Is.EqualTo(Constants.HeadStorageItemName));
             Assert.That(objectNames[1], Is.EqualTo(Constants.StorageItemName));
 
-            Dictionary<GetItemListParameters, string> parameters = new Dictionary<GetItemListParameters, string>();
-            parameters.Add(GetItemListParameters.Marker, "1");
+            var parameters = new Dictionary<GetItemListParameters, string> { { GetItemListParameters.Marker, "HeadStorageItem.txt" } };
             objectNames = container.GetObjectNames(parameters);
             Assert.That(objectNames.Length, Is.EqualTo(1));
             Assert.That(objectNames[0], Is.EqualTo(Constants.StorageItemName));
@@ -159,13 +161,12 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ContainerSpecs
             container.AddObject(Constants.HeadStorageItemName);
             Assert.That(container.ObjectExists(Constants.HeadStorageItemName), Is.True);
 
-            string[] objectNames = container.GetObjectNames();
+            var objectNames = container.GetObjectNames();
             Assert.That(objectNames.Length, Is.EqualTo(2));
             Assert.That(objectNames[0], Is.EqualTo(Constants.HeadStorageItemName));
             Assert.That(objectNames[1], Is.EqualTo(Constants.StorageItemName));
 
-            Dictionary<GetItemListParameters, string> parameters = new Dictionary<GetItemListParameters, string>();
-            parameters.Add(GetItemListParameters.Prefix, "H");
+            var parameters = new Dictionary<GetItemListParameters, string> { { GetItemListParameters.Prefix, "H" } };
             objectNames = container.GetObjectNames(parameters);
             Assert.That(objectNames.Length, Is.EqualTo(1));
             Assert.That(objectNames[0], Is.EqualTo(Constants.HeadStorageItemName));
