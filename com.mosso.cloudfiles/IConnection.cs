@@ -51,6 +51,8 @@ namespace com.mosso.cloudfiles
         void MarkContainerAsPrivate(string containerName);
         Container GetPublicContainerInformation(string containerName);
 
+        void MakePath(string containerName, string path);
+
         IAccount Account { get; }
         string StorageToken { get; }
         string StorageUrl { get; }

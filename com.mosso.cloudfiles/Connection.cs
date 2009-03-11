@@ -151,7 +151,7 @@ namespace com.mosso.cloudfiles
                 .Create(new CloudFilesRequest(getAccountInformationJson));
 
             if (getAccountInformationJsonResponse.ContentBody.Count == 0) return "";
-            string jsonResponse =  String.Join("", getAccountInformationJsonResponse.ContentBody.ToArray());
+            var jsonResponse =  String.Join("", getAccountInformationJsonResponse.ContentBody.ToArray());
 
             getAccountInformationJsonResponse.Dispose();
             return jsonResponse;
@@ -175,7 +175,7 @@ namespace com.mosso.cloudfiles
 
             if (getAccountInformationXmlResponse.ContentBody.Count == 0) return new XmlDocument();
 
-            string contentBody = String.Join("", getAccountInformationXmlResponse.ContentBody.ToArray());
+            var contentBody = String.Join("", getAccountInformationXmlResponse.ContentBody.ToArray());
             getAccountInformationXmlResponse.Dispose();
             
             var xmlDocument = new XmlDocument();
@@ -202,6 +202,7 @@ namespace com.mosso.cloudfiles
         /// </code>
         /// </example>
         /// <param name="containerName">The desired name of the container</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public void CreateContainer(string containerName)
         {
             if (string.IsNullOrEmpty(containerName))
@@ -224,6 +225,7 @@ namespace com.mosso.cloudfiles
         /// </code>
         /// </example>
         /// <param name="containerName">The name of the container to delete</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public void DeleteContainer(string containerName)
         {
             if (string.IsNullOrEmpty(containerName))
@@ -281,6 +283,7 @@ namespace com.mosso.cloudfiles
         /// </example>
         /// <param name="containerName">The name of the container</param>
         /// <returns>An instance of List, containing the names of the storage objects in the give container</returns>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public List<string> GetContainerItemList(string containerName)
         {
             if (string.IsNullOrEmpty(containerName))
@@ -289,7 +292,31 @@ namespace com.mosso.cloudfiles
             return GetContainerItemList(containerName, null);
         }
 
-         /// <summary>
+        /// <summary>
+        /// This method ensures directory objects created for the entire path
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// connection.MakePath("/dir1/dir2/dir3/dir4/file.txt");
+        /// </code>
+        /// </example>
+        /// <param name="containerName">The container to create the directory objects in</param>
+        /// <param name="path">The path of directory objects to create</param>
+        /// <returns>An instance of List, containing the names of the storage objects in the give container</returns>
+        public void MakePath(string containerName, string path)
+        {
+            var directories = path.Split('/');
+            foreach(var directory in directories)
+            {
+                if (string.IsNullOrEmpty(directory)) continue;
+                if (directory.IndexOf('.') > 0) continue;
+                PutStorageItem(containerName, new MemoryStream(new byte[0]), directory.Encode());
+            }
+        }
+
+        /// <summary>
         /// This method retrieves the contents of a container
         /// </summary>
         /// <example>
@@ -306,6 +333,7 @@ namespace com.mosso.cloudfiles
         /// <param name="containerName">The name of the container</param>
         /// <param name="parameters">Parameters to feed to the request to filter the returned list</param>
         /// <returns>An instance of List, containing the names of the storage objects in the give container</returns>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public List<string> GetContainerItemList(string containerName, Dictionary<GetItemListParameters, string> parameters)
          {
              if (string.IsNullOrEmpty(containerName))
@@ -347,6 +375,7 @@ namespace com.mosso.cloudfiles
         /// </example>
         /// <param name="containerName">The name of the container to query about</param>
         /// <returns>An instance of container, with the number of storage objects contained and total byte allocation</returns>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public Container GetContainerInformation(string containerName)
         {
             if (string.IsNullOrEmpty(containerName))
@@ -385,6 +414,7 @@ namespace com.mosso.cloudfiles
         /// </example>
         /// <param name="containerName">name of the container to get information</param>
         /// <returns>json string of object information inside the container</returns>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public string GetContainerInformationJson(string containerName)
         {
             if (string.IsNullOrEmpty(containerName))
@@ -420,6 +450,7 @@ namespace com.mosso.cloudfiles
         /// </example>
         /// <param name="containerName">name of the container to get information</param>
         /// <returns>xml document of object information inside the container</returns>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public XmlDocument GetContainerInformationXml(string containerName)
         {
             if (string.IsNullOrEmpty(containerName))
@@ -474,6 +505,7 @@ namespace com.mosso.cloudfiles
         /// <param name="containerName">The name of the container to put the storage object in</param>
         /// <param name="storageItemName">The complete file uri of the storage object to be uploaded</param>
         /// <param name="metadata">An optional parameter containing a dictionary of meta tags to associate with the storage object</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public void PutStorageItem(string containerName, string storageItemName, Dictionary<string, string> metadata)
         {
             if(string.IsNullOrEmpty(containerName) ||
@@ -513,6 +545,7 @@ namespace com.mosso.cloudfiles
         /// </example>
         /// <param name="containerName">The name of the container to put the storage object in</param>
         /// <param name="storageItemName">The complete file uri of the storage object to be uploaded</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public void PutStorageItem(string containerName, string storageItemName)
         {
             if (string.IsNullOrEmpty(containerName) ||
@@ -536,6 +569,7 @@ namespace com.mosso.cloudfiles
         /// <param name="containerName">The name of the container to put the storage object in</param>
         /// <param name="remoteStorageItemName">The alternate name as it will be called on cloudfiles</param>
         /// <param name="storageStream">The stream representing the storage item to upload</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName)
         {
             if (string.IsNullOrEmpty(containerName) ||
@@ -564,6 +598,7 @@ namespace com.mosso.cloudfiles
         /// <param name="storageStream">The file stream to upload</param>
         /// <param name="metadata">An optional parameter containing a dictionary of meta tags to associate with the storage object</param>
         /// <param name="remoteStorageItemName">The name of the storage object as it will be called on cloudfiles</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName, Dictionary<string, string> metadata)
         {
             if (string.IsNullOrEmpty(containerName) ||
@@ -571,7 +606,7 @@ namespace com.mosso.cloudfiles
                 throw new ArgumentNullException();
 
 
-            string remoteName = Path.GetFileName(remoteStorageItemName);
+            var remoteName = Path.GetFileName(remoteStorageItemName);
             try
             {
                 var putStorageItem = new PutStorageItem(StorageUrl, containerName, remoteName, storageStream, StorageToken, metadata);
@@ -605,6 +640,7 @@ namespace com.mosso.cloudfiles
         /// </example>
         /// <param name="containerName">The name of the container that contains the storage object</param>
         /// <param name="storageItemName">The name of the storage object to delete</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public void DeleteStorageItem(string containerName, string storageItemName)
         {
             if (string.IsNullOrEmpty(containerName) ||
@@ -639,6 +675,7 @@ namespace com.mosso.cloudfiles
         /// <param name="containerName">The name of the container that contains the storage object to retrieve</param>
         /// <param name="storageItemName">The name of the storage object to retrieve</param>
         /// <returns>An instance of StorageItem with the stream containing the bytes representing the desired storage object</returns>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public StorageItem GetStorageItem(string containerName, string storageItemName)
         {
             if (string.IsNullOrEmpty(containerName) ||
@@ -669,6 +706,7 @@ namespace com.mosso.cloudfiles
         /// <param name="storageItemName">The name of the storage object</param>
         /// <param name="requestHeaderFields">A dictionary containing the special headers and their values</param>
         /// <returns>An instance of StorageItem with the stream containing the bytes representing the desired storage object</returns>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public StorageItem GetStorageItem(string containerName, string storageItemName, Dictionary<RequestHeaderFields, string> requestHeaderFields)
         {
             if (string.IsNullOrEmpty(containerName) ||
@@ -709,6 +747,7 @@ namespace com.mosso.cloudfiles
         /// <param name="containerName">The name of the container that contains the storage object to retrieve</param>
         /// <param name="storageItemName">The name of the storage object to retrieve</param>
         /// <param name="localFileName">The file name to save the storage object into on disk</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public void GetStorageItem(string containerName, string storageItemName, string localFileName)
         {
             if (string.IsNullOrEmpty(containerName) ||
@@ -740,6 +779,7 @@ namespace com.mosso.cloudfiles
         /// <param name="storageItemName">The name of the storage object to retrieve</param>
         /// <param name="localFileName">The file name to save the storage object into on disk</param>
         /// <param name="requestHeaderFields">A dictionary containing the special headers and their values</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public void GetStorageItem(string containerName, string storageItemName, string localFileName, Dictionary<RequestHeaderFields, string> requestHeaderFields)
         {
             if (string.IsNullOrEmpty(containerName) ||
@@ -781,6 +821,7 @@ namespace com.mosso.cloudfiles
         /// <param name="containerName">The name of the container containing the storage object</param>
         /// <param name="storageItemName">The name of the storage object</param>
         /// <param name="metadata">A dictionary containiner key/value pairs representing the meta data for this storage object</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public void SetStorageItemMetaInformation(string containerName, string storageItemName, Dictionary<string, string> metadata)
         {
             if (string.IsNullOrEmpty(containerName) ||
@@ -815,6 +856,7 @@ namespace com.mosso.cloudfiles
         /// <param name="containerName">The name of the container that contains the storage object</param>
         /// <param name="storageItemName">The name of the storage object</param>
         /// <returns>An instance of StorageItem containing the byte size and meta information associated with the container</returns>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public StorageItemInformation GetStorageItemInformation(string containerName, string storageItemName)
         {
             if (string.IsNullOrEmpty(containerName) ||
@@ -859,7 +901,7 @@ namespace com.mosso.cloudfiles
                 var getPublicContainers = new GetPublicContainers(CdnManagementUrl, AuthToken);
                 var getPublicContainersResponse =
                     new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(new CloudFilesRequest(getPublicContainers));
-                List<string> containerList = getPublicContainersResponse.ContentBody;
+                var containerList = getPublicContainersResponse.ContentBody;
                 getPublicContainersResponse.Dispose();
 
                 return containerList;
@@ -885,6 +927,7 @@ namespace com.mosso.cloudfiles
         /// </example>
         /// <param name="containerName">The name of the container to mark public</param>
         /// <returns>A string representing the URL of the public container or null</returns>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public Uri MarkContainerAsPublic(string containerName)
         {
             if (string.IsNullOrEmpty(containerName))
@@ -917,6 +960,7 @@ namespace com.mosso.cloudfiles
         /// </code>
         /// </example>
         /// <param name="containerName">The name of the container to mark public</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public void MarkContainerAsPrivate(string containerName)
         {
             if (string.IsNullOrEmpty(containerName))
@@ -951,6 +995,7 @@ namespace com.mosso.cloudfiles
         /// </example>
         /// <param name="containerName">The name of the container to query about</param>
         /// <returns>An instance of Container with appropriate CDN information or null</returns>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public Container GetPublicContainerInformation(string containerName)
         {
             if (string.IsNullOrEmpty(containerName))

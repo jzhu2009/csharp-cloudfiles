@@ -85,7 +85,7 @@ namespace com.mosso.cloudfiles.domain.request
 
             if (metadata != null)
             {
-                foreach (string s in metadata.Keys)
+                foreach (var s in metadata.Keys)
                 {
                     Headers.Add(Constants.META_DATA_HEADER + s, metadata[s]);
                 }
