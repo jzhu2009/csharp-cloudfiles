@@ -97,13 +97,13 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.SetPublicContainerDetai
         [Test]
         public void should_have_an_auth_token_in_the_headers()
         {
-            Assert.That(setPublicContainerDetails.Headers[Constants.X_AUTH_TOKEN], Is.EqualTo("authtoken"));
+            Assert.That(setPublicContainerDetails.Headers[cloudfiles.Constants.X_AUTH_TOKEN], Is.EqualTo("authtoken"));
         }
 
         [Test]
         public void should_have_cdn_enabled_in_the_headers()
         {
-            Assert.That(setPublicContainerDetails.Headers[Constants.X_CDN_ENABLED], Is.EqualTo("True"));
+            Assert.That(setPublicContainerDetails.Headers[cloudfiles.Constants.X_CDN_ENABLED], Is.EqualTo("True"));
         }
     }
 }

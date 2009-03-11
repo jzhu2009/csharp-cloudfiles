@@ -119,7 +119,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetStorageItemInformati
         [Test]
         public void should_have_an_storage_token_in_the_headers()
         {
-            Assert.That(getStorageItemInformation.Headers[Constants.X_STORAGE_TOKEN], Is.EqualTo("storagetoken"));
+            Assert.That(getStorageItemInformation.Headers[cloudfiles.Constants.X_STORAGE_TOKEN], Is.EqualTo("storagetoken"));
         }
     }
 

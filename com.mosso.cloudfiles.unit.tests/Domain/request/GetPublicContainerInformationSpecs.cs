@@ -97,7 +97,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInfor
         [Test]
         public void should_have_an_auth_token_in_the_headers()
         {
-            Assert.That(getPublicContainerInformation.Headers[Constants.X_AUTH_TOKEN], Is.EqualTo("storagetoken"));
+            Assert.That(getPublicContainerInformation.Headers[cloudfiles.Constants.X_AUTH_TOKEN], Is.EqualTo("storagetoken"));
         }
     }
 }

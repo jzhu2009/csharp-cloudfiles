@@ -119,7 +119,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.DeleteStorageItemSpecs
         [Test]
         public void should_have_a_storage_token_in_the_headers()
         {
-            Assert.That(deleteStorageItem.Headers[Constants.X_STORAGE_TOKEN], Is.EqualTo("storagetoken"));
+            Assert.That(deleteStorageItem.Headers[cloudfiles.Constants.X_STORAGE_TOKEN], Is.EqualTo("storagetoken"));
         }
     }
 }

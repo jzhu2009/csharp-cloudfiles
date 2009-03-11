@@ -1,6 +1,5 @@
 using System;
 using com.mosso.cloudfiles.domain;
-using com.mosso.cloudfiles;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
@@ -22,20 +21,13 @@ namespace com.mosso.cloudfiles.unit.tests.Services.ConnectionSpecs
 
     internal class MockConnection : Connection
     {
-        private bool authenticationSuccessful;
+        public MockConnection(UserCredentials userCredentials) : base(userCredentials){}
 
-        public MockConnection(UserCredentials userCredentials) : base(userCredentials)
-        {
-        }
-
-        public bool AuthenticationSuccessful
-        {
-            get { return authenticationSuccessful; }
-        }
+        public bool AuthenticationSuccessful { get; private set; }
 
         protected override void VerifyAuthentication()
         {
-            authenticationSuccessful = true;
+            AuthenticationSuccessful = true;
         }
     }
 }

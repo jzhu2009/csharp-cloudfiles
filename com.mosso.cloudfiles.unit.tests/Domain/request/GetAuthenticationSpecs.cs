@@ -44,13 +44,13 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetAuthenticationSpecs
         [Test]
         public void should_have_a_username_in_the_headers()
         {
-            Assert.That(getAuthentication.Headers[Constants.X_AUTH_USER], Is.EqualTo("username"));
+            Assert.That(getAuthentication.Headers[cloudfiles.Constants.X_AUTH_USER], Is.EqualTo("username"));
         }
 
         [Test]
         public void should_have_api_key_in_the_headers()
         {
-            Assert.That(getAuthentication.Headers[Constants.X_AUTH_KEY], Is.EqualTo("apikey"));
+            Assert.That(getAuthentication.Headers[cloudfiles.Constants.X_AUTH_KEY], Is.EqualTo("apikey"));
         }
     }
 
@@ -81,13 +81,13 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetAuthenticationSpecs
         [Test]
         public void should_have_a_username_in_the_headers()
         {
-            Assert.That(getAuthentication.Headers[Constants.X_AUTH_USER], Is.EqualTo("username"));
+            Assert.That(getAuthentication.Headers[cloudfiles.Constants.X_AUTH_USER], Is.EqualTo("username"));
         }
 
         [Test]
         public void should_have_api_key_in_the_headers()
         {
-            Assert.That(getAuthentication.Headers[Constants.X_AUTH_KEY], Is.EqualTo("apikey"));
+            Assert.That(getAuthentication.Headers[cloudfiles.Constants.X_AUTH_KEY], Is.EqualTo("apikey"));
         }
     }
 
@@ -102,8 +102,8 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetAuthenticationSpecs
             GetAuthentication getAuthentication = new GetAuthentication(userCredentials);
 
             Assert.That(getAuthentication.Uri.AbsoluteUri, Is.EqualTo("http://tempuri//v%201/account%20name/auth"));
-            Assert.That(getAuthentication.Headers[Constants.X_AUTH_USER], Is.EqualTo("user%20name"));
-            Assert.That(getAuthentication.Headers[Constants.X_AUTH_KEY], Is.EqualTo("pass%20word"));
+            Assert.That(getAuthentication.Headers[cloudfiles.Constants.X_AUTH_USER], Is.EqualTo("user%20name"));
+            Assert.That(getAuthentication.Headers[cloudfiles.Constants.X_AUTH_KEY], Is.EqualTo("pass%20word"));
         }
     }
 }

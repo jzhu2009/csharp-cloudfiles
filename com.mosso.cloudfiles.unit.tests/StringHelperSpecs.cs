@@ -33,4 +33,14 @@ namespace com.mosso.cloudfiles.unit.tests.StringHelperSpecs
             Assert.That(false.Capitalize(), Is.EqualTo("False"));
         }
     }
+
+    [TestFixture]
+    public class when_encoding_a_container_name_or_storage_item_for_a_url
+    {
+        [Test]
+        public void should_replace_plus_signs_with_percent_two_b()
+        {
+            Assert.That("this+is+my+example+test".Encode(), Is.EqualTo("this%2bis%2bmy%2bexample%2btest"));
+        }
+    }
 }

@@ -30,8 +30,8 @@ namespace com.mosso.cloudfiles.unit.tests
                 new ResponseFactory<CloudFilesResponse>().Create(
                     new CloudFilesRequest(request));
 
-            storageUrl = response.Headers[Constants.X_STORAGE_URL];
-            storageToken = response.Headers[Constants.X_STORAGE_TOKEN];
+            storageUrl = response.Headers[cloudfiles.Constants.X_STORAGE_URL];
+            storageToken = response.Headers[cloudfiles.Constants.X_STORAGE_TOKEN];
             Assert.That(storageToken.Length, Is.EqualTo(32));
             SetUp();
         }
