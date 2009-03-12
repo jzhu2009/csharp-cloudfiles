@@ -91,8 +91,8 @@ namespace com.mosso.cloudfiles.domain.request
             if (stream.Position == stream.Length)
                 stream.Seek(0, 0);
 
-            Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(authToken));
-            Uri = new Uri(storageUrl + "/" + containerName.Encode() + "/" + remoteStorageItemName.Encode());
+            Headers.Add(Constants.X_AUTH_TOKEN, HttpUtility.UrlEncode(authToken));
+            Uri = new Uri(storageUrl + "/" + containerName.Encode() + "/" + remoteStorageItemName.StripSlashPrefix().Encode());
             Method = "PUT";
         }
 
@@ -139,8 +139,8 @@ namespace com.mosso.cloudfiles.domain.request
                 }
             }
 
-            Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(authToken));
-            Uri = new Uri(storageUrl + "/" + containerName.Encode() + "/" + remoteStorageItemName.Encode());
+            Headers.Add(Constants.X_AUTH_TOKEN, HttpUtility.UrlEncode(authToken));
+            Uri = new Uri(storageUrl + "/" + containerName.Encode() + "/" + remoteStorageItemName.StripSlashPrefix().Encode());
             Method = "PUT";
         }
 
@@ -148,7 +148,7 @@ namespace com.mosso.cloudfiles.domain.request
 
         private string CleanUpFilePath(string filePath)
         {
-            return filePath.Replace(@"file:\\\", "");
+            return filePath.StripSlashPrefix().Replace(@"file:\\\", "");
         }
 
         private void ReadStreamIntoRequest(Stream httpWebRequestFileStream)

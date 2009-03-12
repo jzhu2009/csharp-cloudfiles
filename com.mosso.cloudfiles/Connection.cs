@@ -68,7 +68,6 @@ namespace com.mosso.cloudfiles
             var getAuthenticationResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(getAuthentication, UserCredentials.ProxyCredentials));
             if (getAuthenticationResponse.Status == HttpStatusCode.NoContent)
             {
-                AuthToken = getAuthenticationResponse.Headers[Constants.X_STORAGE_TOKEN];
                 StorageUrl = getAuthenticationResponse.Headers[Constants.X_STORAGE_URL];
                 AuthToken = getAuthenticationResponse.Headers[Constants.X_AUTH_TOKEN];
                 CdnManagementUrl = getAuthenticationResponse.Headers[Constants.X_CDN_MANAGEMENT_URL];
@@ -305,7 +304,7 @@ namespace com.mosso.cloudfiles
         /// <returns>An instance of List, containing the names of the storage objects in the give container</returns>
         public void MakePath(string containerName, string path)
         {
-            var directories = path.Split('/');
+            var directories = path.StripSlashPrefix().Split('/');
             var directory = "";
             var firstItem = true;
             foreach(var item in directories)

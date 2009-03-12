@@ -92,7 +92,7 @@ namespace com.mosso.cloudfiles.domain.request
                     storageItemName.Encode()));
 
             Method = "GET";
-            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, authToken);
+            AddAuthTokenToHeaders(authToken);
             
             AddRequestFieldHeadersToRequestHeaders(requestHeaderFields);
         }

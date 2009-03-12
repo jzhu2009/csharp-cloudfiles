@@ -30,7 +30,7 @@ namespace com.mosso.cloudfiles.domain.request
             Method = "PUT";
 
             Uri = new Uri(cdnManagementUrl + "/" + containerName.Encode());
-            AddStorageOrAuthTokenToHeaders(Constants.X_AUTH_TOKEN, authToken);
+            AddAuthTokenToHeaders(authToken);
         }
     }
 }

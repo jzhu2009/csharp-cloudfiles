@@ -31,7 +31,7 @@ namespace com.mosso.cloudfiles.unit.tests
                     new CloudFilesRequest(request));
 
             storageUrl = response.Headers[cloudfiles.Constants.X_STORAGE_URL];
-            authToken = response.Headers[cloudfiles.Constants.X_STORAGE_TOKEN];
+            authToken = response.Headers[cloudfiles.Constants.X_AUTH_TOKEN];
             Assert.That(authToken.Length, Is.EqualTo(32));
             SetUp();
         }

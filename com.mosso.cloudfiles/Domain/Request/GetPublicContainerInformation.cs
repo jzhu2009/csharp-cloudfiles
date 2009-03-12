@@ -17,7 +17,7 @@ namespace com.mosso.cloudfiles.domain.request
 
             Uri = new Uri(cdnManagementUrl + "/" + containerName.Encode() + "?enabled_only=true");
             Method = "HEAD";
-            AddStorageOrAuthTokenToHeaders(Constants.X_AUTH_TOKEN, authToken);
+            AddAuthTokenToHeaders(authToken);
         }
         
     }

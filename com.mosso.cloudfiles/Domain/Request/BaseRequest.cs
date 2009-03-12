@@ -50,9 +50,9 @@ namespace com.mosso.cloudfiles.domain.request
         /// </summary>
         public string Method { get; protected set; }
 
-        protected void AddStorageOrAuthTokenToHeaders(string headerKey, string value)
+        protected void AddAuthTokenToHeaders(string value)
         {
-            Headers.Add(headerKey, HttpUtility.UrlEncode(value));
+            Headers.Add(Constants.X_AUTH_TOKEN, HttpUtility.UrlEncode(value));
         }
     }
 }

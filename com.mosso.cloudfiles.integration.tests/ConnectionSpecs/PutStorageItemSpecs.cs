@@ -38,16 +38,21 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.PutStorageItemS
             {
                 connection.CreateContainer(Constants.CONTAINER_NAME);
 
-                string executingPath = Assembly.GetExecutingAssembly().CodeBase.Replace(@"com.mosso.cloudfiles.integration.tests.DLL", "") + Constants.StorageItemName;
+                var executingPath = Assembly.GetExecutingAssembly().CodeBase.Replace(@"com.mosso.cloudfiles.integration.tests.DLL", "") + Constants.StorageItemName;
                 connection.PutStorageItem(Constants.CONTAINER_NAME, executingPath);
 
-                List<string> containerList = connection.GetContainerItemList(Constants.CONTAINER_NAME);
+                var containerList = connection.GetContainerItemList(Constants.CONTAINER_NAME);
                 Assert.That(containerList.Contains(Constants.StorageItemName), Is.True);
             }
             finally
             {
-                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
-                connection.DeleteContainer(Constants.CONTAINER_NAME);
+                var storageItems = connection.GetContainerItemList(Constants.CONTAINER_NAME);
+
+                if(storageItems.Contains(Constants.StorageItemName))
+                    connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+
+                if (connection.GetContainerInformation(Constants.CONTAINER_NAME) != null)
+                    connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
 
@@ -61,7 +66,7 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.PutStorageItemS
                 connection.CreateContainer(Constants.CONTAINER_NAME);
                 connection.PutStorageItem(Constants.CONTAINER_NAME, Path.GetFullPath(Constants.StorageItemName));
 
-                List<string> containerList = connection.GetContainerItemList(Constants.CONTAINER_NAME);
+                var containerList = connection.GetContainerItemList(Constants.CONTAINER_NAME);
                 Assert.That(containerList.Contains(Constants.StorageItemName), Is.True);
             }
             finally

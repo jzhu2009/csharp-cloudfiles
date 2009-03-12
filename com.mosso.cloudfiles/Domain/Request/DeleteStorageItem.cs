@@ -35,12 +35,10 @@ namespace com.mosso.cloudfiles.domain.request
             if (!ContainerNameValidator.Validate(containerName)) throw new ContainerNameException();
             if (!ObjectNameValidator.Validate(storageItemName)) throw new StorageItemNameException();
 
-
-            Uri =
-                new Uri(storageUrl + "/" + containerName.Encode() + "/" + storageItemName.Encode());
+            Uri = new Uri(storageUrl + "/" + containerName.Encode() + "/" + storageItemName.StripSlashPrefix().Encode());
             Method = "DELETE";
 
-            Headers.Add("X-Storage-Token", HttpUtility.UrlEncode(authToken));
+            AddAuthTokenToHeaders(authToken);
         }
     }
 }

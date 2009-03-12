@@ -43,4 +43,16 @@ namespace com.mosso.cloudfiles.unit.tests.StringHelperSpecs
             Assert.That("this+is+my+example+test".Encode(), Is.EqualTo("this%2bis%2bmy%2bexample%2btest"));
         }
     }
+
+    [TestFixture]
+    public class when_stripping_a_slash_prefix_from_a_string
+    {
+        [Test]
+        public void should_remove_the_slash_prefix()
+        {
+            Assert.That("/dir1/dir2/dir3/file.txt".StripSlashPrefix(), Is.EqualTo("dir1/dir2/dir3/file.txt"));
+            Assert.That("dira/dirb/dirc/file.txt".StripSlashPrefix(), Is.EqualTo("dira/dirb/dirc/file.txt"));
+            Assert.That("/abcdefg".StripSlashPrefix(), Is.EqualTo("abcdefg"));
+        }
+    }
 }

@@ -26,5 +26,10 @@ namespace com.mosso.cloudfiles
 
             return HttpUtility.UrlEncode(stringToEncode).Replace("+", "%20");
         }
+
+        public static string StripSlashPrefix(this string path)
+        {
+            return path[0] == '/' ? path.Substring(1, path.Length - 1) : path;
+        }
     }
 }

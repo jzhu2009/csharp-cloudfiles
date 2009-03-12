@@ -16,7 +16,7 @@ namespace com.mosso.cloudfiles.domain.request
 
             Method = "GET";
 
-            AddStorageOrAuthTokenToHeaders(Constants.X_AUTH_TOKEN, authToken);
+            AddAuthTokenToHeaders(authToken);
             Uri = new Uri(cdnManagementUrl + "?enabled_only=true");
         }
     }

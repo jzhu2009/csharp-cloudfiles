@@ -97,7 +97,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetContainerInformation
         [Test]
         public void should_have_a_auth_token_in_the_headers()
         {
-            Assert.That(GetContainerInformationSerialized.Headers[cloudfiles.Constants.X_STORAGE_TOKEN], Is.EqualTo("authtoken"));
+            Assert.That(GetContainerInformationSerialized.Headers[cloudfiles.Constants.X_AUTH_TOKEN], Is.EqualTo("authtoken"));
         }
     }
 
@@ -193,7 +193,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetContainerInformation
         [Test]
         public void should_have_a_auth_token_in_the_headers()
         {
-            Assert.That(GetContainerInformationSerialized.Headers[cloudfiles.Constants.X_STORAGE_TOKEN], Is.EqualTo("authtoken"));
+            Assert.That(GetContainerInformationSerialized.Headers[cloudfiles.Constants.X_AUTH_TOKEN], Is.EqualTo("authtoken"));
         }
     }
 

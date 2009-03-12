@@ -31,7 +31,7 @@ namespace com.mosso.cloudfiles.domain.request
 
             Uri = new Uri(storageUrl + "/" + containerName.Encode());
             Method = "HEAD";
-            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, authToken);
+            AddAuthTokenToHeaders(authToken);
         }
     }
 
@@ -52,7 +52,7 @@ namespace com.mosso.cloudfiles.domain.request
 
             Uri = new Uri(storageUrl + "/" + containerName.Encode() + "?format=" + EnumHelper.GetDescription(format));
             Method = "GET";
-            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, authToken);
+            AddAuthTokenToHeaders(authToken);
         }
     }
 }

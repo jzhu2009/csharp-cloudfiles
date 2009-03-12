@@ -37,7 +37,7 @@ namespace com.mosso.cloudfiles.domain.request
 
             Uri = new Uri(storageUrl + "/" + containerName.Encode() + "/" + storageItemName.Encode());
             Method = "HEAD";
-            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, authToken);
+            AddAuthTokenToHeaders(authToken);
         }
     }
 }

@@ -25,7 +25,6 @@ namespace com.mosso.cloudfiles
         public const string X_ACCOUNT_CONTAINER_COUNT = "X-Account-Container-Count";
         public const string X_ACCOUNT_BYTES_USED = "X-Account-Bytes-Used";
         public const string X_STORAGE_URL = "X-Storage-Url";
-        public const string X_STORAGE_TOKEN = "X-Storage-Token";
         public const string X_CONTAINER_STORAGE_OBJECT_COUNT = "X-Container-Object-Count";
         public const string X_CONTAINER_BYTES_USED = "X-Container-Bytes-Used";
         public const string ETAG = "ETag";
