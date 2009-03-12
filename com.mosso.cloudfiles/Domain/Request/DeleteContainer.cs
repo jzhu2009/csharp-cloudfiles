@@ -17,14 +17,14 @@ namespace com.mosso.cloudfiles.domain.request
         /// </summary>
         /// <param name="storageUrl">the customer unique url to interact with cloudfiles</param>
         /// <param name="containerName">the name of the container where the storage item is located</param>
-        /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
+        /// <param name="authToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         /// <exception cref="ContainerNameException">Thrown when the container name is invalid</exception>
         /// <exception cref="StorageItemNameException">Thrown when the object name is invalid</exception>
-        public DeleteContainer(string storageUrl, string storageToken, string containerName)
+        public DeleteContainer(string storageUrl, string authToken, string containerName)
         {
             if (string.IsNullOrEmpty(storageUrl)
-                || string.IsNullOrEmpty(storageToken)
+                || string.IsNullOrEmpty(authToken)
                 || string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
@@ -34,7 +34,7 @@ namespace com.mosso.cloudfiles.domain.request
             Uri = new Uri(storageUrl + "/" + containerName.Encode());
             Method = "DELETE";
 
-            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, storageToken);
+            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, authToken);
         }
     }
 }

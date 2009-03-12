@@ -12,7 +12,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.DeleteContainerSpecs
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new DeleteContainer(null, "storagetoken", "containername");
+            new DeleteContainer(null, "authtoken", "containername");
         }
     }
 
@@ -23,12 +23,12 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.DeleteContainerSpecs
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new DeleteContainer("", "storagetoken", "containername");
+            new DeleteContainer("", "authtoken", "containername");
         }
     }
 
     [TestFixture]
-    public class when_deleting_a_container_and_storage_token_is_null
+    public class when_deleting_a_container_and_auth_token_is_null
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -39,7 +39,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.DeleteContainerSpecs
     }
 
     [TestFixture]
-    public class when_deleting_a_container_and_storage_token_is_emptry_string
+    public class when_deleting_a_container_and_auth_token_is_emptry_string
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -56,7 +56,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.DeleteContainerSpecs
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new DeleteContainer("http://storageurl", "storagetoken", null);
+            new DeleteContainer("http://storageurl", "authtoken", null);
         }
     }
 
@@ -67,7 +67,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.DeleteContainerSpecs
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new DeleteContainer("http://storageUrl", "storagetoken", "");
+            new DeleteContainer("http://storageUrl", "authtoken", "");
         }
     }
 
@@ -79,7 +79,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.DeleteContainerSpecs
         [SetUp]
         public void setup()
         {
-            deleteContainer = new DeleteContainer("http://storageurl", "storagetoken", "containername");
+            deleteContainer = new DeleteContainer("http://storageurl", "authtoken", "containername");
         }
 
         [Test]
@@ -95,9 +95,9 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.DeleteContainerSpecs
         }
 
         [Test]
-        public void should_have_a_storage_token_in_the_headers()
+        public void should_have_a_auth_token_in_the_headers()
         {
-            Assert.That(deleteContainer.Headers[cloudfiles.Constants.X_STORAGE_TOKEN], Is.EqualTo("storagetoken"));
+            Assert.That(deleteContainer.Headers[cloudfiles.Constants.X_STORAGE_TOKEN], Is.EqualTo("authtoken"));
         }
     }
 }

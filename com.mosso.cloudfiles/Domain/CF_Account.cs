@@ -39,9 +39,9 @@ namespace com.mosso.cloudfiles.domain
             get { return new Uri(connection.StorageUrl); }
         }
 
-        public string StorageToken
+        public string AuthToken
         {
-            get { return connection.StorageToken; }
+            get { return connection.AuthToken; }
         }
 
         public int ContainerCount
@@ -62,10 +62,7 @@ namespace com.mosso.cloudfiles.domain
             }
         }
 
-        public string AuthToken { get; set; }
-
         public Uri CDNManagementUrl { get; set; }
-
         public UserCredentials UserCredentials { get; set; }
 
         public string JSON

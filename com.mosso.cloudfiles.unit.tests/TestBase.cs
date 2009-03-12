@@ -10,7 +10,7 @@ namespace com.mosso.cloudfiles.unit.tests
     public class TestBase
     {
         protected string storageUrl;
-        protected string storageToken;
+        protected string authToken;
 
         [SetUp]
         public void SetUpBase()
@@ -31,8 +31,8 @@ namespace com.mosso.cloudfiles.unit.tests
                     new CloudFilesRequest(request));
 
             storageUrl = response.Headers[cloudfiles.Constants.X_STORAGE_URL];
-            storageToken = response.Headers[cloudfiles.Constants.X_STORAGE_TOKEN];
-            Assert.That(storageToken.Length, Is.EqualTo(32));
+            authToken = response.Headers[cloudfiles.Constants.X_STORAGE_TOKEN];
+            Assert.That(authToken.Length, Is.EqualTo(32));
             SetUp();
         }
 

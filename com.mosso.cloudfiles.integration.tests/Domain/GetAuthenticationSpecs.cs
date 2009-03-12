@@ -38,12 +38,12 @@ namespace com.mosso.cloudfiles.integration.tests.domain.AuthenticationRequestSpe
         }
 
         [Test]
-        public void Should_get_storage_token_when_authenticated_correctly()
+        public void Should_get_auth_token_when_authenticated_correctly()
         {
             var response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(request));
-            var storageToken = response.Headers[Constants.XStorageToken];
-            Assert.That(storageToken.Length, Is.GreaterThan(0));
-            Assert.That(storageToken.Length, Is.EqualTo(STORAGE_TOKEN.Length));
+            var authToken = response.Headers[Constants.XAuthToken];
+            Assert.That(authToken.Length, Is.GreaterThan(0));
+            Assert.That(authToken.Length, Is.EqualTo(STORAGE_TOKEN.Length));
         }
 
         [Test]

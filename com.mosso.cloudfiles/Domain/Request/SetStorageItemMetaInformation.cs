@@ -22,12 +22,12 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="containerName">the name of the container where the storage item is located</param>
         /// <param name="storageItemName">the name of the storage item to add meta information too</param>
         /// <param name="metadata">dictionary containing the meta tags on the storage item</param>
-        /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
+        /// <param name="authToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
         /// <exception cref="System.ArgumentNullException">Thrown when any of the arguments are null</exception>
-        public SetStorageItemMetaInformation(string storageUrl, string storageToken, string containerName, string storageItemName, Dictionary<string, string> metadata)
+        public SetStorageItemMetaInformation(string storageUrl, string authToken, string containerName, string storageItemName, Dictionary<string, string> metadata)
         {
             if (string.IsNullOrEmpty(storageUrl)
-                || string.IsNullOrEmpty(storageToken)
+                || string.IsNullOrEmpty(authToken)
                 || string.IsNullOrEmpty(containerName)
                 || string.IsNullOrEmpty(storageItemName))
                 throw new ArgumentNullException();
@@ -41,7 +41,7 @@ namespace com.mosso.cloudfiles.domain.request
             Uri = new Uri(storageUrl + "/" + containerName.Encode() + "/" + storageItemName.Encode());
             Method = "POST";
 
-            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, storageToken);
+            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, authToken);
 
             AttachMetadataToHeaders();
         }

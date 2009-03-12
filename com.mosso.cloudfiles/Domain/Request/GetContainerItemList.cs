@@ -20,13 +20,13 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="storageUrl">the customer unique url to interact with cloudfiles</param>
         /// <param name="containerName">the name of the container where the storage item is located</param>
         /// <param name="requestParameters">dictionary of parameter filters to place on the request url</param>
-        /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
+        /// <param name="authToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         /// <exception cref="ContainerNameException">Thrown when the container name is invalid</exception>
-        public GetContainerItemList(string storageUrl, string storageToken, string containerName, Dictionary<GetItemListParameters, string> requestParameters)
+        public GetContainerItemList(string storageUrl, string authToken, string containerName, Dictionary<GetItemListParameters, string> requestParameters)
         {
             if (string.IsNullOrEmpty(storageUrl)
-                || string.IsNullOrEmpty(storageToken)
+                || string.IsNullOrEmpty(authToken)
                 || string.IsNullOrEmpty(containerName))
                 throw new ArgumentNullException();
 
@@ -51,7 +51,7 @@ namespace com.mosso.cloudfiles.domain.request
             }
             Uri = new Uri(storageUrl + "/" + containerName.Encode() + stringBuilder);
             Method = "GET";
-            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, storageToken);
+            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, authToken);
         }
 
         /// <summary>
@@ -59,9 +59,9 @@ namespace com.mosso.cloudfiles.domain.request
         /// </summary>
         /// <param name="storageUrl">the customer unique url to interact with cloudfiles</param>
         /// <param name="containerName">the name of the container where the storage item is located</param>
-        /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
-        public GetContainerItemList(string storageUrl, string storageToken, string containerName)
-            : this(storageUrl, storageToken, containerName, null)
+        /// <param name="authToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
+        public GetContainerItemList(string storageUrl, string authToken, string containerName)
+            : this(storageUrl, authToken, containerName, null)
         {
         }
     }

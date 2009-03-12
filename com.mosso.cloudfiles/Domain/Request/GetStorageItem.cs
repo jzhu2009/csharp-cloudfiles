@@ -56,11 +56,11 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="storageUrl">the customer unique url to interact with cloudfiles</param>
         /// <param name="containerName">the name of the container where the storage item is located</param>
         /// <param name="storageItemName">the name of the storage item to add meta information too</param>
-        /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
+        /// <param name="authToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         /// <exception cref="ContainerNameException">Thrown when the container name length exceeds the maximum container length allowed</exception>
-        public GetStorageItem(string storageUrl, string containerName, string storageItemName, string storageToken) :
-            this(storageUrl, containerName, storageItemName, storageToken, null)
+        public GetStorageItem(string storageUrl, string containerName, string storageItemName, string authToken) :
+            this(storageUrl, authToken, containerName, storageItemName, null)
         {
         }
 
@@ -70,14 +70,14 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="storageUrl">the customer unique url to interact with cloudfiles</param>
         /// <param name="containerName">the name of the container where the storage item is located</param>
         /// <param name="storageItemName">the name of the storage item to add meta information too</param>
-        /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
+        /// <param name="authToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
         /// <param name="requestHeaderFields">dictionary of request header fields to apply to the request</param>
         /// <exception cref="ContainerNameException">Thrown when the container name is invalid</exception>
         /// <exception cref="StorageItemNameException">Thrown when the object name is invalid</exception>
-        public GetStorageItem(string storageUrl, string containerName, string storageItemName, string storageToken, Dictionary<RequestHeaderFields, string> requestHeaderFields)
+        public GetStorageItem(string storageUrl, string authToken, string containerName, string storageItemName, Dictionary<RequestHeaderFields, string> requestHeaderFields)
         {
             if (string.IsNullOrEmpty(storageUrl)
-                || string.IsNullOrEmpty(storageToken)
+                || string.IsNullOrEmpty(authToken)
                 || string.IsNullOrEmpty(containerName)
                 || string.IsNullOrEmpty(storageItemName))
                 throw new ArgumentNullException();
@@ -92,7 +92,7 @@ namespace com.mosso.cloudfiles.domain.request
                     storageItemName.Encode()));
 
             Method = "GET";
-            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, storageToken);
+            AddStorageOrAuthTokenToHeaders(Constants.X_STORAGE_TOKEN, authToken);
             
             AddRequestFieldHeadersToRequestHeaders(requestHeaderFields);
         }

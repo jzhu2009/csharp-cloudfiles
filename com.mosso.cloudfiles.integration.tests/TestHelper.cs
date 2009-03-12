@@ -15,20 +15,20 @@ namespace com.mosso.cloudfiles.integration.tests
 {
     public class TestHelper : IDisposable
     {
-        private readonly string storageToken;
+        private readonly string authToken;
         private readonly string storageUrl;
         private readonly string containerName;
 
-        public TestHelper(string storageToken, string storageUrl, string containerName)
+        public TestHelper(string authToken, string storageUrl, string containerName)
         {
-            this.storageToken = storageToken;
+            this.authToken = authToken;
             this.storageUrl = storageUrl;
             this.containerName = containerName;
 
             CreateContainer();
         }
 
-        public TestHelper(string storageToken, string storageUrl) : this(storageToken, storageUrl, Constants.CONTAINER_NAME)
+        public TestHelper(string authToken, string storageUrl) : this(authToken, storageUrl, Constants.CONTAINER_NAME)
         {} 
 
         public void DeleteItemFromContainer()
@@ -38,7 +38,7 @@ namespace com.mosso.cloudfiles.integration.tests
 
         public void DeleteItemFromContainer(string storageItemName)
         {
-            var deleteStorageItem = new DeleteStorageItem(storageUrl, containerName, storageItemName, storageToken);
+            var deleteStorageItem = new DeleteStorageItem(storageUrl, authToken, containerName, storageItemName);
             var deleteStorageItemResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(deleteStorageItem));
             Assert.That(deleteStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.NoContent));
         }
@@ -46,7 +46,7 @@ namespace com.mosso.cloudfiles.integration.tests
         public void AddMetadataToItem(string storageItemName)
         {
             var metadata = new Dictionary<string, string> {{"Test", "test"}, {"Test2", "test2"}};
-            var setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, storageToken, containerName, storageItemName, metadata);
+            var setStorageItemMetaInformation = new SetStorageItemMetaInformation(storageUrl, authToken, containerName, storageItemName, metadata);
             var postStorageItemResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(setStorageItemMetaInformation));
             Assert.That(postStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.Accepted));
             Assert.That(postStorageItemResponse.Headers["Content-Type"].Contains("text/plain"), Is.True);
@@ -60,7 +60,7 @@ namespace com.mosso.cloudfiles.integration.tests
 
         public void PutItemInContainer(string storageItemName, string remoteName)
         {
-            var putStorageItem = new PutStorageItem(storageUrl, containerName, remoteName, storageItemName, storageToken);
+            var putStorageItem = new PutStorageItem(storageUrl, authToken, containerName, remoteName, storageItemName);
             var putStorageItemResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(putStorageItem));
             Assert.That(putStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.Created));
         }
@@ -77,14 +77,14 @@ namespace com.mosso.cloudfiles.integration.tests
 
         private void CreateContainer()
         {
-            var createContainer = new CreateContainer(storageUrl, storageToken, containerName);
+            var createContainer = new CreateContainer(storageUrl, authToken, containerName);
             var putContainerResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(createContainer));
             Assert.That(putContainerResponse.Status, Is.EqualTo(HttpStatusCode.Created));
         }
 
         private void DeleteContainer()
         {
-            var deleteContainer = new DeleteContainer(storageUrl, storageToken, containerName);
+            var deleteContainer = new DeleteContainer(storageUrl, authToken, containerName);
             var deleteContainerResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(deleteContainer));
             Assert.That(deleteContainerResponse.Status, Is.EqualTo(HttpStatusCode.NoContent));
         }

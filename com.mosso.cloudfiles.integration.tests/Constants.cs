@@ -4,7 +4,6 @@ namespace com.mosso.cloudfiles.integration.tests
     {
         public const string XAuthUser = "X-Auth-User";
         public const string XAuthKey = "X-Auth-Key";
-        public const string XStorageToken = "X-Storage-Token";
         public const string XStorageUrl = "X-Storage-Url";
         public const string XContainerObjectCount = "X-Container-Object-Count";
         public const string XContainerBytesUsed = "X-Container-Bytes-Used";

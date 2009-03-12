@@ -33,8 +33,8 @@ namespace com.mosso.cloudfiles
         string GetContainerInformationJson(string containerName);
         XmlDocument GetContainerInformationXml(string containerName);
         
-        void PutStorageItem(string containerName, string storageItemName, Dictionary<string, string> metadata);
-        void PutStorageItem(string containerName, string storageItemName);
+        void PutStorageItem(string containerName, string localFilePath, Dictionary<string, string> metadata);
+        void PutStorageItem(string containerName, string localFilePath);
         void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName);
         void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName, Dictionary<string, string> metadata);
         
@@ -54,7 +54,6 @@ namespace com.mosso.cloudfiles
         void MakePath(string containerName, string path);
 
         IAccount Account { get; }
-        string StorageToken { get; }
         string StorageUrl { get; }
         string CdnManagementUrl { get; }
         string AuthToken { get; }

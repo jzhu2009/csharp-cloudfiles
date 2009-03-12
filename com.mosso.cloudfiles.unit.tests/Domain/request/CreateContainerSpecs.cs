@@ -12,7 +12,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.CreateContainerSpecs
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new CreateContainer(null, "storagetoken", "containername");        
+            new CreateContainer(null, "authtoken", "containername");        
         }
     }
 
@@ -23,12 +23,12 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.CreateContainerSpecs
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new CreateContainer("", "storagetoken", "containername");
+            new CreateContainer("", "authtoken", "containername");
         }
     }
 
     [TestFixture]
-    public class when_creating_a_container_and_storage_token_is_null
+    public class when_creating_a_container_and_auth_token_is_null
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -39,7 +39,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.CreateContainerSpecs
     }
 
     [TestFixture]
-    public class when_creating_a_container_and_storage_token_is_emptry_string
+    public class when_creating_a_container_and_auth_token_is_emptry_string
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -56,7 +56,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.CreateContainerSpecs
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new CreateContainer("http://storageurl", "storagetoken", null);
+            new CreateContainer("http://storageurl", "authtoken", null);
         }
     }
 
@@ -67,7 +67,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.CreateContainerSpecs
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new CreateContainer("http://storageUrl", "storagetoken", "");
+            new CreateContainer("http://storageUrl", "authtoken", "");
         }
     }
 
@@ -79,7 +79,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.CreateContainerSpecs
         [SetUp]
         public void setup()
         {
-            createContainer = new CreateContainer("http://storageurl", "storagetoken", "containername");    
+            createContainer = new CreateContainer("http://storageurl", "authtoken", "containername");    
         }
 
         [Test]
@@ -95,9 +95,9 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.CreateContainerSpecs
         }
 
         [Test]
-        public void should_have_a_storage_token_in_the_headers()
+        public void should_have_a_auth_token_in_the_headers()
         {
-            Assert.That(createContainer.Headers[cloudfiles.Constants.X_STORAGE_TOKEN], Is.EqualTo("storagetoken"));
+            Assert.That(createContainer.Headers[cloudfiles.Constants.X_STORAGE_TOKEN], Is.EqualTo("authtoken"));
         }
     }
 }

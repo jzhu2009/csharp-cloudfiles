@@ -12,7 +12,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetAccountInformationSp
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new GetAccountInformation(null, "storagetoken");
+            new GetAccountInformation(null, "authtoken");
         }
     }
 
@@ -23,12 +23,12 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetAccountInformationSp
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new GetAccountInformation("", "storagetoken");
+            new GetAccountInformation("", "authtoken");
         }
     }
 
     [TestFixture]
-    public class when_getting_account_information_and_storage_token_is_null
+    public class when_getting_account_information_and_auth_token_is_null
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -39,7 +39,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetAccountInformationSp
     }
 
     [TestFixture]
-    public class when_getting_account_information_and_storage_token_is_emptry_string
+    public class when_getting_account_information_and_auth_token_is_emptry_string
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -57,7 +57,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetAccountInformationSp
         [SetUp]
         public void setup()
         {
-            getAccountInformation = new GetAccountInformation("http://storageurl", "storagetoken");
+            getAccountInformation = new GetAccountInformation("http://storageurl", "authtoken");
         }
 
         [Test]
@@ -73,9 +73,9 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetAccountInformationSp
         }
 
         [Test]
-        public void should_have_a_storage_token_in_the_headers()
+        public void should_have_a_auth_token_in_the_headers()
         {
-            Assert.That(getAccountInformation.Headers[cloudfiles.Constants.X_STORAGE_TOKEN], Is.EqualTo("storagetoken"));
+            Assert.That(getAccountInformation.Headers[cloudfiles.Constants.X_STORAGE_TOKEN], Is.EqualTo("authtoken"));
         }
     }
 }

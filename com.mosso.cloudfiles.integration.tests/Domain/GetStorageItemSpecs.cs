@@ -16,13 +16,13 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
         public void Should_return_ok_if_the_object_exists()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 IResponseWithContentBody getStorageItemResponse = null;
                 try
                 {
                     testHelper.PutItemInContainer();
-                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken);
+                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, authToken);
 
                     getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
                     Assert.That(getStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.OK));
@@ -39,13 +39,13 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
         public void Should_return_ok_if_the_object_exists_and_valid_content_type_of_image_gif()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 IResponseWithContentBody getStorageItemResponse = null;
                 try
                 {
                     testHelper.PutItemInContainer(Constants.StorageItemNameGif);
-                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemNameGif, storageToken);
+                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemNameGif, authToken);
 
                     getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
                     Assert.That(getStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.OK));
@@ -63,13 +63,13 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
         public void Should_return_ok_if_the_object_exists_and_valid_content_type_of_image_jpeg()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 IResponseWithContentBody getStorageItemResponse = null;
                 try
                 {
                     testHelper.PutItemInContainer(Constants.StorageItemNameJpg);
-                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemNameJpg, storageToken);
+                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemNameJpg, authToken);
 
                     getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
                     Assert.That(getStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.OK));
@@ -87,9 +87,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
         public void Should_return_not_found_if_the_object_does_not_exist()
         {
             
-            using (new TestHelper(storageToken, storageUrl))
+            using (new TestHelper(authToken, storageUrl))
             {
-                var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME,Constants.StorageItemName, storageToken);
+                var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME,Constants.StorageItemName, authToken);
                 var exceptionWasThrown = false;
 
                 IResponseWithContentBody getStorageItemResponse = null;
@@ -126,13 +126,13 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
         public void Should_return_ok_if_the_item_exists()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 IResponseWithContentBody getStorageItemResponse = null;
                 try
                 {
                     testHelper.PutItemInContainer();
-                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken, requestHeaderFields);
+                    var getStorageItem = new GetStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, requestHeaderFields);
 
                     getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
                     Assert.That(getStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.OK));
@@ -162,13 +162,13 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
         public void Should_return_ok_if_the_item_exists()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 IResponseWithContentBody getStorageItemResponse = null;
                 try
                 {
                     testHelper.PutItemInContainer();
-                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken, requestHeaderFields);
+                    var getStorageItem = new GetStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, requestHeaderFields);
 
                     getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
                     Assert.That(getStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.OK));
@@ -197,14 +197,14 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
             requestHeaderFields = new Dictionary<RequestHeaderFields, string>();
             requestHeaderFields.Add(RequestHeaderFields.IfModifiedSince, futureDateTime.ToString());
 
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 IResponseWithContentBody getStorageItemResponse = null;
                 var exceptionWasThrown = false;
                 try
                 {
                     testHelper.PutItemInContainer();
-                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken, requestHeaderFields);
+                    var getStorageItem = new GetStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, requestHeaderFields);
                     getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
                 } 
                 catch(WebException ex)
@@ -231,13 +231,13 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
             requestHeaderFields = new Dictionary<RequestHeaderFields, string>();
             requestHeaderFields.Add(RequestHeaderFields.IfModifiedSince, pastDateTime.ToString());
 
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 IResponseWithContentBody getStorageItemResponse = null;
                 try
                 {
                     testHelper.PutItemInContainer();
-                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken, requestHeaderFields);
+                    var getStorageItem = new GetStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, requestHeaderFields);
 
                     getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
                     Assert.That(getStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.OK));
@@ -266,13 +266,13 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
             requestHeaderFields = new Dictionary<RequestHeaderFields, string>();
             requestHeaderFields.Add(RequestHeaderFields.IfUnmodifiedSince, futureDateTime.ToString());
 
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 IResponseWithContentBody getStorageItemResponse = null;
                 try
                 {
                     testHelper.PutItemInContainer();
-                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken, requestHeaderFields);
+                    var getStorageItem = new GetStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, requestHeaderFields);
                     getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
                     Assert.That(getStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.OK));
                 }
@@ -293,7 +293,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
             requestHeaderFields = new Dictionary<RequestHeaderFields, string>();
             requestHeaderFields.Add(RequestHeaderFields.IfUnmodifiedSince, pastDateTime.ToString());
 
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 IResponseWithContentBody getStorageItemResponse = null;
                 var exceptionWasThrown = false;
@@ -301,7 +301,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
                 {
                     testHelper.PutItemInContainer();
                     testHelper.PutItemInContainer();
-                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken, requestHeaderFields);
+                    var getStorageItem = new GetStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, requestHeaderFields);
 
                     getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
                     Assert.That(getStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.OK));
@@ -339,14 +339,14 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
         {
             
             requestHeaderFields.Add(RequestHeaderFields.Range, "0-5");
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 IResponseWithContentBody getStorageItemResponse = null;
                 try
                 {
                     testHelper.PutItemInContainer();
          
-                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken, requestHeaderFields);
+                    var getStorageItem = new GetStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, requestHeaderFields);
 
                     getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
                     Assert.That(getStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.PartialContent));
@@ -364,14 +364,14 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
         {
             
             requestHeaderFields.Add(RequestHeaderFields.Range, "10-");
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 IResponseWithContentBody getStorageItemResponse = null;
                 try
                 {
                     testHelper.PutItemInContainer();
 
-                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken, requestHeaderFields);
+                    var getStorageItem = new GetStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, requestHeaderFields);
 
                     getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
                     Assert.That(getStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.PartialContent));
@@ -389,14 +389,14 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemSpecs
         {
             
             requestHeaderFields.Add(RequestHeaderFields.Range, "-8");
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 IResponseWithContentBody getStorageItemResponse = null;
                 try
                 {
                     testHelper.PutItemInContainer();
 
-                    var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, storageToken, requestHeaderFields);
+                    var getStorageItem = new GetStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, requestHeaderFields);
 
                     getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem));
                     Assert.That(getStorageItemResponse.Status, Is.EqualTo(HttpStatusCode.PartialContent));

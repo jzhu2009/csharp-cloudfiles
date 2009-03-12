@@ -16,14 +16,14 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemInformatio
         public void Should_get_204_No_Content_when_item_exists()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 try
                 {
                     testHelper.PutItemInContainer(Constants.HeadStorageItemName);
                     testHelper.AddMetadataToItem(Constants.HeadStorageItemName);
 
-                    var getStorageItemInformation = new GetStorageItemInformation(storageUrl, storageToken, Constants.CONTAINER_NAME, Constants.HeadStorageItemName);
+                    var getStorageItemInformation = new GetStorageItemInformation(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.HeadStorageItemName);
                     var getStorageItemInformationResponse = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(getStorageItemInformation));
                     Assert.That(getStorageItemInformationResponse.Status, Is.EqualTo(HttpStatusCode.NoContent));
 
@@ -43,9 +43,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemInformatio
         {
             
 
-            using (new TestHelper(storageToken, storageUrl))
+            using (new TestHelper(authToken, storageUrl))
             {
-                var getStorageItemInformation = new GetStorageItemInformation(storageUrl, storageToken, Constants.CONTAINER_NAME, Constants.StorageItemName);
+                var getStorageItemInformation = new GetStorageItemInformation(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName);
                 try
                 {
                     new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(getStorageItemInformation));
@@ -87,7 +87,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.GetStorageItemInformatio
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
-        public void Should_throw_an_exception_when_the_storage_token_is_null()
+        public void Should_throw_an_exception_when_the_auth_token_is_null()
         {
             new GetStorageItemInformation("a", null, "a", "a");
         }

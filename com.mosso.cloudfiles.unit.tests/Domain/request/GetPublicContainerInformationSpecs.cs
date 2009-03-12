@@ -12,7 +12,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInfor
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new GetPublicContainerInformation(null, "storagetoken", "containername");
+            new GetPublicContainerInformation(null, "authtoken", "containername");
         }
     }
 
@@ -23,12 +23,12 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInfor
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new GetPublicContainerInformation("", "storagetoken", "containername");
+            new GetPublicContainerInformation("", "authtoken", "containername");
         }
     }
 
     [TestFixture]
-    public class when_getting_information_of_a_public_container_and_storage_token_is_null
+    public class when_getting_information_of_a_public_container_and_auth_token_is_null
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -39,7 +39,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInfor
     }
 
     [TestFixture]
-    public class when_getting_information_of_a_public_container_and_storage_token_is_emptry_string
+    public class when_getting_information_of_a_public_container_and_auth_token_is_emptry_string
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -56,7 +56,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInfor
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new GetPublicContainerInformation("http://storageurl", "storagetoken", null);
+            new GetPublicContainerInformation("http://storageurl", "authtoken", null);
         }
     }
 
@@ -67,7 +67,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInfor
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new GetPublicContainerInformation("http://storageurl", "storagetoken", "");
+            new GetPublicContainerInformation("http://storageurl", "authtoken", "");
         }
     }
 
@@ -79,7 +79,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInfor
         [SetUp]
         public void setup()
         {
-            getPublicContainerInformation = new GetPublicContainerInformation("http://storageurl", "storagetoken", "containername");
+            getPublicContainerInformation = new GetPublicContainerInformation("http://storageurl", "authtoken", "containername");
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetPublicContainerInfor
         [Test]
         public void should_have_an_auth_token_in_the_headers()
         {
-            Assert.That(getPublicContainerInformation.Headers[cloudfiles.Constants.X_AUTH_TOKEN], Is.EqualTo("storagetoken"));
+            Assert.That(getPublicContainerInformation.Headers[cloudfiles.Constants.X_AUTH_TOKEN], Is.EqualTo("authtoken"));
         }
     }
 }

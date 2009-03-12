@@ -25,12 +25,11 @@ namespace com.mosso.cloudfiles.domain.request
         /// </summary>
         /// <param name="storageUrl">the customer unique url to interact with cloudfiles</param>
         /// <param name="containerName">the name of the container where the storage item is located</param>
-        /// <param name="storageItemName">the name of the storage item to add meta information too</param>
-        /// <param name="fileUri">the path of the file to put into cloudfiles</param>
-        /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
-        public PutStorageItem(string storageUrl, string containerName, string storageItemName, string fileUri,
-                              string storageToken)
-            : this(storageUrl, containerName, storageItemName, fileUri, storageToken, null)
+        /// <param name="remoteStorageItemName">the name of the storage item to add meta information too</param>
+        /// <param name="localFilePath">the path of the file to put into cloudfiles</param>
+        /// <param name="authToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
+        public PutStorageItem(string storageUrl, string authToken, string containerName, string remoteStorageItemName, string localFilePath)
+            : this(storageUrl, authToken, containerName, remoteStorageItemName, localFilePath, null)
         {
         }
 
@@ -39,12 +38,11 @@ namespace com.mosso.cloudfiles.domain.request
         /// </summary>
         /// <param name="storageUrl">the customer unique url to interact with cloudfiles</param>
         /// <param name="containerName">the name of the container where the storage item is located</param>
-        /// <param name="storageItemName">the name of the storage item to add meta information too</param>
+        /// <param name="remoteStorageItemName">the name of the storage item to add meta information too</param>
         /// <param name="filestream">the fiel stream of the file to put into cloudfiles</param>
-        /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
-        public PutStorageItem(string storageUrl, string containerName, string storageItemName, Stream filestream,
-                              string storageToken)
-            : this(storageUrl, containerName, storageItemName, filestream, storageToken, null)
+        /// <param name="authToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
+        public PutStorageItem(string storageUrl, string authToken, string containerName, string remoteStorageItemName, Stream filestream)
+            : this(storageUrl, authToken, containerName, remoteStorageItemName, filestream, null)
         {
         }
 
@@ -53,28 +51,27 @@ namespace com.mosso.cloudfiles.domain.request
         /// </summary>
         /// <param name="storageUrl">the customer unique url to interact with cloudfiles</param>
         /// <param name="containerName">the name of the container where the storage item is located</param>
-        /// <param name="storageItemName">the name of the storage item to add meta information too</param>
+        /// <param name="remoteStorageItemName">the name of the storage item to add meta information too</param>
         /// <param name="stream">the fiel stream of the file to put into cloudfiles</param>
-        /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
+        /// <param name="authToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
         /// <param name="metadata">dictionary of meta tags to apply to the storage item</param>
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         /// <exception cref="ContainerNameException">Thrown when the container name is invalid</exception>
         /// <exception cref="StorageItemNameException">Thrown when the object name is invalid</exception>
-        public PutStorageItem(string storageUrl, string containerName, string storageItemName, Stream stream,
-                              string storageToken, Dictionary<string, string> metadata)
+        public PutStorageItem(string storageUrl, string authToken, string containerName, string remoteStorageItemName, Stream stream, Dictionary<string, string> metadata)
         {
             if (string.IsNullOrEmpty(storageUrl)
-                || string.IsNullOrEmpty(storageToken)
+                || string.IsNullOrEmpty(authToken)
                 || string.IsNullOrEmpty(containerName)
                 || stream == null
-                || string.IsNullOrEmpty(storageItemName))
+                || string.IsNullOrEmpty(remoteStorageItemName))
                 throw new ArgumentNullException();
 
 
             if (!ContainerNameValidator.Validate(containerName)) throw new ContainerNameException();
-            if (!ObjectNameValidator.Validate(storageItemName)) throw new StorageItemNameException();
+            if (!ObjectNameValidator.Validate(remoteStorageItemName)) throw new StorageItemNameException();
 
-            FileUri = CleanUpFileUri(storageItemName);
+            FileUri = CleanUpFilePath(remoteStorageItemName);
             this.stream = stream;
             Headers = new NameValueCollection();
             ContentLength = this.stream.Length;
@@ -94,8 +91,8 @@ namespace com.mosso.cloudfiles.domain.request
             if (stream.Position == stream.Length)
                 stream.Seek(0, 0);
 
-            Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(storageToken));
-            Uri = new Uri(storageUrl + "/" + containerName.Encode() + "/" + storageItemName.Encode());
+            Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(authToken));
+            Uri = new Uri(storageUrl + "/" + containerName.Encode() + "/" + remoteStorageItemName.Encode());
             Method = "PUT";
         }
 
@@ -104,28 +101,27 @@ namespace com.mosso.cloudfiles.domain.request
         /// </summary>
         /// <param name="storageUrl">the customer unique url to interact with cloudfiles</param>
         /// <param name="containerName">the name of the container where the storage item is located</param>
-        /// <param name="storageItemName">the name of the storage item to add meta information too</param>
-        /// <param name="fileUri">the path of the file to put into cloudfiles</param>
-        /// <param name="storageToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
+        /// <param name="remoteStorageItemName">the name of the storage item to add meta information too</param>
+        /// <param name="localFilePath">the path of the file to put into cloudfiles</param>
+        /// <param name="authToken">the customer unique token obtained after valid authentication necessary for all cloudfiles ReST interaction</param>
         /// <param name="metadata">dictionary of meta tags to apply to the storage item</param>
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         /// <exception cref="ContainerNameException">Thrown when the container name is invalid</exception>
         /// <exception cref="StorageItemNameException">Thrown when the object name is invalid</exception>
-        public PutStorageItem(string storageUrl, string containerName, string storageItemName, string fileUri,
-                              string storageToken, Dictionary<string, string> metadata)
+        public PutStorageItem(string storageUrl, string authToken, string containerName, string remoteStorageItemName, string localFilePath, Dictionary<string, string> metadata)
         {
             if (string.IsNullOrEmpty(storageUrl)
-                || string.IsNullOrEmpty(storageToken)
+                || string.IsNullOrEmpty(authToken)
                 || string.IsNullOrEmpty(containerName)
-                || string.IsNullOrEmpty(fileUri)
-                || string.IsNullOrEmpty(storageItemName))
+                || string.IsNullOrEmpty(localFilePath)
+                || string.IsNullOrEmpty(remoteStorageItemName))
                 throw new ArgumentNullException();
 
 
             if (!ContainerNameValidator.Validate(containerName)) throw new ContainerNameException();
-            if (!ObjectNameValidator.Validate(storageItemName))throw new StorageItemNameException();
+            if (!ObjectNameValidator.Validate(remoteStorageItemName))throw new StorageItemNameException();
             
-            FileUri = CleanUpFileUri(fileUri);
+            FileUri = CleanUpFilePath(localFilePath);
             Headers = new NameValueCollection();
 
             
@@ -137,22 +133,22 @@ namespace com.mosso.cloudfiles.domain.request
 
             if (metadata != null && metadata.Count > 0)
             {
-                foreach (string s in metadata.Keys)
+                foreach (var s in metadata.Keys)
                 {
                     Headers.Add(Constants.META_DATA_HEADER + s, metadata[s]);
                 }
             }
 
-            Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(storageToken));
-            Uri = new Uri(storageUrl + "/" + containerName.Encode() + "/" + storageItemName.Encode());
+            Headers.Add(Constants.X_STORAGE_TOKEN, HttpUtility.UrlEncode(authToken));
+            Uri = new Uri(storageUrl + "/" + containerName.Encode() + "/" + remoteStorageItemName.Encode());
             Method = "PUT";
         }
 
         public string FileUri { get; private set; }
 
-        private string CleanUpFileUri(string fileUri)
+        private string CleanUpFilePath(string filePath)
         {
-            return fileUri.Replace(@"file:\\\", "");
+            return filePath.Replace(@"file:\\\", "");
         }
 
         private void ReadStreamIntoRequest(Stream httpWebRequestFileStream)

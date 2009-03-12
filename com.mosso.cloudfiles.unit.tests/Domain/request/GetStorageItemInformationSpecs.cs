@@ -12,7 +12,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetStorageItemInformati
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new GetStorageItemInformation(null, "storagetoken", "containername", "storageitemname");
+            new GetStorageItemInformation(null, "authtoken", "containername", "storageitemname");
         }
     }
 
@@ -23,12 +23,12 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetStorageItemInformati
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new GetStorageItemInformation("", "storagetoken", "containername", "storageitemname");
+            new GetStorageItemInformation("", "authtoken", "containername", "storageitemname");
         }
     }
 
     [TestFixture]
-    public class when_getting_information_of_a_storage_item_and_storage_token_is_null
+    public class when_getting_information_of_a_storage_item_and_auth_token_is_null
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -39,7 +39,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetStorageItemInformati
     }
 
     [TestFixture]
-    public class when_getting_information_of_a_storage_item_and_storage_token_is_emptry_string
+    public class when_getting_information_of_a_storage_item_and_auth_token_is_emptry_string
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -56,7 +56,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetStorageItemInformati
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new GetStorageItemInformation("http://storageurl", "storagetoken", null, "storageitemname");
+            new GetStorageItemInformation("http://storageurl", "authtoken", null, "storageitemname");
         }
     }
 
@@ -67,7 +67,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetStorageItemInformati
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new GetStorageItemInformation("http://storageurl", "storagetoken", "", "storageitemname");
+            new GetStorageItemInformation("http://storageurl", "authtoken", "", "storageitemname");
         }
     }
 
@@ -78,7 +78,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetStorageItemInformati
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new GetStorageItemInformation("http://storageurl", "storagetoken", "containername", null);
+            new GetStorageItemInformation("http://storageurl", "authtoken", "containername", null);
         }
     }
 
@@ -89,7 +89,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetStorageItemInformati
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new GetStorageItemInformation("http://storageurl", "storagetoken", "containername", "");
+            new GetStorageItemInformation("http://storageurl", "authtoken", "containername", "");
         }
     }
 
@@ -101,7 +101,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetStorageItemInformati
         [SetUp]
         public void setup()
         {
-            getStorageItemInformation = new GetStorageItemInformation("http://storageurl", "storagetoken", "containername", "storageitemname");
+            getStorageItemInformation = new GetStorageItemInformation("http://storageurl", "authtoken", "containername", "storageitemname");
         }
 
         [Test]
@@ -117,9 +117,9 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetStorageItemInformati
         }
 
         [Test]
-        public void should_have_an_storage_token_in_the_headers()
+        public void should_have_an_auth_token_in_the_headers()
         {
-            Assert.That(getStorageItemInformation.Headers[cloudfiles.Constants.X_STORAGE_TOKEN], Is.EqualTo("storagetoken"));
+            Assert.That(getStorageItemInformation.Headers[cloudfiles.Constants.X_STORAGE_TOKEN], Is.EqualTo("authtoken"));
         }
     }
 

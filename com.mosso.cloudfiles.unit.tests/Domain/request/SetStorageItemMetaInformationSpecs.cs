@@ -13,7 +13,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.SetStorageItemMetaInfor
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new SetStorageItemMetaInformation(null, "storagetoken", "containername", "storageitemname", null);
+            new SetStorageItemMetaInformation(null, "authtoken", "containername", "storageitemname", null);
         }
     }
 
@@ -24,12 +24,12 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.SetStorageItemMetaInfor
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new SetStorageItemMetaInformation("", "storagetoken", "containername", "storageitemname", null);
+            new SetStorageItemMetaInformation("", "authtoken", "containername", "storageitemname", null);
         }
     }
 
     [TestFixture]
-    public class when_setting_storage_item_information_and_storage_token_is_null
+    public class when_setting_storage_item_information_and_auth_token_is_null
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -40,7 +40,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.SetStorageItemMetaInfor
     }
 
     [TestFixture]
-    public class when_setting_storage_item_information_and_storage_token_is_emptry_string
+    public class when_setting_storage_item_information_and_auth_token_is_emptry_string
     {
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -57,7 +57,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.SetStorageItemMetaInfor
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new SetStorageItemMetaInformation("http://storageurl", "storagetoken", null, "storageitemname", null);
+            new SetStorageItemMetaInformation("http://storageurl", "authtoken", null, "storageitemname", null);
         }
     }
 
@@ -68,7 +68,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.SetStorageItemMetaInfor
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new SetStorageItemMetaInformation("http://storageurl", "storagetoken", "", "storageitemname", null);
+            new SetStorageItemMetaInformation("http://storageurl", "authtoken", "", "storageitemname", null);
         }
     }
 
@@ -79,7 +79,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.SetStorageItemMetaInfor
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new SetStorageItemMetaInformation("http://storageurl", "storagetoken", "containername", null, null);
+            new SetStorageItemMetaInformation("http://storageurl", "authtoken", "containername", null, null);
         }
     }
 
@@ -90,7 +90,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.SetStorageItemMetaInfor
         [ExpectedException(typeof(ArgumentNullException))]
         public void should_throw_argument_null_exception()
         {
-            new SetStorageItemMetaInformation("http://storageurl", "storagetoken", "containername", "", null);
+            new SetStorageItemMetaInformation("http://storageurl", "authtoken", "containername", "", null);
         }
     }
 
@@ -103,7 +103,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.SetStorageItemMetaInfor
         public void setup()
         {
             var metadata = new Dictionary<string, string>{{"key1", "value1"},{"key2", "value2"}};
-            setStorageItemInformation = new SetStorageItemMetaInformation("http://storageurl", "storagetoken", "containername", "storageitemname", metadata);
+            setStorageItemInformation = new SetStorageItemMetaInformation("http://storageurl", "authtoken", "containername", "storageitemname", metadata);
         }
 
         [Test]
@@ -119,9 +119,9 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.SetStorageItemMetaInfor
         }
 
         [Test]
-        public void should_have_a_storage_token_in_the_headers()
+        public void should_have_a_auth_token_in_the_headers()
         {
-            Assert.That(setStorageItemInformation.Headers[cloudfiles.Constants.X_STORAGE_TOKEN], Is.EqualTo("storagetoken"));
+            Assert.That(setStorageItemInformation.Headers[cloudfiles.Constants.X_STORAGE_TOKEN], Is.EqualTo("authtoken"));
         }
 
         [Test]

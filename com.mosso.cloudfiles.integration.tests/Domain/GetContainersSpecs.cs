@@ -16,12 +16,12 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
         public void Should_return_OK_status()
         {
             
-            using(new TestHelper(storageToken, storageUrl))
+            using(new TestHelper(authToken, storageUrl))
             {
                 CloudFilesResponseWithContentBody response = null;
                 try
                 {
-                    GetContainers request = new GetContainers(storageUrl, storageToken);
+                    GetContainers request = new GetContainers(storageUrl, authToken);
                     request.UserAgent = "NASTTestUserAgent";
 
                     response = new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(new CloudFilesRequest(request));
@@ -44,12 +44,12 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
 //            Console.WriteLine("Begin listing containers");
 
             
-            using (new TestHelper(storageToken, storageUrl))
+            using (new TestHelper(authToken, storageUrl))
             {
                 IResponseWithContentBody response = null;
                 try
                 {
-                    GetContainers request = new GetContainers(storageUrl, storageToken);
+                    GetContainers request = new GetContainers(storageUrl, authToken);
                     response = new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(new CloudFilesRequest(request));
                     Assert.That(response.ContentBody.Count, Is.GreaterThan(0));
 //                    foreach (string s in response.ContentBody)
@@ -74,7 +74,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
-        public void Should_throw_an_exception_when_the_storage_token_is_null()
+        public void Should_throw_an_exception_when_the_auth_token_is_null()
         {
             new GetContainers("a", null);
         }
@@ -87,7 +87,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.RetrieveContainerRequest
         public void Should_return_No_Content_status()
         {
             //Assert.Ignore("Is returning OK instead of NoContent, need to investigate - 2/3/2009");
-            GetContainers request = new GetContainers(storageUrl, storageToken);
+            GetContainers request = new GetContainers(storageUrl, authToken);
             request.UserAgent = "NASTTestUserAgent";
 
             var response = new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(new CloudFilesRequest(request));

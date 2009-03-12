@@ -16,7 +16,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
         [ExpectedException(typeof (ContainerNameException))]
         public void Should_throw_exception_if_container_name_greater_than_256_characters()
         {
-            new CreateContainer(storageUrl, storageToken, Constants.BadContainerName);
+            new CreateContainer(storageUrl, authToken, Constants.BadContainerName);
             Assert.Fail("Should fail due to container name exceeding 64 characters");
         }
 
@@ -24,7 +24,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
         [ExpectedException(typeof(ContainerNameException))]
         public void Should_throw_exception_if_container_name_contains_a_slash()
         {
-            new CreateContainer(storageUrl, storageToken, Constants.BadContainerNameWithSlash);
+            new CreateContainer(storageUrl, authToken, Constants.BadContainerNameWithSlash);
             Assert.Fail("Should fail due to container name having a slash");
         }
 
@@ -32,7 +32,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
         [ExpectedException(typeof(ContainerNameException))]
         public void Should_throw_exception_if_container_name_contains_a_question_mark()
         {
-            new CreateContainer(storageUrl, storageToken, Constants.BadContainerNameWithQuestionMark);
+            new CreateContainer(storageUrl, authToken, Constants.BadContainerNameWithQuestionMark);
             Assert.Fail("Should fail due to container name having a question mark");
         }
 
@@ -40,7 +40,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
         public void Should_return_created_status_when_the_container_does_not_exist()
         {
             
-            CreateContainer createContainer = new CreateContainer(storageUrl, storageToken, Constants.CONTAINER_NAME);
+            CreateContainer createContainer = new CreateContainer(storageUrl, authToken, Constants.CONTAINER_NAME);
 
             IResponse response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(createContainer));
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.Created));
@@ -64,7 +64,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
 
         [Test]
         [ExpectedException(typeof (ArgumentNullException))]
-        public void Should_throw_an_exception_when_the_storage_token_is_null()
+        public void Should_throw_an_exception_when_the_auth_token_is_null()
         {
             new CreateContainer("a", "a", null);
         }
@@ -74,12 +74,12 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
         public void Should_return_accepted_status_when_the_container_already_exists()
         {
             
-            CreateContainer createContainer = new CreateContainer(storageUrl, storageToken, Constants.CONTAINER_NAME);
+            CreateContainer createContainer = new CreateContainer(storageUrl, authToken, Constants.CONTAINER_NAME);
 
             IResponse response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(createContainer));
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.Created));
 
-            createContainer = new CreateContainer(storageUrl, storageToken, Constants.CONTAINER_NAME);
+            createContainer = new CreateContainer(storageUrl, authToken, Constants.CONTAINER_NAME);
 
             response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(createContainer, null));
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.Accepted));
@@ -89,7 +89,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutContainerSpecs
 
         private void DeleteContainer(string storageUri, string containerName)
         {
-            DeleteContainer deleteContainer = new DeleteContainer(storageUri, storageToken, containerName);
+            DeleteContainer deleteContainer = new DeleteContainer(storageUri, authToken, containerName);
 
             IResponse response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(deleteContainer));
             Assert.That(response.Status, Is.EqualTo(HttpStatusCode.NoContent));

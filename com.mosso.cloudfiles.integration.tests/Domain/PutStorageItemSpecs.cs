@@ -9,7 +9,7 @@ using com.mosso.cloudfiles.exceptions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
+namespace com.mosso.cloudfiles.integration.tests.domain.PutStorageItemSpecs
 {
     [TestFixture]
     public class When_putting_storage_objects : TestBase
@@ -18,9 +18,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         public void Should_return_created_as_status_when_the_file_does_not_already_exist()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
-                var putStorageItem = new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName, storageToken);
+                var putStorageItem = new PutStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName);
 
                 Assert.That(putStorageItem.ContentLength, Is.EqualTo(34));
 
@@ -35,9 +35,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         public void Should_set_content_type_of_jpg_for_local_file_upload()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
-                var putStorageItem = new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemNameJpg, Constants.StorageItemNameJpg, storageToken);
+                var putStorageItem = new PutStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemNameJpg, Constants.StorageItemNameJpg);
 
                 Assert.That(putStorageItem.ContentLength, Is.GreaterThan(0));
                 Assert.That(putStorageItem.ContentType, Is.EqualTo("image/jpeg"));
@@ -53,7 +53,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         public void Should_still_come_back_as_pdf_even_when_sent_up_as_octet_stream()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 var file = new FileInfo(Constants.StorageItemNamePdf);
                 var metadata = new Dictionary<string, string>();
@@ -61,7 +61,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
                 metadata.Add("Note", "2");
                 const string DUMMY_FILE_NAME = "HAHAHA";
 
-                var putStorageItem = new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, DUMMY_FILE_NAME, file.Open(FileMode.Open), storageToken, metadata);
+                var putStorageItem = new PutStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, DUMMY_FILE_NAME, file.Open(FileMode.Open), metadata);
 
                 Assert.That(putStorageItem.ContentLength, Is.GreaterThan(0));
                 Assert.That(putStorageItem.ContentType, Is.EqualTo("application/octet-stream"));
@@ -70,7 +70,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
                 Assert.That(response.Status, Is.EqualTo(HttpStatusCode.Created));
                 Assert.That(response.Headers[Constants.ETAG], Is.EqualTo(putStorageItem.ETag));
 
-                var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, DUMMY_FILE_NAME, storageToken);
+                var getStorageItem = new GetStorageItem(storageUrl, Constants.CONTAINER_NAME, DUMMY_FILE_NAME, authToken);
                 var getStorageItemResponse = new ResponseFactoryWithContentBody<CloudFilesResponseWithContentBody>().Create(new CloudFilesRequest(getStorageItem));
                 Assert.That(getStorageItemResponse.ContentType, Is.EqualTo("application/octet-stream"));
                 getStorageItemResponse.Dispose();
@@ -83,9 +83,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         public void Should_set_content_type_of_gif_for_local_file_upload()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
-                var putStorageItem = new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemNameGif, Constants.StorageItemNameGif, storageToken);
+                var putStorageItem = new PutStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemNameGif, Constants.StorageItemNameGif);
 
                 Assert.That(putStorageItem.ContentLength, Is.GreaterThan(0));
                 Assert.That(putStorageItem.ContentType, Is.EqualTo("image/gif"));
@@ -101,10 +101,10 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         public void Should_set_content_type_of_jpg_for_stream_upload()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 var fileStream = new FileStream(Constants.StorageItemNameJpg, FileMode.Open);
-                var putStorageItem = new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemNameJpg, fileStream, storageToken);
+                var putStorageItem = new PutStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemNameJpg, fileStream);
 
                 Assert.That(putStorageItem.ContentLength, Is.GreaterThan(0));
                 Assert.That(putStorageItem.ContentType, Is.EqualTo("image/jpeg"));
@@ -120,10 +120,10 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         public void Should_set_content_type_of_gif_for_stream_upload()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 var fileStream = new FileStream(Constants.StorageItemNameGif, FileMode.Open);
-                var putStorageItem = new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemNameGif, fileStream, storageToken);
+                var putStorageItem = new PutStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemNameGif, fileStream);
 
                 Assert.That(putStorageItem.ContentLength, Is.GreaterThan(0));
                 Assert.That(putStorageItem.ContentType, Is.EqualTo("image/gif"));
@@ -143,9 +143,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
                                                       {
                                                           {Constants.MetadataKey, Constants.MetadataValue}
                                                       };
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
-                var putStorageItem = new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName, storageToken, metadata);
+                var putStorageItem = new PutStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName, metadata);
 
                 Assert.That(putStorageItem.ContentLength, Is.GreaterThan(0));
 
@@ -157,46 +157,12 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         }
 
         [Test]
-        public void Should_throw_file_IO_exception_when_file_does_not_exist()
-        {
-            
-            using (new TestHelper(storageToken, storageUrl))
-            {
-                try
-                {
-                    new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, "#%", "noexists.fail", storageToken);
-                }
-                catch (Exception ex)
-                {
-                    Assert.That(ex, Is.TypeOf(typeof (FileNotFoundException)));
-                }
-            }
-        }
-
-        [Test]
-        public void Should_not_allow_upload_of_item_if_name_exceeds_128_characters()
-        {
-            
-            using (new TestHelper(storageToken, storageUrl))
-            {
-                try
-                {
-                    new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, new string('a', 1025), "%#", storageToken);
-                }
-                catch (Exception ex)
-                {
-                    Assert.That(ex, Is.TypeOf(typeof (StorageItemNameException)));
-                }
-            }
-        }
-
-        [Test]
         public void Should_return_created_when_etag_is_not_supplied_because_it_is_optional()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
-                var putStorageItem = new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName, storageToken);
+                var putStorageItem = new PutStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName);
                 putStorageItem.Headers.Remove("ETag");
 
                 var response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(putStorageItem));
@@ -209,10 +175,10 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         public void Should_return_created_when_a_stream_is_passed_instead_of_a_file_name()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
                 var fs = new FileStream(Constants.StorageItemName, FileMode.Open);
-                var putStorageItem = new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, fs, storageToken, null);
+                var putStorageItem = new PutStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, fs, null);
                 var response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(putStorageItem));
                 fs.Close();
                 Assert.That(response.Status, Is.EqualTo(HttpStatusCode.Created));
@@ -224,9 +190,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         public void Should_return_created_when_content_length_is_not_supplied_because_it_is_optional()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
-                var putStorageItem = new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName, storageToken);
+                var putStorageItem = new PutStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName);
                 putStorageItem.Headers.Remove("Content-Length");
 
                 var response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(putStorageItem));
@@ -241,9 +207,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         public void Should_return_created_when_content_type_is_not_supplied_because_it_is_optional()
         {
             
-            using (TestHelper testHelper = new TestHelper(storageToken, storageUrl))
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
             {
-                var putStorageItem = new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName, storageToken);
+                var putStorageItem = new PutStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName);
                 putStorageItem.Headers.Remove("Content-Type");
 
                 var response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(putStorageItem));
@@ -257,9 +223,9 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
         public void Should_throw_a_WebException_with_status_code_422_when_the_ETag_passed_does_not_match_MD5_of_the_file()
         {
             
-            using (new TestHelper(storageToken, storageUrl))
+            using (new TestHelper(authToken, storageUrl))
             {
-                var putStorageItem = new PutStorageItem(storageUrl, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName, storageToken);
+                var putStorageItem = new PutStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName);
                 putStorageItem.Headers.Remove("ETag");
                 putStorageItem.Headers.Add("ETag", new string('A', 32));
                 try
@@ -273,124 +239,6 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStoragecsSpecs
             }
         }
 
-        [Test]
-        [ExpectedException(typeof (ContainerNameException))]
-        public void Should_throw_an_exception_when_a_file_name_is_passed_and_the_container_name_exceeds_the_maximum_length()
-        {
-            new PutStorageItem("a", new string('a', Constants.MaximumContainerNameLength + 1), "a", "a", "a");
-        }
-
-        [Test]
-        public void Should_throw_an_exception_when_a_stream_is_passed_and_the_container_name_exceeds_the_maximum_length()
-        {
-            FileStream s = new FileStream(Constants.StorageItemName, FileMode.Open);
-            try
-            {
-                new PutStorageItem("a", new string('a', Constants.MaximumContainerNameLength + 1), "a", s, "a");
-            }
-            catch (Exception ex)
-            {
-                Assert.That(ex, Is.TypeOf(typeof (ContainerNameException)));
-            }
-            s.Close();
-        }
-
-        [Test]
-        [ExpectedException(typeof (ArgumentNullException))]
-        public void Should_throw_an_exception_when_a_file_name_is_passed_and_the_storage_url_is_null()
-        {
-            new PutStorageItem(null, "a", "a", "a", "a");
-        }
-
-        [Test]
-        [ExpectedException(typeof (ArgumentNullException))]
-        public void Should_throw_an_exception_when_a_file_name_is_passed_and_the_container_name_is_null()
-        {
-            new PutStorageItem("a", null, "a", "a", "a");
-        }
-
-        [Test]
-        [ExpectedException(typeof (ArgumentNullException))]
-        public void Should_throw_an_exception_when_a_file_name_is_passed_and_the_storage_object_name_is_null()
-        {
-            new PutStorageItem("a", "a", null, "a", "a");
-        }
-
-        [Test]
-        [ExpectedException(typeof (ArgumentNullException))]
-        public void Should_throw_an_exception_when_a_file_name_is_passed_and_the_file_uri_is_null()
-        {
-            new PutStorageItem("a", "a", "a", "", "a");
-        }
-
-
-        [Test]
-        [ExpectedException(typeof (ArgumentNullException))]
-        public void Should_throw_an_exception_when_a_file_name_is_passed_and_the_storage_token_is_null()
-        {
-            new PutStorageItem("a", "a", "a", "a", null);
-        }
-
-        [Test]
-        public void Should_throw_an_exception_when_a_stream_is_passed_and_the_storage_url_is_null()
-        {
-            FileStream s = new FileStream(Constants.StorageItemName, FileMode.Open);
-            try
-            {
-                new PutStorageItem(null, "a", "a", s, "a");
-            }
-            catch (Exception ex)
-            {
-                Assert.That(ex, Is.TypeOf(typeof (ArgumentNullException)));
-            }
-            s.Close();
-        }
-
-        [Test]
-        public void Should_throw_an_exception_when_a_stream_is_passed_and_the_container_name_is_null()
-        {
-            FileStream s = new FileStream(Constants.StorageItemName, FileMode.Open);
-            try
-            {
-                new PutStorageItem("a", null, "a", s, "a");
-            }
-            catch (Exception ex)
-            {
-                Assert.That(ex, Is.TypeOf(typeof (ArgumentNullException)));
-            }
-            s.Close();
-        }
-
-        [Test]
-        public void Should_throw_an_exception_when_a_stream_is_passed_and_the_storage_object_name_is_null()
-        {
-            FileStream s = new FileStream(Constants.StorageItemName, FileMode.Open);
-            try
-            {
-                new PutStorageItem("a", "a", null, s, "a");
-            }
-            catch (Exception ex)
-            {
-                Assert.That(ex, Is.TypeOf(typeof (ArgumentNullException)));
-            }
-            s.Close();
-        }
-
-        [Test]
-        public void Should_throw_an_exception_when_a_stream_is_passed_and_the_storage_token_is_null()
-        {
-            FileStream s = new FileStream(Constants.StorageItemName, FileMode.Open);
-            try
-            {
-                new PutStorageItem("a", "a", "a", s, null);
-            }
-            catch (Exception ex)
-            {
-                Assert.That(ex, Is.TypeOf(typeof (ArgumentNullException)));
-            }
-            s.Close();
-        }
-
-      
+        
     }
 }
