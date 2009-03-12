@@ -238,9 +238,9 @@ namespace com.mosso.cloudfiles
             {
                 var response = ((HttpWebResponse)ex.Response);
                 if (response != null && response.StatusCode == HttpStatusCode.NotFound)
-                    throw new ContainerNotFoundException("The requested container does not exist");
+                    throw new ContainerNotFoundException("The requested container " + containerName + " does not exist");
                 if (response != null && response.StatusCode == HttpStatusCode.Conflict)
-                    throw new ContainerNotEmptyException("The container you are trying to delete is not empty");
+                    throw new ContainerNotEmptyException("The container you are trying to delete " + containerName +"is not empty");
                 throw;
             }
         }

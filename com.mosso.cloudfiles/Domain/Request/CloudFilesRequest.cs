@@ -109,6 +109,8 @@ namespace com.mosso.cloudfiles.domain.request
             IRequestWithContentBody requestWithContentBody = (IRequestWithContentBody) request;
             httpWebRequest.ContentLength = requestWithContentBody.ContentLength;
             httpWebRequest.AllowWriteStreamBuffering = false;
+            if(httpWebRequest.ContentLength < 1)
+                httpWebRequest.SendChunked = true;
 
             var requestMimeType = request.ContentType;
             httpWebRequest.ContentType = String.IsNullOrEmpty(requestMimeType) 

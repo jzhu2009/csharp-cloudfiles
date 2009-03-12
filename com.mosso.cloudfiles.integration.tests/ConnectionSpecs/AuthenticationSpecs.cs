@@ -1,6 +1,6 @@
 using System;
+using System.Net;
 using com.mosso.cloudfiles.domain;
-using com.mosso.cloudfiles;
 using NUnit.Framework;
 
 namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs
@@ -20,6 +20,13 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs
         {
 
             new Connection(new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY));
+        }
+
+        [Test]
+        [ExpectedException(typeof(WebException), ExpectedMessage = "The remote server returned an error: (401) Unauthorized.")]
+        public void Should_throw_not_authorized_exception_when_credentials_are_invalid()
+        {
+            new Connection(new UserCredentials("invalid_username", "invalid_api_key"));
         }
     }
 }

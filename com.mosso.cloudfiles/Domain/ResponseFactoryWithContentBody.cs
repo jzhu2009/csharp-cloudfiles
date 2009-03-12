@@ -2,6 +2,8 @@
 /// See COPYING file for licensing information
 ///
 
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using com.mosso.cloudfiles.domain.request;
@@ -24,12 +26,14 @@ namespace com.mosso.cloudfiles.domain
         /// <returns></returns>
         public T Create(CloudFilesRequest request)
         {
-            HttpWebRequest httpWebRequest = request.GetRequest();
+            var httpWebRequest = request.GetRequest();
+//            OutputRequestInformation(httpWebRequest);
+            
             httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
 
-            WebHeaderCollection headerCollection = httpResponse.Headers;
-            HttpStatusCode statusCode = httpResponse.StatusCode;
-            Stream responseStream = httpResponse.GetResponseStream();
+            var headerCollection = httpResponse.Headers;
+            var statusCode = httpResponse.StatusCode;
+            var responseStream = httpResponse.GetResponseStream();
 
             T response = new T
                              {
@@ -40,5 +44,14 @@ namespace com.mosso.cloudfiles.domain
 
             return response;
         }
+
+//        private void OutputRequestInformation(HttpWebRequest request)
+//        {
+//            Console.WriteLine(request.Method +" "+ request.RequestUri);
+//            foreach(var key in request.Headers.AllKeys)
+//            {
+//                Console.WriteLine(key + ": " + request.Headers[key]);
+//            }
+//        }
     }
 }
