@@ -43,7 +43,6 @@
     <mkdir dir="${deploy.dir}" if="${not directory::exists(deploy.dir)}"/>
     <mkdir dir="${deploy.src.dir}" if="${not directory::exists(deploy.src.dir)}"/>
     <mkdir dir="${deploy.bin.dir}" if="${not directory::exists(deploy.bin.dir)}"/>
-    <mkdir dir="${deploy.example.dir}" if="${not directory::exists(deploy.example.dir)}"/>
     <mkdir dir="${deploy.docs.dir}" if="${not directory::exists(deploy.docs.dir)}"/>
     <mkdir dir="${test.reports.dir}" if="${not directory::exists(test.reports.dir)}"/>
     <mkdir dir="${config.dir}" if="${not directory::exists(config.dir)}" />
@@ -79,7 +78,6 @@
 
   <target name="deploy">
     <call target="deploy.bin" />
-    <call target="deploy.example" />
     <call target="deploy.docs" />
     <call target="deploy.src" />
     <call target="deploy.package.master.zip" />
@@ -130,16 +128,6 @@
         <exclude name ="*.xml" />
         <exclude name ="UnitTests/**" />
         <exclude name ="IntegrationTests/**" />
-        <include name="**" />
-      </fileset>
-    </zip>
-  </target>
-
-  <target name="deploy.example">
-    <zip zipfile="${deploy.example.dir}\${zip.file.prefix}-example-${cloud.files.release.build.number}.zip">
-      <fileset basedir="${directory::get-current-directory()}\cloudfilesviewer">
-        <exclude name=".svn/" />
-        <exclude name="*.*resharper*" />
         <include name="**" />
       </fileset>
     </zip>

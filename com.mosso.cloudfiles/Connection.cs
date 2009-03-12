@@ -106,9 +106,24 @@ namespace com.mosso.cloudfiles
             }
         }
 
+        /// <summary>
+        /// The user credentials used to authenticate against cloud files
+        /// </summary>
         public UserCredentials UserCredentials { get; private set; }
+
+        /// <summary>
+        /// The storage url used to interact with cloud files
+        /// </summary>
         public string StorageUrl { get; private set; }
+
+        /// <summary>
+        /// the session based token used to ensure the user was authenticated
+        /// </summary>
         public string AuthToken { get; private set; }
+
+        /// <summary>
+        /// the public cdn url for the authenticated user
+        /// </summary>
         public string CdnManagementUrl { get; private set; }
 
         /// <summary>
