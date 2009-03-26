@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace com.mosso.cloudfiles
+namespace com.mosso.cloudfiles.utils
 {
     public class ContainerNameValidator
     {
@@ -9,8 +9,8 @@ namespace com.mosso.cloudfiles
         public static bool Validate(string containerName)
         {
             return containerName.IndexOf("?") < 0 && 
-                containerName.IndexOf("/") < 0 &&
-                containerName.Length <= MAX_CONTAINER_NAME_LENGTH;
+                   containerName.IndexOf("/") < 0 &&
+                   containerName.Length <= MAX_CONTAINER_NAME_LENGTH;
         }
     }
 }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Specialized;
 using System.Web;
 using com.mosso.cloudfiles.exceptions;
+using com.mosso.cloudfiles.utils;
 
 namespace com.mosso.cloudfiles.domain.request
 {

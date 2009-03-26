@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Net;
+using com.mosso.cloudfiles.utils;
 
 namespace com.mosso.cloudfiles.domain
 {

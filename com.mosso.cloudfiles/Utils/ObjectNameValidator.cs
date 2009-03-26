@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace com.mosso.cloudfiles
+namespace com.mosso.cloudfiles.utils
 {
     public class ObjectNameValidator
     {
@@ -9,7 +9,7 @@ namespace com.mosso.cloudfiles
         public static bool Validate(string objectName)
         {
             return objectName.IndexOf("?") < 0 &&
-                objectName.Length <= MAX_OBJECT_NAME_LENGTH;
+                   objectName.Length <= MAX_OBJECT_NAME_LENGTH;
         }
     }
 }

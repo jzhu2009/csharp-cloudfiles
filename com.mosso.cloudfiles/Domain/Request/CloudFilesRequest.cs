@@ -6,6 +6,7 @@ using System;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using com.mosso.cloudfiles.utils;
 
 namespace com.mosso.cloudfiles.domain.request
 {

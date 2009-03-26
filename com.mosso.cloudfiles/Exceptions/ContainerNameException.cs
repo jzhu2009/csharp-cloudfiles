@@ -3,6 +3,7 @@
 ///
 
 using System;
+using com.mosso.cloudfiles.utils;
 
 namespace com.mosso.cloudfiles.exceptions
 {

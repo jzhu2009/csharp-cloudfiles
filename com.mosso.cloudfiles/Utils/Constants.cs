@@ -1,8 +1,4 @@
-﻿///
-/// See COPYING file for licensing information
-///
-
-namespace com.mosso.cloudfiles
+﻿namespace com.mosso.cloudfiles.utils
 {
     /// <summary>
     /// This class initializes the constants which would be utilized all over the application.

@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using com.mosso.cloudfiles.exceptions;
+using com.mosso.cloudfiles.utils;
 
 namespace com.mosso.cloudfiles.domain.request
 {

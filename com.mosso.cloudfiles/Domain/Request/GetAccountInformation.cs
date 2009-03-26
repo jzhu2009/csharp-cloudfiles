@@ -4,6 +4,7 @@
 
 using System;
 using System.ComponentModel;
+using com.mosso.cloudfiles.utils;
 
 namespace com.mosso.cloudfiles.domain.request
 {

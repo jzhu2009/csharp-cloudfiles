@@ -8,7 +8,7 @@ using System.IO;
 using log4net;
 using log4net.Config;
 
-namespace com.mosso.cloudfiles
+namespace com.mosso.cloudfiles.utils
 {
     /// <summary>
     /// the logging class

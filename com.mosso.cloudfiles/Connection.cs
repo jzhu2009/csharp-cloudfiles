@@ -11,6 +11,7 @@ using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.domain.response;
 using com.mosso.cloudfiles.exceptions;
+using com.mosso.cloudfiles.utils;
 
 namespace com.mosso.cloudfiles
 {

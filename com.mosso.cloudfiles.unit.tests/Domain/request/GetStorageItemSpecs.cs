@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.exceptions;
+using com.mosso.cloudfiles.utils;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 

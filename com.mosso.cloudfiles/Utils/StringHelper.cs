@@ -1,7 +1,7 @@
 using System;
 using System.Web;
 
-namespace com.mosso.cloudfiles
+namespace com.mosso.cloudfiles.utils
 {
     public static class StringHelper
     {

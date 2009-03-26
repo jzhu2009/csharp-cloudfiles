@@ -75,7 +75,7 @@ namespace com.mosso.cloudfiles.unit.tests.Domain.request.GetAccountInformationSp
         [Test]
         public void should_have_a_auth_token_in_the_headers()
         {
-            Assert.That(getAccountInformation.Headers[cloudfiles.Constants.X_AUTH_TOKEN], Is.EqualTo("authtoken"));
+            Assert.That(getAccountInformation.Headers[utils.Constants.X_AUTH_TOKEN], Is.EqualTo("authtoken"));
         }
     }
 }
