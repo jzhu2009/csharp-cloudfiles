@@ -2,7 +2,7 @@ using com.mosso.cloudfiles.utils;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace com.mosso.cloudfiles.unit.tests.ObjectNameValidatorSpecs
+namespace com.mosso.cloudfiles.unit.tests.Utils.ObjectNameValidatorSpecs
 {
     [TestFixture]
     public class When_a_object_name_has_no_invalid_characters

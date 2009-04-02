@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="ConnectionSpecs\MakePathSpecs.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="ContainerNameValidatorSpecs.cs" />
+    <Compile Include="Utils\ContainerNameValidatorSpecs.cs" />
     <Compile Include="Domain\AccountSpecs.cs" />
     <Compile Include="Domain\CF\AccountSpecs.cs" />
     <Compile Include="Domain\CF\ContainerSpecs.cs" />
@@ -72,12 +72,12 @@
     <Compile Include="Domain\request\PutStorageItemSpecs.cs" />
     <Compile Include="Domain\request\SetPublicContainerDetailsSpecs.cs" />
     <Compile Include="Domain\request\SetStorageItemMetaInformationSpecs.cs" />
-    <Compile Include="ObjectNameValidatorSpecs.cs" />
+    <Compile Include="Utils\ObjectNameValidatorSpecs.cs" />
     <Compile Include="Services\ConnectionSpecs.cs" />
     <Compile Include="Domain\ContainerSpecs.cs" />
     <Compile Include="Domain\StorageItemSpecs.cs" />
     <Compile Include="Domain\UserCredentialsSpecs.cs" />
-    <Compile Include="EnumHelperSpecs.cs" />
+    <Compile Include="Utils\EnumHelperSpecs.cs" />
     <Compile Include="Mocks\MockResponse.cs" />
     <Compile Include="Mocks\MockRequest.cs" />
     <Compile Include="Mocks\MockRequestFactory.cs" />
@@ -86,7 +86,7 @@
     <Compile Include="OurWebResponse.cs" />
     <Compile Include="RequestFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringHelperSpecs.cs" />
+    <Compile Include="Utils\StringHelperSpecs.cs" />
     <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>

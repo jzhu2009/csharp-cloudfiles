@@ -2,7 +2,7 @@ using com.mosso.cloudfiles.utils;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace com.mosso.cloudfiles.unit.tests.ContainerNameValidatorSpecs
+namespace com.mosso.cloudfiles.unit.tests.Utils.ContainerNameValidatorSpecs
 {
     [TestFixture]
     public class When_a_container_name_has_no_invalid_characters

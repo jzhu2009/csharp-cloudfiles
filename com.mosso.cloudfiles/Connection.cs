@@ -13,6 +13,12 @@ using com.mosso.cloudfiles.domain.response;
 using com.mosso.cloudfiles.exceptions;
 using com.mosso.cloudfiles.utils;
 
+/// <example>
+/// <code>
+/// UserCredentials userCredentials = new UserCredentials("username", "api key");
+/// IConnection connection = new Connection(userCredentials);
+/// </code>
+/// </example>
 namespace com.mosso.cloudfiles
 {
     /// <summary>
@@ -30,6 +36,12 @@ namespace com.mosso.cloudfiles
     /// This class represents the primary means of interaction between a user and cloudfiles. Methods are provided representing all of the actions
     /// one can take against his/her account, such as creating containers and downloading storage objects. 
     /// </summary>
+    /// <example>
+    /// <code>
+    /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+    /// IConnection connection = new Connection(userCredentials);
+    /// </code>
+    /// </example>
     public class Connection : IConnection
     {
         private bool retry;
@@ -47,6 +59,7 @@ namespace com.mosso.cloudfiles
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public Connection(UserCredentials userCredentials)
         {
+            Log.EnsureInitialized();
             AuthToken = "";
             StorageUrl = "";
             if (userCredentials == null) throw new ArgumentNullException("userCredentials");
@@ -732,7 +745,8 @@ namespace com.mosso.cloudfiles
             {
                 var getStorageItem = new GetStorageItem(StorageUrl, AuthToken, containerName, storageItemName, requestHeaderFields);
                 var getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem, UserCredentials.ProxyCredentials));
-                var storageItem = new StorageItem(storageItemName, null, getStorageItemResponse.ContentType, getStorageItemResponse.ContentStream, long.Parse(getStorageItemResponse.ContentLength));
+                var metadata = GetMetadata(getStorageItemResponse);
+                var storageItem = new StorageItem(storageItemName, metadata, getStorageItemResponse.ContentType, getStorageItemResponse.ContentStream, long.Parse(getStorageItemResponse.ContentLength));
 //                getStorageItemResponse.Dispose();
                 return storageItem;
             }
@@ -747,6 +761,17 @@ namespace com.mosso.cloudfiles
             }
         }
 
+        private Dictionary<string, string> GetMetadata(GetStorageItemResponse getStorageItemResponse)
+        {
+            var metadata = new Dictionary<string, string>();
+            var headers = getStorageItemResponse.Headers;
+            foreach (var key in headers.AllKeys)
+            {
+                if (key.IndexOf(Constants.META_DATA_HEADER) > -1)
+                    metadata.Add(key, headers[key]);
+            }
+            return metadata;
+        }
 
 
         /// <summary>

@@ -5,7 +5,6 @@ using System.Net;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.domain.response;
-using com.mosso.cloudfiles.exceptions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
@@ -135,26 +134,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStorageItemSpecs
             }
         }
 
-        [Test]
-        public void Should_return_created_as_status_when_the_file_does_not_already_exist_and_meta_information_is_supplied()
-        {
-            
-            Dictionary<string, string> metadata = new Dictionary<string, string>
-                                                      {
-                                                          {Constants.MetadataKey, Constants.MetadataValue}
-                                                      };
-            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
-            {
-                var putStorageItem = new PutStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName, metadata);
-
-                Assert.That(putStorageItem.ContentLength, Is.GreaterThan(0));
-
-                var response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(putStorageItem));
-                Assert.That(response.Status, Is.EqualTo(HttpStatusCode.Created));
-                Assert.That(response.Headers[Constants.ETAG], Is.EqualTo(putStorageItem.ETag));
-                testHelper.DeleteItemFromContainer();
-            }
-        }
+        
 
         [Test]
         public void Should_return_created_when_etag_is_not_supplied_because_it_is_optional()
@@ -240,5 +220,30 @@ namespace com.mosso.cloudfiles.integration.tests.domain.PutStorageItemSpecs
         }
 
         
+    }
+
+    [TestFixture]
+    public class When_putting_storage_objects_when_the_file_does_not_already_exist_and_meta_information_is_supplied : TestBase
+    {
+        [Test]
+        public void Should_return_created_as_status()
+        {
+
+            Dictionary<string, string> metadata = new Dictionary<string, string>
+                                                      {
+                                                          {Constants.MetadataKey, Constants.MetadataValue}
+                                                      };
+            using (TestHelper testHelper = new TestHelper(authToken, storageUrl))
+            {
+                var putStorageItem = new PutStorageItem(storageUrl, authToken, Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName, metadata);
+
+                Assert.That(putStorageItem.ContentLength, Is.GreaterThan(0));
+
+                var response = new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(putStorageItem));
+                Assert.That(response.Status, Is.EqualTo(HttpStatusCode.Created));
+                Assert.That(response.Headers[Constants.ETAG], Is.EqualTo(putStorageItem.ETag));
+                testHelper.DeleteItemFromContainer();
+            }
+        }
     }
 }

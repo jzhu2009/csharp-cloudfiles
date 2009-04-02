@@ -2,7 +2,7 @@ using com.mosso.cloudfiles.utils;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace com.mosso.cloudfiles.unit.tests.StringHelperSpecs
+namespace com.mosso.cloudfiles.unit.tests.Utils.StringHelperSpecs
 {
     [TestFixture]
     public class when_capitalizing_a_string

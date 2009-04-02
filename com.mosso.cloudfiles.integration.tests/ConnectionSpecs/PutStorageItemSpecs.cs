@@ -131,6 +131,66 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.PutStorageItemS
 
     }
 
+    [TestFixture]
+    public class When_putting_an_object_into_a_container_with_meta_information : TestBase
+    {
+
+        [Test]
+        public void Should_upload_the_meta_information()
+        {
+
+            connection.CreateContainer(Constants.CONTAINER_NAME);
+
+            StorageItem storageItem = null;
+            try
+            {
+                Dictionary<string, string> metadata = new Dictionary<string, string>
+                                                      {
+                                                          {Constants.MetadataKey, Constants.MetadataValue}
+                                                      };
+                connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNameJpg, metadata);
+                storageItem = connection.GetStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNameJpg);
+                Assert.That(storageItem.Metadata[Constants.XMetaKeyHeader + Constants.MetadataKey], Is.EqualTo(Constants.MetadataValue));
+                Assert.That(storageItem.ContentType, Is.EqualTo("image/jpeg"));
+
+            }
+            finally
+            {
+                if (storageItem != null && storageItem.ObjectStream.CanRead) storageItem.ObjectStream.Close();
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNameJpg);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
+            }
+        }
+
+        [Test]
+        public void Should_upload_the_meta_information_with_file_stream()
+        {
+
+            connection.CreateContainer(Constants.CONTAINER_NAME);
+
+            StorageItem storageItem = null;
+            try
+            {
+                var file = new FileInfo(Constants.StorageItemNameJpg);
+                Dictionary<string, string> metadata = new Dictionary<string, string>
+                                                      {
+                                                          {Constants.MetadataKey, Constants.MetadataValue}
+                                                      };
+                connection.PutStorageItem(Constants.CONTAINER_NAME, file.Open(FileMode.Open), Constants.StorageItemNameJpg, metadata);
+                storageItem = connection.GetStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNameJpg);
+                Assert.That(storageItem.Metadata[Constants.XMetaKeyHeader + Constants.MetadataKey], Is.EqualTo(Constants.MetadataValue));
+                Assert.That(storageItem.ContentType, Is.EqualTo("image/jpeg"));
+
+            }
+            finally
+            {
+                if (storageItem != null && storageItem.ObjectStream.CanRead) storageItem.ObjectStream.Close();
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNameJpg);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
+            }
+        }
+    }
+
 //    [TestFixture]
 //    public class When_putting_a_object_greater_than_2_GB_into_cloud_files : TestBase
 //    {
