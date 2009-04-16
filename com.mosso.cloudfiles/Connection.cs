@@ -962,7 +962,7 @@ namespace com.mosso.cloudfiles
         /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
-        /// Uri containerPublicUrl = connection.MarkContainerAsPublic("copntainer name");
+        /// Uri containerPublicUrl = connection.MarkContainerAsPublic("container name");
         /// </code>
         /// </example>
         /// <param name="containerName">The name of the container to mark public</param>
@@ -996,7 +996,7 @@ namespace com.mosso.cloudfiles
         /// <code>
         /// UserCredentials userCredentials = new UserCredentials("username", "api key");
         /// IConnection connection = new Connection(userCredentials);
-        /// Uri containerPublicUrl = connection.MarkContainerAsPublic("copntainer name");
+        /// connection.MarkContainerAsPrivate("container name");
         /// </code>
         /// </example>
         /// <param name="containerName">The name of the container to mark public</param>

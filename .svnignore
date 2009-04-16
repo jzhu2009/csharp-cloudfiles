@@ -1,9 +1,0 @@
-*\bin
-*\obj
-*\bin\*
-*\obj\*
-*.suo
-*ReSharper*
-*resharper*
-*.csproj.user
-*.msi
