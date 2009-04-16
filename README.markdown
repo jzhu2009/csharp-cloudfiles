@@ -2,9 +2,9 @@ The .NET API for Mosso CloudFiles (http://www.mosso.com/cloudfiles.jsp)
 
 Compiling
 ----------
-Running build.bat will build/compile
+To compile this file go to this directory in the command prompt and type:
 
-call build.bat
+build.bat
 
 Using
 ----------
