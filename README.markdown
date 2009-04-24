@@ -1,25 +1,44 @@
+
 The .NET API for Mosso CloudFiles (http://www.mosso.com/cloudfiles.jsp)
 
-Compiling
-----------
+#############################
+# Compiling					#
+#############################
+
 To compile this file go to this directory in the command prompt and type:
 
 build.bat
 
-Using
-----------
-Just reference the either the provided dll file from the download or from the your compiled dll from source in your project and you can start using Mosso CloudFiles via a .NET codebase
+#############################
+# Using						#
+#############################
 
-Logging
-----------
-Logging is already in place, you just need to edit the log4net.config file so that you get the desired logging output and format.  Please reference the log4net documentation on how to edit that config file (http://logging.apache.org/log4net/release/config-examples.html)
+Just reference the com.mosso.cloudfiles.dll file (either from downloaded bin zip or from you compilinging the source)
+in your project and you can start using Mosso CloudFiles
 
-Forums
-----------
+#############################
+# Logging					#
+#############################
+
+Logging is done with the log4net.dll and log4net.config file that are included in the source/downloads.
+You just need to edit the log4net.config file so that you get the desired logging output and format.  
+Currently the log is going to log/com.mosso.cloudfiles.log, whereever you have the dll referenced.
+
+i.e., 
+<file value="logs/com.mosso.cloudfiles.log" />   (in the log4net.config file)
+
+Please reference the log4net documentation on how to edit that config file (http://logging.apache.org/log4net/release/config-examples.html)
+
+#############################
+# Forums					#
+#############################
+
 Please visit the Mosso Forums (https://manage.mosso.com/forum/).  Once you are logged in, scroll to cloud files category/grouping and then the .NET thread.
 
-Code Examples
-----------
+#############################
+# Code Examples				#
+#############################
+
 <code>
 // types are explicitly used in this example.  var keyword could also be used
 
@@ -108,7 +127,6 @@ requestHeaderFields.Add(RequestHeaderFields.IfModifiedSince, DateTime.Now.AddDay
 requestHeaderFields.Add(RequestHeaderFields.IfUnmodifiedSince, DateTime.Now.AddDays(-6).ToString());
 requestHeaderFields.Add(RequestHeaderFields.Range, "0-5");
 StorageItem storageItem = connection.GetStorageItem("container name", "RemoteFileName.txt", "C:\Local\File\Path\file.txt", requestHeaderFields);
-</code>
 
 // Set meta data information for an item in a container
 Dictionary<string, string> metadata = new Dictionary<string, string>();
@@ -137,4 +155,3 @@ connection.DeleteStorageItem("container name", "RemoteStorageItem.txt");
 
 // Delete container
 connection.DeleteContainer("container name");
-</code>

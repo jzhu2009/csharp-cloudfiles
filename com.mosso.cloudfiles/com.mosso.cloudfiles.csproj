@@ -140,7 +140,7 @@
     <Compile Include="Utils\StringHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Utils\Log4Net.config">
+    <Content Include="Log4Net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -277,7 +277,9 @@ namespace com.mosso.cloudfiles.utils
 
         private static void initialize()
         {
-            XmlConfigurator.ConfigureAndWatch(new FileInfo("Log4Net.config"));
+            XmlConfigurator.ConfigureAndWatch(new FileInfo(Path.Combine(
+                                              AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+                                              "Log4Net.config")));
             logInitialized = true;
         }
 
