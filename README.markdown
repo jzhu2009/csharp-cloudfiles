@@ -2,7 +2,7 @@
 The .NET API for Mosso CloudFiles (http://www.mosso.com/cloudfiles.jsp)
 
 #############################
-# Compiling					#
+# Compiling
 #############################
 
 To compile this file go to this directory in the command prompt and type:
@@ -10,14 +10,14 @@ To compile this file go to this directory in the command prompt and type:
 build.bat
 
 #############################
-# Using						#
+# Using
 #############################
 
 Just reference the com.mosso.cloudfiles.dll file (either from downloaded bin zip or from you compilinging the source)
 in your project and you can start using Mosso CloudFiles
 
 #############################
-# Logging					#
+# Logging
 #############################
 
 Logging is done with the log4net.dll and log4net.config file that are included in the source/downloads.
@@ -30,16 +30,15 @@ i.e.,
 Please reference the log4net documentation on how to edit that config file (http://logging.apache.org/log4net/release/config-examples.html)
 
 #############################
-# Forums					#
+# Forums
 #############################
 
 Please visit the Mosso Forums (https://manage.mosso.com/forum/).  Once you are logged in, scroll to cloud files category/grouping and then the .NET thread.
 
 #############################
-# Code Examples				#
+# Code Examples
 #############################
 
-<code>
 // types are explicitly used in this example.  var keyword could also be used
 
 // Connect to CloudFiles
