@@ -16,7 +16,7 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ObjectSpecs
         [SetUp]
         public void Setup()
         {
-            var userCredentials = new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY);
+            var userCredentials = new UserCredentials(Credentials.USERNAME, Credentials.API_KEY);
             IConnection connection = new Connection(userCredentials);
 
             account = connection.Account;

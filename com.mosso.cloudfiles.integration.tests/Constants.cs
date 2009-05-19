@@ -15,34 +15,8 @@ namespace com.mosso.cloudfiles.integration.tests
         public const string ETAG = "ETag";
         public const string CONTAINER_NAME = "integration.tests.container";
 
-        //Authentication constants
-//        public const string Account = "Persistent";
-//        public const string UserName = "dev";
-//        public const string Password = "persistent";
-//        public const string AuthUrl = "http://auth.stg.racklabs.com";
-//        public const string WrongPassword = "asdfsaf";
-//        public const string ProxyUserName = "";
-//        public const string ProxyPassword = "";
-//        public const string ProxyAddress = "";
-//        public const string ProxyDomain = "";
-
-        //Staging 2 accounts for alternate testing
-//        public const string AccountStaging2 = "CSharpTestingAcct";
-//        public const string UserNameStaging2 = "csharptesting";
-//        public const string PasswordStaging2 = "testing";
-
         //Mosso accounts for authentication
-        public const string MOSSO_USERNAME = "cloudfilestester";
-        public const string MOSSO_API_KEY = "c8252a62b96288a4a4e5c81faf4f90c0";
         public const string MOSSO_AUTH_URL = "https://api.mosso.com/auth";
-
-        //HTTPS authentication testing constants
-//        public const string HTTPSAccount = "Racklabs";
-//        public const string HTTPSUserName = "csharptesting";
-//        public const string HTTPSPassword = "csharptesting";
-//        public const string HTTPSAuthUrl = "https://auth.clouddrive.com";
-
-        //END
 
         //Response constants
         public const int NoContentResponse = 204;

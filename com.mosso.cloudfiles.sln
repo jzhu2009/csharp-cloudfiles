@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{1820EC64
 		com.mosso.cloudfiles.dev.build = com.mosso.cloudfiles.dev.build
 		Documentation.proj = Documentation.proj
 		properties.include = properties.include
-		README.markdown = README.markdown
+		README.rdoc = README.rdoc
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.mosso.cloudfiles", "com.mosso.cloudfiles\com.mosso.cloudfiles.csproj", "{A4EC4FAB-EE91-4DE7-B21D-CBABFA05B363}"

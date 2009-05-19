@@ -41,6 +41,19 @@ i.e.,
 
 Please reference the log4net documentation on how to edit that config file[http://logging.apache.org/log4net/release/config-examples.html]
 
+== Integration Testing
+
+The com.mosso.cloudfiles.integration.tests project is a full regression testing suite.  In order to use this you need to edit the Credentials.cs file:
+
+	public const string USERNAME = "ENTER YOUR USERNAME HERE";
+	public const string API_KEY = "ENTER YOUR API KEY HERE";
+
+to include your username and api key.
+
+== Unit Testing
+
+This project is still currently in progress and has some working unit tests.
+
 == Forums
 
 Please visit the Mosso Forums (https://manage.mosso.com/forum/).  Once you are logged in, scroll to cloud files category/grouping and then the .NET thread.

@@ -18,7 +18,7 @@ namespace com.mosso.cloudfiles.integration.tests.domain.AuthenticationRequestSpe
         public void Setup()
         {
             request =
-                new GetAuthentication(new UserCredentials(Constants.MOSSO_USERNAME, Constants.MOSSO_API_KEY));
+                new GetAuthentication(new UserCredentials(Credentials.USERNAME, Credentials.API_KEY));
         }
 
         [Test]
