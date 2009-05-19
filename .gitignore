@@ -10,3 +10,4 @@ _ReSharper.*
 *.swp
 /Build
 NDependOut
+Credentials.cs
