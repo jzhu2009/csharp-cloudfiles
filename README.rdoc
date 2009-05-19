@@ -6,7 +6,7 @@ This is a .NET/C# interface into the Rackspace[http://rackspace.com/] {Mosso Clo
 
 == Getting dll and using in your project
 
-Go to http://github.com/rackspace/csharp-cloudfiles/downloads[http://github.com/rackspace/csharp-cloudfiles/downloads] and download the latest version.  Unzip the file, unzip the bin zip, and grab the dll files. Reference them from your application.  Look at the examples below once you done this.  Example folder structure:
+Go to http://github.com/rackspace/csharp-cloudfiles/downloads and download the latest version.  Unzip the file, unzip the bin zip, and grab the dll files. Reference them from your application.  Look at the examples below once you done this.  Example folder structure:
 
 	/Your_project
 		/lib
@@ -49,7 +49,9 @@ Please visit the Mosso Forums (https://manage.mosso.com/forum/).  Once you are l
 
 See the class definitions for documentation on specific methods and operations.
 
-	// types are explicitly used in this example.  var keyword could also be used
+	// types are explicitly used in this example.  
+	// var keyword could also be used
+	// and object/collection initializers could be used.  explicit for example
 
 	// Connect to CloudFiles
 	UserCredentials userCredentials = new UserCredentials("username", "api key");
@@ -172,6 +174,7 @@ See the class definitions for documentation on specific methods and operations.
 == Authors
 
 Jason Meridth <jason.meridth@rackspace.com>
+
 Matt Dietz <matt.dietz@rackspace.com>
 
 == License
