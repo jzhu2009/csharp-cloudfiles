@@ -91,9 +91,13 @@ See the class definitions for documentation on specific methods and operations.
 
 	// Put item in container from stream with metadata
 	Dictionary{string, string} metadata = new Dictionary{string, string}();
-	metadata.Add("key1", "value1");// Put item in container from stream
-	metadata.Add("key2", "value2");FileInfo file = new FileInfo("C:\Local\File\Path\file.txt");
-	metadata.Add("key3", "value3");connection.PutStorageItem("container name", file.Open(FileMode.Open), "RemoteFileName.txt");
+	metadata.Add("key1", "value1");
+	metadata.Add("key2", "value2");
+	metadata.Add("key3", "value3");
+	FileInfo file = new FileInfo("C:\Local\File\Path\file.txt");
+	connection.PutStorageItem("container name", file.Open(FileMode.Open), "RemoteFileName.txt");
+	
+	// Put item in container from stream
 	FileInfo file = new FileInfo("C:\Local\File\Path\file.txt");
 	connection.PutStorageItem("container name", file.Open(FileMode.Open), "RemoteFileName.txt", metadata);
 
