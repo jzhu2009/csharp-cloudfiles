@@ -15,6 +15,7 @@
   
   <!-- BUILD CODE DIRECTORY -->
   <property name="build.dir" value="${cloudfiles.builds.dir}\build" />
+  <property name="build.docs.dir" value="${cloudfiles.builds.dir}\build\docs" />
   
   <!-- BUILD DEPLOY DIRECTORY (ZIP FILE) -->
   <property name="deploy.dir" value="${cloudfiles.builds.dir}\deploy" />
@@ -31,15 +32,8 @@
   <property name="unit.tests.dir" value="${build.dir}\${config}\UnitTests" />
   
   <property name="msbuild" value="${environment::get-variable('SYSTEMROOT')}/Microsoft.NET/Framework/v3.5/MSBuild.exe" />
-  <property name="temp.constants" value="TempConstants.cs" />
   
   <property name="sln.file" value="com.mosso.cloudfiles.sln" />
-  <property name="sln.file.without.tests" value="com.mosso.cloudfiles.sln.withouttests" />
   <property name="documentation.xml.file" value="com.mosso.cloudfiles\bin\${config}\com.mosso.cloudfiles.XML" />
-  <property name="sandcastle.exe.dir" value="C:\Program Files\Sandcastle" />
-  <property name="htmlhelpworkshop.dir" value="C:\Program Files\HTML Help Workshop" />
-  <property name="help.dir" value="Help" />
-  <property name="chm.file.name" value="com.mosso.cloudfiles" />
-  
   <property name="zip.file.prefix" value="csharp-cloudfiles" />
 </project>

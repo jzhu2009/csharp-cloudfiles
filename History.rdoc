@@ -1,0 +1,24 @@
+= History
+
+== 1.3.1 2009-05-19
+=== New Features
+ * Added TTL (time-to-live) parameter to making a container public
+ * Log4Net wire-up for logging available, information in README
+ * Better documentation, found in the README.rdoc file
+ * Add repo to github.com/rackspace/csharp-cloudfiles (source and tests)
+ 
+=== Bugfixes
+=== Removed Features
+
+
+== 1.3.0 2009-03-16
+=== New Features
+* Container/Object lists in JSON or XML with item details
+* API support to return your account's total storage or at a Container level
+* Chunked Transfer-Encoding on PUT requests
+* "Pathname" support for pseudo-hierarchical folders/directories
+* Increased name length for Containers/Objects
+* Adding Ruby to the list of supported language APIs
+
+=== Bugfixes
+=== Removed Features

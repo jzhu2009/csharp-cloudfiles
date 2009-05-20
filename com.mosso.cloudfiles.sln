@@ -8,7 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{1820EC64
 		build.bat = build.bat
 		com.mosso.cloudfiles.build = com.mosso.cloudfiles.build
 		com.mosso.cloudfiles.dev.build = com.mosso.cloudfiles.dev.build
-		Documentation.proj = Documentation.proj
+		History.rdoc = History.rdoc
 		properties.include = properties.include
 		README.rdoc = README.rdoc
 	EndProjectSection

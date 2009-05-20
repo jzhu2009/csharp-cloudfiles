@@ -5,12 +5,10 @@
   <target name="complete" depends="clean, compile, setup, test, deploy" description="Compile and Run Tests" />
 
   <target name="clean" description="Deletes all generated folders and files to start with clean folder structure">
-    <delete dir="${help.dir}" />
     <delete dir="${cloudfiles.builds.dir}" />
-    <call target="clean.generated.doc.helper.files" />
   </target>
 
-  <target name="compile" description="Compiles debug solution">
+  <target name="compile" depends="clean" description="Compiles debug solution">
     <call target="create.assemblyinfo" />
 
     <exec program="${msbuild}">
@@ -30,16 +28,11 @@
         <include name="log4net.dll" />
       </fileset>
     </copy>
-
-    <copy todir="docs\lib" overwrite="true" >
-      <fileset basedir="${core.project.original.dll.dir}">
-        <include name="com.mosso.cloudfiles.XML" />
-      </fileset>
-    </copy>
   </target>
 
   <target name="setup" depends="compile">
     <mkdir dir="${build.dir}" if="${not directory::exists(build.dir)}"/>
+    <mkdir dir="${build.docs.dir}" if="${not directory::exists(build.docs.dir)}"/>
     <mkdir dir="${deploy.dir}" if="${not directory::exists(deploy.dir)}"/>
     <mkdir dir="${deploy.src.dir}" if="${not directory::exists(deploy.src.dir)}"/>
     <mkdir dir="${deploy.bin.dir}" if="${not directory::exists(deploy.bin.dir)}"/>
@@ -59,6 +52,7 @@
     </copy>
     <copy todir="${integration.tests.dir}">
       <fileset basedir="${integration.tests.original.dll.dir}">
+        <exclude name="logs" />
         <include name="**/*" />
       </fileset>
     </copy>
@@ -75,7 +69,6 @@
     </exec>
   </target>
 
-
   <target name="deploy">
     <call target="deploy.bin" />
     <call target="deploy.docs" />
@@ -84,41 +77,28 @@
   </target>
 
   <target name="deploy.src">
-    <call target="remove.tests.for.deployment" />
-    <move file="com.mosso.cloudfiles.sln" tofile="temp/com.mosso.cloudfiles.sln" overwrite="true" />
-    <move file="${sln.file.without.tests}" tofile="com.mosso.cloudfiles.sln" overwrite="true" />
     <zip zipfile="${deploy.src.dir}\${zip.file.prefix}-src-${cloud.files.release.build.number}.zip">
       <fileset basedir="${directory::get-current-directory()}">
-        <include name="${help.dir}/*.chm" />
-        <exclude name="lib/**" />
         <exclude name="temp/**" />
-        <exclude name="temp/**" />
-        <exclude name="TempConstants.cs" />
-        <exclude name="cloudfilesviewer/**" />
-        <exclude name="obfuscateconstants/**" />
-        <exclude name="docs/**" />
-        <exclude name="${help.dir}/**" />
         <exclude name="${build.dir}/**" />
         <exclude name="${deploy.dir}/**" />
-        <exclude name=".svn/" />
+        <exclude name=".git/**" />
+        <exclude name=".gitignore" />
         <exclude name="*resharper*" />
         <exclude name="*ReSharper*/**" />
         <exclude name="*suo*" />
         <exclude name="*.cache*" />
-        <exclude name="com.mosso.cloudfiles.integration.tests/**" />
-        <exclude name="com.mosso.cloudfiles.unit.tests/**" />
-        <exclude name="com.mosso.cloudfiles.dev.build" />
-        <exclude name="Documentation.proj" />
-        <exclude name="dev.bat" />
-        <exclude name="properties.include" />
+        <exclude name="com.mosso.cloudfiles/bin/**" />
+        <exclude name="com.mosso.cloudfiles/obj/**" />
+        <exclude name="com.mosso.cloudfiles.integration.tests/bin/**" />
+        <exclude name="com.mosso.cloudfiles.integration.tests/obj /**" />
+        <exclude name="com.mosso.cloudfiles.unit.tests/bin/**" />
+        <exclude name="com.mosso.cloudfiles.unit.tests/obj/**" />
+        <exclude name="cloudfilesviewer/bin/**" />
+        <exclude name="cloudfilesviewer/obj/**" />
         <include name="**" />
       </fileset>
-      <fileset basedir="${help.dir}">
-        <include name="${chm.file.name}.chm" />
-      </fileset>
     </zip>
-    <move file="temp/com.mosso.cloudfiles.sln" tofile="com.mosso.cloudfiles.sln" overwrite="true" />
-    <delete dir="temp"/>
   </target>
 
   <target name="deploy.bin">
@@ -133,98 +113,21 @@
     </zip>
   </target>
 
-  <target name="remove.tests.for.deployment">
-    <script language="C#" prefix="test" >
-      <code>
-        <![CDATA[
-                  [TaskName("removetests")]
-                  public class ReplaceTask : Task {
-                    private string solutionfilename;
-
-                    [TaskAttribute("solutionfilename", Required=true)]
-                    public string FilePath {
-                        get { return solutionfilename; }
-                        set { solutionfilename = value; }
-                    }
-
-                    protected override void ExecuteTask() {
-                        string file = String.Empty;
-                        using (StreamReader reader = File.OpenText(solutionfilename))
-                        {
-                            file = reader.ReadToEnd();
-							
-							              file = file.Replace("\r\n\t\tcom.mosso.cloudfiles.dev.build = com.mosso.cloudfiles.dev.build", "");
-							              file = file.Replace("\r\nMicrosoft Visual Studio Solution File, Format Version 10.00", "Microsoft Visual Studio Solution File, Format Version 10.00");
-                            file = file.Replace("Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"com.mosso.cloudfiles.integration.tests\", \"com.mosso.cloudfiles.integration.tests\\com.mosso.cloudfiles.integration.tests.csproj\", \"{E9F72C28-155A-476F-B533-BAEC0228CA1E}\"\r\nEndProject\r\n", "");
-                            file = file.Replace("Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"com.mosso.cloudfiles.unit.tests\", \"com.mosso.cloudfiles.unit.tests\\com.mosso.cloudfiles.unit.tests.csproj\", \"{8720F9D5-59B8-49DC-A05A-DAEE3611DA00}\"\r\nEndProject\r\n", "");
-
-                            //Console.WriteLine(file);
-                            using (TextWriter tw = new StreamWriter("com.mosso.cloudfiles.sln.withouttests"))
-                            {
-                                tw.WriteLine(file);
-                            }
-
-                            Console.WriteLine("Removal of tests from solution complete");
-                        }
-                    }
-                  }
-                ]]>
-      </code>
-    </script>
-    <removetests solutionfilename="com.mosso.cloudfiles.sln"/>
-  </target>
-
-  <target name="deploy.docs">
-    <call target="verify.sandcastle.installed" />
-    <call target="verify.htmlhelpworkshop.installed" />
-    <call target="deploy.docs.all" />
-  </target>
-
-  <target name="verify.sandcastle.installed" >
-    <if test="${not directory::exists(sandcastle.exe.dir)}">
-      <fail message="Sandcastle needs to be installed at ${sandcastle.exe.dir} to generate documentation, please download from http://www.microsoft.com/downloads/details.aspx?FamilyID=E82EA71D-DA89-42EE-A715-696E3A4873B2." />
-    </if>
-  </target>
-
-  <target name="verify.htmlhelpworkshop.installed" >
-    <if test="${not directory::exists(htmlhelpworkshop.dir)}">
-      <fail message="HTML Help Workshop needs to be installed at ${htmlhelpworkshop.dir} to generate documentation, please download from http://go.microsoft.com/fwlink/?linkid=14188." />
-    </if>
-  </target>
-
-
-  <target name="deploy.docs.all" description="creates chm file and packages into zip file">
+  <target name="deploy.docs" description="creates documentation files and packages into zip file">
     <call target="create.docs" />
     <call target="package.docs" />
   </target>
 
-  <!-- if this target fails, just change /verbosity:quiet to /verbosity:minimal or /verbosity:verbose -->
   <target name="create.docs" depends="compile, setup">
-    <exec program="${msbuild}">
-      <arg value="Documentation.proj" />
-      <arg value="/verbosity:quiet" />
-      <arg value="/target:Documentation" />
-      <arg value="/p:Configuration=${config}" />
-      <arg value="/p:HelpName=${chm.file.name}" />
+    <exec program="docu.exe" basedir="lib\docu">
+      <arg value="--output=${build.docs.dir}" />
+      <arg value="${config.dir}\com.mosso.cloudfiles.dll" />
     </exec>
-    <call target="clean.generated.doc.helper.files" />
-  </target>
-
-  <target name="clean.generated.doc.helper.files">
-    <delete>
-      <fileset>
-        <include name="sandcastle.config" />
-        <include name="reflection.org" />
-        <include name="reflection.xml" />
-        <include name="manifest.xml" />
-        <include name="toc.xml" />
-      </fileset>
-    </delete>
   </target>
 
   <target name="package.docs">
     <zip zipfile="${deploy.docs.dir}\${zip.file.prefix}-doc-${cloud.files.release.build.number}.zip">
-      <fileset basedir="${help.dir}">
+      <fileset basedir="${build.docs.dir}">
         <include name="**" />
       </fileset>
     </zip>
@@ -244,7 +147,7 @@
         <attribute type="AssemblyFileVersionAttribute" value="${cloud.files.release.build.number}" />
         <attribute type="AssemblyTitleAttribute" value="com.mosso.cloudfiles" />
         <attribute type="AssemblyDescriptionAttribute" value="C#.NET API for Rackspace Cloud Files Cloud Storage" />
-        <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2008, Rackspace Managed Hosting" />
+        <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2008 2009, Rackspace Managed Hosting" />
         <attribute type="AssemblyCompanyAttribute" value="Rackspace Managed Hosting" />
       </attributes>
     </asminfo>
