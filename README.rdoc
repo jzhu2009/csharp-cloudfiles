@@ -295,9 +295,9 @@ See the Cloud Files Viewer demo for a more concrete example
 	
 == Authors
 
-Jason Meridth <jason.meridth@rackspace.com>
+Jason Meridth <jason.meridth@rackspace.com> (armmer)
 
-Matt Dietz <matt.dietz@rackspace.com>
+Matt Dietz <matt.dietz@rackspace.com> (cerberus98)
 
 == License
 
