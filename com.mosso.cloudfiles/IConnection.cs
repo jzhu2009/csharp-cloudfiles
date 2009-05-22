@@ -48,7 +48,9 @@ namespace com.mosso.cloudfiles
         
         List<string> GetPublicContainers();
         Uri MarkContainerAsPublic(string containerName);
+        Uri MarkContainerAsPublic(string containerName, int timeToLiveInSeconds);
         void MarkContainerAsPrivate(string containerName);
+        void SetTTLOnPublicContainer(string containerName, int timeToLiveInSeconds);
         Container GetPublicContainerInformation(string containerName);
 
         void MakePath(string containerName, string path);

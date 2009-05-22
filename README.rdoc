@@ -79,45 +79,45 @@ See the class definitions for documentation on specific methods and operations.
 
 types are explicitly used in this example. The +var+ keyword could also be used and object/collection initializers could be used.  We are being explicit for example
 
-*Connect to CloudFiles*
+<b>Connect to CloudFiles</b>
 	UserCredentials userCredentials = new UserCredentials("username", "api key");
 	IConnection connection = new Connection(userCredentials);
 
-*Get the account information*
+<b>Get the account information</b>
 	AccountInformation accountInformation = connection.GetAccountInformation();
 
-*Get the account information as JSON*
+<b>Get the account information as JSON</b>
 	string jsonReturnValue = connection.GetAccountInformationJson();
 
-*Get the account information as XML*
+<b>Get the account information as XML</b>
 	XmlDocument xmlReturnValue = connection.GetAccountInformationXml();
 
-*Create new container*
+<b>Create new container</b>
 	connection.CreateContainer("container name");
 
-*Get container information*
+<b>Get container information</b>
 	Container container = connection.GetContainerInformation("container name");
 
-*Get container information as JSON*
+<b>Get container information as JSON</b>
 	string jsonResponse = connection.GetContainerInformationJson("container name");
 
-*Get container information as XML*
+<b>Get container information as XML</b>
 	XmlDocument xmlResponse = connection.GetContainerInformationXml("container name");
 
-*Put item in container with metadata*
+<b>Put item in container with metadata</b>
 	Dictionary<string, string> metadata = new Dictionary<string, string>();
 	metadata.Add("key1", "value1");
 	metadata.Add("key2", "value2");
 	metadata.Add("key3", "value3");
 	connection.PutStorageItem("container name", "C:\Local\File\Path\file.txt", metadata);
 
-*Get all the containers for the account*
+<b>Get all the containers for the account</b>
 	List<string> containers = connection.GetContainers();
 
-*Put item in container without metadata*
+<b>Put item in container without metadata</b>
 	connection.PutStorageItem("container name", "C:\Local\File\Path\file.txt");
 
-*Put item in container from stream with metadata*
+<b>Put item in container from stream with metadata</b>
 	Dictionary{string, string} metadata = new Dictionary{string, string}();
 	metadata.Add("key1", "value1");
 	metadata.Add("key2", "value2");
@@ -125,27 +125,27 @@ types are explicitly used in this example. The +var+ keyword could also be used 
 	FileInfo file = new FileInfo("C:\Local\File\Path\file.txt");
 	connection.PutStorageItem("container name", file.Open(FileMode.Open), "RemoteFileName.txt");
 
-*Put item in container from stream*
+<b>Put item in container from stream</b>
 	FileInfo file = new FileInfo("C:\Local\File\Path\file.txt");
 	connection.PutStorageItem("container name", file.Open(FileMode.Open), "RemoteFileName.txt", metadata);
 
-*Make path explicitly with auto-creation of "directory" structure*
+<b>Make path explicitly with auto-creation of "directory" structure</b>
 	connection.MakePath("/dir1/dir2/dir3/dir4/file.txt");
 
-*List all the items in a container*
+<b>List all the items in a container</b>
 	List<string> containerItemList = connection.GetContainerItemList("container name");
 
-*Shortening the search results by using parameter dictionary*
+<b>Shortening the search results by using parameter dictionary</b>
 	Dictionary<GetItemListParameters, string> parameters = new Dictionary<GetItemListParameters, string>();
 	parameters.Add(GetItemListParameters.Limit, 2);
 	parameters.Add(GetItemListParameters.Marker, 1);
 	parameters.Add(GetItemListParameters.Prefix, "a");
 	List<string> containerItemList = connection.GetContainerItemList("container name", parameters);
 
-*Get item from container*
+<b>Get item from container</b>
 	StorageItem storageItem = connection.GetStorageItem("container name", "RemoteStorageItem.txt");
 
-*Get item from container with request Header fields*
+<b>Get item from container with request Header fields</b>
 	Dictionary<RequestHeaderFields, string> requestHeaderFields = Dictionary<RequestHeaderFields, string>();
 	string dummy_etag = "5c66108b7543c6f16145e25df9849f7f";
 	requestHeaderFields.Add(RequestHeaderFields.IfMatch, dummy_etag);
@@ -155,10 +155,10 @@ types are explicitly used in this example. The +var+ keyword could also be used 
 	requestHeaderFields.Add(RequestHeaderFields.Range, "0-5");
 	StorageItem storageItem = connection.GetStorageItem("container name", "RemoteStorageItem.txt", requestHeaderFields);
 
-*Get item from container and put straight into local file*
+<b>Get item from container and put straight into local file</b>
 	StorageItem storageItem = connection.GetStorageItem("container name", "RemoteStorageItem.txt", "C:\Local\File\Path\file.txt");
 
-*Get item from container and put straight into local file with request Header fields*
+<b>Get item from container and put straight into local file with request Header fields</b>
 	Dictionary<RequestHeaderFields, string> requestHeaderFields = Dictionary<RequestHeaderFields, string>();
 	string dummy_etag = "5c66108b7543c6f16145e25df9849f7f";
 	requestHeaderFields.Add(RequestHeaderFields.IfMatch, dummy_etag);
@@ -168,35 +168,38 @@ types are explicitly used in this example. The +var+ keyword could also be used 
 	requestHeaderFields.Add(RequestHeaderFields.Range, "0-5");
 	StorageItem storageItem = connection.GetStorageItem("container name", "RemoteFileName.txt", "C:\Local\File\Path\file.txt", requestHeaderFields);
 
-*Set meta data information for an item in a container*
+<b>Set meta data information for an item in a container</b>
 	Dictionary<string, string> metadata = new Dictionary<string, string>();
 	metadata.Add("key1", "value1");
 	metadata.Add("key2", "value2");
 	metadata.Add("key3", "value3");
 	connection.SetStorageItemMetaInformation("container name", "C:\Local\File\Path\file.txt", metadata);
 
-*Get item information*
+<b>Get item information</b>
 	StorageItem storageItem = connection.GetStorageItemInformation("container name", "RemoteStorageItem.txt");
 
-*Get a list of the public containers (on the CDN)*
+<b>Get a list of the public containers (on the CDN)</b>
 	List<string> containers = connection.GetPublicContainers();
 
-*Mark a container as public (available on the CDN)*
+<b>Mark a container as public (available on the CDN)</b>
 	Uri containerPublicUrl = connection.MarkContainerAsPublic("container name");
 	
-*Mark a container as public (available on the CDN), with time-to-live (TTL) parameters*
-	Uri containerPublicUrl = connection.MarkContainerAsPublic("container name");
+<b>Mark a container as public (available on the CDN), with time-to-live (TTL) parameters</b>
+	Uri containerPublicUrl = connection.MarkContainerAsPublic("container name", 12345);
 
-*Get public container information*
+<b>Get public container information</b>
 	Container container = connection.GetPublicContainerInformation("container name")
 
-*Mark a container as private (remove it from the CDN)*
+<b>Set TTL on public container</b>
+	connection.SetTTLOnPublicContainer("container name", 12345);
+	
+<b>Mark a container as private (remove it from the CDN)</b>
 	connection.MarkContainerAsPrivate("container name");
-
-*Delete item from container*
+	
+<b>Delete item from container</b>
 	connection.DeleteStorageItem("container name", "RemoteStorageItem.txt");
 
-*Delete container*
+<b>Delete container</b>
 	connection.DeleteContainer("container name");
 
 == Authors

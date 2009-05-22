@@ -35,5 +35,13 @@ namespace com.mosso.cloudfiles.unit.tests.domain.StorageObjectSpecs.ContainerSpe
             container.ObjectCount = Constants.CONTAINER_OBJECT_COUNT;
             Assert.AreEqual(container.ObjectCount, Constants.CONTAINER_OBJECT_COUNT);
         }
+
+        [Test]
+        public void Should_have_time_to_live_initialized_to_negative_one()
+        {
+            Assert.That(container.TTL, Is.EqualTo(-1));
+            container.TTL = 300;
+            Assert.That(container.TTL, Is.EqualTo(300));
+        }
     }
 }

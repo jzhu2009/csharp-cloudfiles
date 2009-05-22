@@ -16,7 +16,7 @@ namespace com.mosso.cloudfiles.domain.request
         /// <param name="authToken">The authorization token returned from the authorization server</param>
         /// <param name="containerName">The name of the container to update the details for</param>
         /// <param name="isCdnEnabled">Sets whether or not specified container is available on the CDN</param>
-        public SetPublicContainerDetails(string cdnManagementUrl, string authToken, string containerName, bool isCdnEnabled)
+        public SetPublicContainerDetails(string cdnManagementUrl, string authToken, string containerName, bool isCdnEnabled, int timeToLiveInSeconds)
         {
             if (String.IsNullOrEmpty(cdnManagementUrl) ||
                     String.IsNullOrEmpty(authToken) ||
@@ -29,6 +29,7 @@ namespace com.mosso.cloudfiles.domain.request
 
             AddAuthTokenToHeaders(authToken);
             Headers.Add(Constants.X_CDN_ENABLED, isCdnEnabled.Capitalize());
+            if(timeToLiveInSeconds > -1) Headers.Add(Constants.X_CDN_TTL, timeToLiveInSeconds.ToString());
         }
     }
 }
