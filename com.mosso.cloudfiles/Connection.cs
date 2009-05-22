@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Runtime.Remoting.Messaging;
+using System.Threading;
 using System.Xml;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.domain.request;
@@ -44,7 +46,13 @@ namespace com.mosso.cloudfiles
     /// </example>
     public class Connection : IConnection
     {
+        public delegate void OperationCompleteCallback();
+
+        public event OperationCompleteCallback OperationComplete;
+
+        public delegate void ProgressCallback(int bytesWritten);
         private bool retry;
+        private List<ProgressCallback> callbackFuncs;
 
         /// <summary>
         /// A constructor used to create an instance of the Connection class
@@ -59,6 +67,7 @@ namespace com.mosso.cloudfiles
         /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
         public Connection(UserCredentials userCredentials)
         {
+            callbackFuncs = new List<ProgressCallback>();
             Log.EnsureInitialized();
             AuthToken = "";
             StorageUrl = "";
@@ -75,7 +84,11 @@ namespace com.mosso.cloudfiles
                 Authenticate();
             }
         }
-
+        
+        public void foo()
+        {
+            
+        }
         private void Authenticate()
         {
             Log.Info(this, "Authenticating user " + UserCredentials.Username);
@@ -103,6 +116,11 @@ namespace com.mosso.cloudfiles
                 Log.Error(this, "Error authenticating user " + UserCredentials.Username, ex);
                 throw;
             }
+        }
+
+        public void AddProgressWatcher(ProgressCallback progressCallback)
+        {
+            callbackFuncs.Add(progressCallback);
         }
 
         private bool IsAuthenticated()
@@ -682,6 +700,10 @@ namespace com.mosso.cloudfiles
                 var remoteName = Path.GetFileName(localFilePath);
                 var localName = localFilePath.Replace("/", "\\");
                 var putStorageItem = new PutStorageItem(StorageUrl, AuthToken, containerName, remoteName, localName, metadata);
+                foreach (var callback in callbackFuncs)
+                {
+                    putStorageItem.Progress += callback;
+                }
                 new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(putStorageItem, UserCredentials.ProxyCredentials));
             }
             catch (WebException webException)
@@ -759,6 +781,282 @@ namespace com.mosso.cloudfiles
         }
 
         /// <summary>
+        /// This method uploads a storage object to cloudfiles asychronously
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// private void transferComplete()
+        /// {
+        ///     if (InvokeRequired)
+        ///     {
+        ///         Invoke(new CloseCallback(Close), new object[]{});
+        ///     }
+        ///     else
+        ///     {
+        ///         if (!IsDisposed)
+        ///             Close();
+        ///     }
+        /// }
+        /// 
+        /// private void fileTransferProgress(int bytesTransferred)
+        /// {
+        ///    if (InvokeRequired)
+        ///    {
+        ///        Invoke(new FileProgressCallback(fileTransferProgress), new object[] {bytesTransferred});
+        ///    }
+        ///    else
+        ///    {
+        ///        System.Console.WriteLine(totalTransferred.ToString());
+        ///        totalTransferred += bytesTransferred;
+        ///        bytesTransferredLabel.Text = totalTransferred.ToString();
+        ///        var progress = (int) ((totalTransferred/filesize)*100.0f);
+        ///        if(progress > 100)
+        ///            progress = 100;
+        ///        transferProgressBar.Value = progress ;
+        ///    }
+        /// }
+        /// 
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// connection.AddProgressWatcher(fileTransferProgress);
+        /// connection.OperationComplete += transferComplete;
+        /// connection.PutStorageItemAsync("container name", "RemoteStorageItem.txt", "RemoteStorageItem.txt");
+        /// </code>
+        /// </example>
+        /// <param name="containerName">The name of the container to put the storage object in</param>
+        /// <param name="remoteStorageItemName">The alternate name as it will be called on cloudfiles</param>
+        /// <param name="storageStream">The stream representing the storage item to upload</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
+        public void PutStorageItemAsync(string containerName, Stream storageStream, string remoteStorageItemName)
+        {
+            var thread = new Thread(
+                () =>
+                    {
+                        try
+                        {
+                            PutStorageItem(containerName, storageStream, remoteStorageItemName);
+                        }
+                        finally  //Always fire the completed event
+                        {
+                            if (OperationComplete != null)
+                            {
+                                //Fire the operation complete event if there are any listeners
+                                OperationComplete();
+                            }
+                        }
+                    }
+                );
+            thread.Start();
+        }
+
+        /// <summary>
+        /// This method uploads a storage object to cloudfiles asychronously
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// private void transferComplete()
+        /// {
+        ///     if (InvokeRequired)
+        ///     {
+        ///         Invoke(new CloseCallback(Close), new object[]{});
+        ///     }
+        ///     else
+        ///     {
+        ///         if (!IsDisposed)
+        ///             Close();
+        ///     }
+        /// }
+        /// 
+        /// private void fileTransferProgress(int bytesTransferred)
+        /// {
+        ///    if (InvokeRequired)
+        ///    {
+        ///        Invoke(new FileProgressCallback(fileTransferProgress), new object[] {bytesTransferred});
+        ///    }
+        ///    else
+        ///    {
+        ///        System.Console.WriteLine(totalTransferred.ToString());
+        ///        totalTransferred += bytesTransferred;
+        ///        bytesTransferredLabel.Text = totalTransferred.ToString();
+        ///        var progress = (int) ((totalTransferred/filesize)*100.0f);
+        ///        if(progress > 100)
+        ///            progress = 100;
+        ///        transferProgressBar.Value = progress ;
+        ///    }
+        /// }
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// Dictionary{string, string} metadata = new Dictionary{string, string}();
+        /// metadata.Add("key1", "value1");
+        /// metadata.Add("key2", "value2");
+        /// metadata.Add("key3", "value3");
+        /// connection.PutStorageItemAsync("container name", "LocalFileName.txt", metadata);
+        /// </code>
+        /// </example>
+        /// <param name="containerName">The name of the container to put the storage object in</param>
+        /// <param name="localStorageItemName">The name of the file locally </param>
+        /// <param name="metadata">An optional parameter containing a dictionary of meta tags to associate with the storage object</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
+        public void PutStorageItemAsync(string containerName, string localStorageItemName, Dictionary<string, string> metadata)
+        {
+            var thread = new Thread(
+                () =>
+                {
+                    try
+                    {
+                        PutStorageItem(containerName, localStorageItemName, metadata);
+                    }
+                    finally //Always fire the completed event
+                    {
+                        if (OperationComplete != null)
+                        {
+                            //Fire the operation complete event if there aren't any listeners
+                            OperationComplete();
+                        }
+                    }
+                }
+            );
+            thread.Start();
+        }
+
+        /// <summary>
+        /// This method uploads a storage object to cloudfiles asychronously
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// private void transferComplete()
+        /// {
+        ///     if (InvokeRequired)
+        ///     {
+        ///         Invoke(new CloseCallback(Close), new object[]{});
+        ///     }
+        ///     else
+        ///     {
+        ///         if (!IsDisposed)
+        ///             Close();
+        ///     }
+        /// }
+        /// 
+        /// private void fileTransferProgress(int bytesTransferred)
+        /// {
+        ///    if (InvokeRequired)
+        ///    {
+        ///        Invoke(new FileProgressCallback(fileTransferProgress), new object[] {bytesTransferred});
+        ///    }
+        ///    else
+        ///    {
+        ///        System.Console.WriteLine(totalTransferred.ToString());
+        ///        totalTransferred += bytesTransferred;
+        ///        bytesTransferredLabel.Text = totalTransferred.ToString();
+        ///        var progress = (int) ((totalTransferred/filesize)*100.0f);
+        ///        if(progress > 100)
+        ///            progress = 100;
+        ///        transferProgressBar.Value = progress ;
+        ///    }
+        /// }
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// Dictionary{string, string} metadata = new Dictionary{string, string}();
+        /// metadata.Add("key1", "value1");
+        /// metadata.Add("key2", "value2");
+        /// metadata.Add("key3", "value3");
+        /// FileInfo file = new FileInfo("C:\Local\File\Path\file.txt");
+        /// connection.PutStorageItemAsync("container name", file.Open(FileMode.Open), "RemoteFileName.txt", metadata);
+        /// </code>
+        /// </example>
+        /// <param name="containerName">The name of the container to put the storage object in</param>
+        /// <param name="remoteStorageItemName">The alternate name as it will be called on cloudfiles</param>
+        /// <param name="storageStream">The stream representing the storage item to upload</param>
+        /// <param name="metadata">An optional parameter containing a dictionary of meta tags to associate with the storage object</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
+        public void PutStorageItemAsync(string containerName, Stream storageStream, string remoteStorageItemName, Dictionary<string, string> metadata)
+        {
+            var thread = new Thread(
+                () => 
+                {
+                    try
+                    {
+                        PutStorageItem(containerName, storageStream, remoteStorageItemName, metadata);
+                    }
+                    finally
+                    {
+                        if (OperationComplete != null)
+                        {
+                            //Fire the operation complete event if there are any listeners
+                            OperationComplete();
+                        }
+                    }
+                }
+                );
+            thread.Start();
+        }
+
+        /// <summary>
+        /// This method uploads a storage object to cloudfiles asychronously
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// private void transferComplete()
+        /// {
+        ///     if (InvokeRequired)
+        ///     {
+        ///         Invoke(new CloseCallback(Close), new object[]{});
+        ///     }
+        ///     else
+        ///     {
+        ///         if (!IsDisposed)
+        ///             Close();
+        ///     }
+        /// }
+        /// 
+        /// private void fileTransferProgress(int bytesTransferred)
+        /// {
+        ///    if (InvokeRequired)
+        ///    {
+        ///        Invoke(new FileProgressCallback(fileTransferProgress), new object[] {bytesTransferred});
+        ///    }
+        ///    else
+        ///    {
+        ///        System.Console.WriteLine(totalTransferred.ToString());
+        ///        totalTransferred += bytesTransferred;
+        ///        bytesTransferredLabel.Text = totalTransferred.ToString();
+        ///        var progress = (int) ((totalTransferred/filesize)*100.0f);
+        ///        if(progress > 100)
+        ///            progress = 100;
+        ///        transferProgressBar.Value = progress ;
+        ///    }
+        /// }
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// connection.PutStorageItemAsync("container name", "LocalFileName.txt");
+        /// </code>
+        /// </example>
+        /// <param name="containerName">The name of the container to put the storage object in</param>
+        /// <param name="localStorageItemName">The name of the file locally </param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
+        public void PutStorageItemAsync(string containerName, string localStorageItemName)
+        {
+            var thread = new Thread(
+                () => 
+                {
+                    try
+                    {
+                        PutStorageItem(containerName, localStorageItemName);
+                    }
+                    finally //Always fire the completed event
+                    {
+                        if (OperationComplete != null)
+                        {
+                            //Fire the operation complete event if there aren't any listeners
+                            OperationComplete();
+                        }
+                    }
+                }
+            );
+            thread.Start();
+        }
+        
+        /// <summary>
         /// This method uploads a storage object to cloudfiles with an alternate name
         /// </summary>
         /// <example>
@@ -792,6 +1090,10 @@ namespace com.mosso.cloudfiles
             try
             {
                 var putStorageItem = new PutStorageItem(StorageUrl, AuthToken, containerName, remoteStorageItemName, storageStream, metadata);
+                foreach(var callback in callbackFuncs)
+                {
+                    putStorageItem.Progress += callback;
+                }
                 new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(putStorageItem, UserCredentials.ProxyCredentials));
             }
             catch (WebException webException)
@@ -925,6 +1227,8 @@ namespace com.mosso.cloudfiles
             {
                 var getStorageItem = new GetStorageItem(StorageUrl, AuthToken, containerName, storageItemName, requestHeaderFields);
                 var getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem, UserCredentials.ProxyCredentials));
+               
+
                 var metadata = GetMetadata(getStorageItemResponse);
                 var storageItem = new StorageItem(storageItemName, metadata, getStorageItemResponse.ContentType, getStorageItemResponse.ContentStream, long.Parse(getStorageItemResponse.ContentLength));
 //                getStorageItemResponse.Dispose();
@@ -958,6 +1262,150 @@ namespace com.mosso.cloudfiles
             return metadata;
         }
 
+        /// <summary>
+        /// This method downloads a storage object from cloudfiles asychronously
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// private void transferComplete()
+        /// {
+        ///     if (InvokeRequired)
+        ///     {
+        ///         Invoke(new CloseCallback(Close), new object[]{});
+        ///     }
+        ///     else
+        ///     {
+        ///         if (!IsDisposed)
+        ///             Close();
+        ///     }
+        /// }
+        /// 
+        /// private void fileTransferProgress(int bytesTransferred)
+        /// {
+        ///    if (InvokeRequired)
+        ///    {
+        ///        Invoke(new FileProgressCallback(fileTransferProgress), new object[] {bytesTransferred});
+        ///    }
+        ///    else
+        ///    {
+        ///        System.Console.WriteLine(totalTransferred.ToString());
+        ///        totalTransferred += bytesTransferred;
+        ///        bytesTransferredLabel.Text = totalTransferred.ToString();
+        ///        var progress = (int) ((totalTransferred/filesize)*100.0f);
+        ///        if(progress > 100)
+        ///            progress = 100;
+        ///        transferProgressBar.Value = progress ;
+        ///    }
+        /// }
+        /// 
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// connection.AddProgressWatcher(fileTransferProgress);
+        /// connection.OperationComplete += transferComplete;
+        /// connection.GetStorageItemAsync("container name", "RemoteStorageItem.txt", "RemoteStorageItem.txt");
+        /// </code>
+        /// </example>
+        /// <param name="containerName">The name of the container that contains the storage object to retrieve</param>
+        /// <param name="storageItemName">The name of the storage object to retrieve</param>
+        /// <param name="localFileName">The name to write the file to on your hard drive. </param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
+        public void GetStorageItemAsync(string containerName, string storageItemName, string localFileName)
+        {
+            var thread = new Thread(
+                 () =>
+                 {
+                    try
+                    {
+                         GetStorageItem(containerName, storageItemName, localFileName);
+                    }
+                    finally //Always fire the completed event
+                    {
+                        if (OperationComplete != null)
+                        {
+                            //Fire the operation complete event if there aren't any listeners
+                            OperationComplete();
+                        }
+                    }
+                 }
+             );
+            thread.Start();
+        }
+
+        /// <summary>
+        /// This method downloads a storage object from cloudfiles asychronously
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// private void transferComplete()
+        /// {
+        ///     if (InvokeRequired)
+        ///     {
+        ///         Invoke(new CloseCallback(Close), new object[]{});
+        ///     }
+        ///     else
+        ///     {
+        ///         if (!IsDisposed)
+        ///             Close();
+        ///     }
+        /// }
+        /// 
+        /// private void fileTransferProgress(int bytesTransferred)
+        /// {
+        ///    if (InvokeRequired)
+        ///    {
+        ///        Invoke(new FileProgressCallback(fileTransferProgress), new object[] {bytesTransferred});
+        ///    }
+        ///    else
+        ///    {
+        ///        System.Console.WriteLine(totalTransferred.ToString());
+        ///        totalTransferred += bytesTransferred;
+        ///        bytesTransferredLabel.Text = totalTransferred.ToString();
+        ///        var progress = (int) ((totalTransferred/filesize)*100.0f);
+        ///        if(progress > 100)
+        ///            progress = 100;
+        ///        transferProgressBar.Value = progress ;
+        ///    }
+        /// }
+        /// Dictionary{RequestHeaderFields, string} requestHeaderFields = Dictionary{RequestHeaderFields, string}();
+        /// string dummy_etag = "5c66108b7543c6f16145e25df9849f7f";
+        /// requestHeaderFields.Add(RequestHeaderFields.IfMatch, dummy_etag);
+        /// requestHeaderFields.Add(RequestHeaderFields.IfNoneMatch, dummy_etag);
+        /// requestHeaderFields.Add(RequestHeaderFields.IfModifiedSince, DateTime.Now.AddDays(6).ToString());
+        /// requestHeaderFields.Add(RequestHeaderFields.IfUnmodifiedSince, DateTime.Now.AddDays(-6).ToString());
+        /// requestHeaderFields.Add(RequestHeaderFields.Range, "0-5");
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// connection.AddProgressWatcher(fileTransferProgress);
+        /// connection.OperationComplete += transferComplete;
+        /// connection.GetStorageItemAsync("container name", "RemoteStorageItem.txt", "RemoteStorageItem.txt", requestHeaderFields);
+        /// </code>
+        /// </example>
+        /// <param name="containerName">The name of the container that contains the storage object to retrieve</param>
+        /// <param name="storageItemName">The name of the storage object to retrieve</param>
+        /// <param name="localFileName">The name to write the file to on your hard drive. </param>
+        /// <param name="requestHeaderFields">A dictionary containing the special headers and their values</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the reference parameters are null</exception>
+        public void GetStorageItemAsync(string containerName, string storageItemName, string localFileName, Dictionary<RequestHeaderFields, string> requestHeaderFields)
+        {
+            var thread = new Thread(
+                 () =>
+                 {
+                    try
+                    {
+                        GetStorageItem(containerName, storageItemName, localFileName, requestHeaderFields);
+                    }
+                    finally //Always fire the completed event
+                    {
+                        if (OperationComplete != null)
+                        {
+                            //Fire the operation complete event if there aren't any listeners
+                            OperationComplete();
+                        }
+                    }
+                 }
+             );
+            thread.Start();
+        }
 
         /// <summary>
         /// An alternate method for downloading storage objects from cloudfiles directly to a file name specified in the method
@@ -1025,9 +1473,14 @@ namespace com.mosso.cloudfiles
                 + localFileName + " locally");
 
             var getStorageItem = new GetStorageItem(StorageUrl, AuthToken, containerName, storageItemName, requestHeaderFields);
+            
             try
             {
                 var getStorageItemResponse = new ResponseFactoryWithContentBody<GetStorageItemResponse>().Create(new CloudFilesRequest(getStorageItem, UserCredentials.ProxyCredentials));
+                foreach (var callback in callbackFuncs)
+                {
+                    getStorageItemResponse.Progress += callback;
+                }
                 getStorageItemResponse.SaveStreamToDisk(localFileName);
             }
             catch (WebException we)

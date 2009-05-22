@@ -201,7 +201,98 @@ types are explicitly used in this example. The +var+ keyword could also be used 
 
 <b>Delete container</b>
 	connection.DeleteContainer("container name");
+	
+* Upload/Download files asychrononously while displaying a progress bar *
+	
+	Create a new Windows form with your progress bar control. Using the code below as an example, create upload
+	and download methods in the code behind for the form that take whatever parameters you're using for the 
+	GetStorageItem and PutStorageItem call. 
+	
+	In your main form, when initiating the download/upload, create a new instance of your form and call the appropriate
+	method. 
+	
+	An example of uploading asynchronously:
+	
+	var p = new ProgressDialog();
+    p.StartFileTransfer(this, Connection, containerName, localFileName);
+    
+    SetSuccessfulMessageInStatusBar();
+    //Refresh the container
+    RetrieveContainerItemList();
+	
+	Code below is an example of what would go in your progress bar form:
+	
+	public void StartFileTransfer(Form owner, Connection connection, string container, string filePath)
+    {
+        totalTransferred = 0f;
+        Text = "Uploading File";
+        Cursor = Cursors.WaitCursor;
+        var fi = new FileInfo(filePath);
+        filesize = fi.Length;
+        totalBytesLabel.Text = filesize.ToString();
 
+        connection.AddProgressWatcher(fileTransferProgress);
+        connection.OperationComplete += transferComplete;
+
+        connection.PutStorageItemAsync(container, filePath);
+        //It's absolutely critical that ShowDialog is called over Show. ShowDialog sets the dialog to modal, blocking input to any
+        //other form in the application until the operation is complete. Otherwise, a deadlock occurs if you click the main form,
+        //hanging the entire application
+        ShowDialog(owner);      
+    }
+
+    private void transferComplete()
+    {
+        if (InvokeRequired)
+        {
+            Invoke(new CloseCallback(Close), new object[]{});
+        }
+        else
+        {
+            if (!IsDisposed)
+                Close();
+        }
+    }
+
+    private void fileTransferProgress(int bytesTransferred)
+    {
+        if (InvokeRequired)
+        {
+            Invoke(new FileProgressCallback(fileTransferProgress), new object[] {bytesTransferred});
+        }
+        else
+        {
+            System.Console.WriteLine(totalTransferred.ToString());
+            totalTransferred += bytesTransferred;
+            bytesTransferredLabel.Text = totalTransferred.ToString();
+            var progress = (int) ((totalTransferred/filesize)*100.0f);
+            if(progress > 100)
+                progress = 100;
+            transferProgressBar.Value = progress ;
+        }
+    }
+    
+    public void StartFileDownload(MainForm owner, Connection connection, long filesize, string container, string storageItemName, string localFileName)
+    {
+        Text = "Downloading File";
+        Cursor = Cursors.WaitCursor;
+        this.filesize = filesize;
+
+        totalBytesLabel.Text = filesize.ToString();
+
+        connection.AddProgressWatcher(fileTransferProgress);
+        connection.OperationComplete += transferComplete;
+
+        connection.GetStorageItemAsync(container, storageItemName, localFileName);
+
+        //It's absolutely critical that ShowDialog is called over Show. ShowDialog sets the dialog to modal, blocking input to any
+        //other form in the application until the operation is complete. Otherwise, a deadlock occurs if you click the main form,
+        //hanging the entire application
+        ShowDialog(owner);
+    }
+
+	See the Cloud Files Viewer demo for a more concrete example
+	
 == Authors
 
 Jason Meridth <jason.meridth@rackspace.com>

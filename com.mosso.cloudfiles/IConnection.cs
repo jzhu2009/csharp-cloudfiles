@@ -23,7 +23,7 @@ namespace com.mosso.cloudfiles
         void CreateContainer(string containerName);
         
         void DeleteContainer(string continerName);
-        
+
         List<string> GetContainers();
         
         List<string> GetContainerItemList(string containerName);
@@ -32,7 +32,13 @@ namespace com.mosso.cloudfiles
         Container GetContainerInformation(string containerName);
         string GetContainerInformationJson(string containerName);
         XmlDocument GetContainerInformationXml(string containerName);
-        
+
+
+        void PutStorageItemAsync(string containerName, Stream storageStream, string remoteStorageItemName);
+        void PutStorageItemAsync(string containerName, string localStorageItemName);
+
+        void GetStorageItemAsync(string containerName, string storageItemName, string localItemName);
+
         void PutStorageItem(string containerName, string localFilePath, Dictionary<string, string> metadata);
         void PutStorageItem(string containerName, string localFilePath);
         void PutStorageItem(string containerName, Stream storageStream, string remoteStorageItemName);

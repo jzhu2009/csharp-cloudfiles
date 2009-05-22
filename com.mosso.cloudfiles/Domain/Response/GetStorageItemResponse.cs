@@ -15,6 +15,7 @@ namespace com.mosso.cloudfiles.domain.response
     public class GetStorageItemResponse : IResponseWithContentBody
     {
         private readonly List<string> contentBody;
+        public event Connection.ProgressCallback Progress;
         private Stream contentStream;
 
         /// <summary>
@@ -96,6 +97,8 @@ namespace com.mosso.cloudfiles.domain.response
             while ((amt = contentStream.Read(buffer, 0, buffer.Length)) != 0)
             {
                 fs.Write(buffer, 0, amt);
+                if (Progress != null)
+                    Progress(amt);
             }
             fs.Close();
             contentStream.Close();

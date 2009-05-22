@@ -2,7 +2,7 @@
 {
     internal static class Credentials
     {
-        public const string USERNAME = "ENTER YOUR USERNAME HERE";
-        public const string API_KEY = "ENTER YOUR API KEY HERE";
+        public const string USERNAME = "YOUR USER NAME HERE";
+        public const string API_KEY = "YOUR API KEY HERE";
     }
 }

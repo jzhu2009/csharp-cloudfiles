@@ -13,6 +13,7 @@ namespace com.mosso.cloudfiles.domain
     /// </summary>
     public class StorageItem : IDisposable
     {
+        public event Connection.ProgressCallback Progress;
         private readonly string objectName;
         private readonly Dictionary<string, string> metadata;
         private readonly string objectContentType;
@@ -99,5 +100,7 @@ namespace com.mosso.cloudfiles.domain
         {
             get { return objectName; }
         }
+
+
     }
 }

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E9F72C28-155A-476F-B533-BAEC0228CA1E}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -111,15 +111,15 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestStorageItem.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\com.mosso.cloudfiles\com.mosso.cloudfiles.csproj">
       <Project>{A4EC4FAB-EE91-4DE7-B21D-CBABFA05B363}</Project>
       <Name>com.mosso.cloudfiles</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="TestStorageItem.pdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

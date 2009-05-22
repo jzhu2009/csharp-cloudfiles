@@ -6,6 +6,7 @@
  * Log4Net wire-up for logging available, information in README
  * Better documentation, found in the README.rdoc file
  * Add repo to github.com/rackspace/csharp-cloudfiles (source and tests)
+ * Progress information on file transfers
  
 === Bugfixes
 === Removed Features
@@ -16,7 +17,7 @@
 * Container/Object lists in JSON or XML with item details
 * API support to return your account's total storage or at a Container level
 * Chunked Transfer-Encoding on PUT requests
-* "Pathname" support for pseudo-hierarchical folders/directories
+* "Pathname" support for pseudo-hierarchical folders/directoriess
 * Increased name length for Containers/Objects
 * Adding Ruby to the list of supported language APIs
 

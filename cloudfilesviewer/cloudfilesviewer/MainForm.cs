@@ -1,9 +1,10 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using cloudfilesviewer;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.exceptions;
 using com.mosso.cloudfiles;
@@ -108,6 +109,8 @@ namespace CloudFSViewer
             deleteContainerToolStripMenuItem.Enabled = false;
             uploadFileToolStripMenuItem.Enabled = false;
             uploadFileAsStreamToolStripMenuItem.Enabled = false;
+            uploadFileAsynchronouslyToolStripMenuItem.Enabled = false;
+            downloadFileAsynchronouslyToolStripMenuItem.Enabled = false;
 
             if (treeView1.SelectedNode != null)
             {
@@ -123,7 +126,8 @@ namespace CloudFSViewer
                     deleteContainerToolStripMenuItem.Enabled = true;
                     uploadFileToolStripMenuItem.Enabled = true;
                     uploadFileAsStreamToolStripMenuItem.Enabled = true;
-
+                    uploadFileAsynchronouslyToolStripMenuItem.Enabled = true;
+                    downloadFileAsynchronouslyToolStripMenuItem.Enabled = true;
                     SetSuccessfulMessageInStatusBar();
                 }
                 catch (ContainerNotFoundException notFoundException)
@@ -184,18 +188,23 @@ namespace CloudFSViewer
             }
         }
 
+        private StorageItemInformation GetObjectInfo(string containerName, string objectName)
+        {
+            return Connection.GetStorageItemInformation(containerName, objectName);
+        }
 
         private void PopulateObjectInfo(string containerName, string objectName)
         {
-            StorageItem storageObject = Connection.GetStorageItemInformation(containerName, objectName);
+            var storageObject = GetObjectInfo(containerName, objectName);
             if (storageObject != null)
             {
-                StringBuilder stringBuilder = new StringBuilder();
+                var stringBuilder = new StringBuilder();
                 stringBuilder.Append(
                     "Name:" + objectName + Environment.NewLine +
                     "Type:" + storageObject.ContentType + Environment.NewLine +
-                    "Size:" + storageObject.FileLength + Environment.NewLine +
-                    "Meta:" + Environment.NewLine);
+                    "Size:" + storageObject.ContentLength + Environment.NewLine +
+                    "Meta:" + Environment.NewLine
+                );
 
                 foreach (string s in storageObject.Metadata.Keys)
                 {
@@ -552,5 +561,51 @@ namespace CloudFSViewer
                 cmMenu.Show(this, new Point(e.X, e.Y));
             }
         }
+
+        private void uploadFileAsynchronouslyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ClearStatusBar();
+            TreeNode selectedContainerNode = treeView1.SelectedNode;
+            openFileDialog1.RestoreDirectory = true;
+            if (selectedContainerNode != null && openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                var p = new ProgressDialog();
+                p.StartFileTransfer(this, Connection, selectedContainerNode.Text, openFileDialog1.FileName);
+                
+                SetSuccessfulMessageInStatusBar();
+                //Refresh the container
+                RetrieveContainerItemList();
+            }
+        }
+
+        private void downloadFileAsynchronouslyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ClearStatusBar();
+            TreeNode selectedContainerNode = treeView1.SelectedNode;
+            TreeNode selectedTreeNode = treeViewStorageObjects.SelectedNode;
+
+            saveFileDialog1.RestoreDirectory = true;
+           
+            if (selectedContainerNode != null && selectedTreeNode != null)
+            {
+                if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+                {
+                    long filesize = long.Parse(GetObjectInfo(selectedContainerNode.Text, selectedTreeNode.Text).ContentLength);
+                    
+                    var p = new ProgressDialog();
+                    p.StartFileDownload(this, Connection,filesize, selectedContainerNode.Text, selectedTreeNode.Text, saveFileDialog1.FileName);
+
+                    SetSuccessfulMessageInStatusBar();
+                    //Refresh the container
+                    RetrieveContainerItemList();
+
+                    Connection.GetStorageItem(selectedContainerNode.Text, selectedTreeNode.Text);
+                    SetSuccessfulMessageInStatusBar();
+                }
+            }
+           
+        }
+
+       
     }
 }

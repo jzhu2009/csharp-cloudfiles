@@ -50,6 +50,7 @@
             this.downloadFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.assignMetaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uploadFileAsynchronouslyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -62,6 +63,7 @@
             this.downloadAsStreamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.assignMetadataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblUploading = new System.Windows.Forms.Label();
+            this.downloadFileAsynchronouslyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.readOnlyContainerInformationGroup.SuspendLayout();
             this.readOnlyFileInformationGroup.SuspendLayout();
             this.containerInformationGroup.SuspendLayout();
@@ -207,7 +209,9 @@
             this.deleteContainerToolStripMenuItem,
             this.downloadFileToolStripMenuItem,
             this.dowToolStripMenuItem,
-            this.assignMetaToolStripMenuItem});
+            this.assignMetaToolStripMenuItem,
+            this.uploadFileAsynchronouslyToolStripMenuItem,
+            this.downloadFileAsynchronouslyToolStripMenuItem});
             this.operationsToolStripMenuItem.Name = "operationsToolStripMenuItem";
             this.operationsToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
             this.operationsToolStripMenuItem.Text = "Operations";
@@ -215,7 +219,7 @@
             // getAccountInformationToolStripMenuItem
             // 
             this.getAccountInformationToolStripMenuItem.Name = "getAccountInformationToolStripMenuItem";
-            this.getAccountInformationToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
+            this.getAccountInformationToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
             this.getAccountInformationToolStripMenuItem.Text = "Get Account Information";
             this.getAccountInformationToolStripMenuItem.Click += new System.EventHandler(this.getAccountInformationToolStripMenuItem_Click);
             // 
@@ -224,7 +228,7 @@
             this.createContainerToolStripMenuItem.Name = "createContainerToolStripMenuItem";
             this.createContainerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.C)));
-            this.createContainerToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
+            this.createContainerToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
             this.createContainerToolStripMenuItem.Text = "Create Container";
             this.createContainerToolStripMenuItem.Click += new System.EventHandler(this.createContainerToolStripMenuItem_Click);
             // 
@@ -234,7 +238,7 @@
             this.uploadFileToolStripMenuItem.Name = "uploadFileToolStripMenuItem";
             this.uploadFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.U)));
-            this.uploadFileToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
+            this.uploadFileToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
             this.uploadFileToolStripMenuItem.Text = "Upload File";
             this.uploadFileToolStripMenuItem.Click += new System.EventHandler(this.uploadFileToolStripMenuItem_Click);
             // 
@@ -244,7 +248,7 @@
             this.uploadFileAsStreamToolStripMenuItem.Name = "uploadFileAsStreamToolStripMenuItem";
             this.uploadFileAsStreamToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.S)));
-            this.uploadFileAsStreamToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
+            this.uploadFileAsStreamToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
             this.uploadFileAsStreamToolStripMenuItem.Text = "Upload File as Stream";
             this.uploadFileAsStreamToolStripMenuItem.Click += new System.EventHandler(this.uploadFileAsStreamToolStripMenuItem_Click);
             // 
@@ -254,7 +258,7 @@
             this.deleteStorageObjectToolStripMenuItem.Name = "deleteStorageObjectToolStripMenuItem";
             this.deleteStorageObjectToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.D)));
-            this.deleteStorageObjectToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
+            this.deleteStorageObjectToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
             this.deleteStorageObjectToolStripMenuItem.Text = "Delete Storage Object";
             this.deleteStorageObjectToolStripMenuItem.Click += new System.EventHandler(this.deleteStorageObjectToolStripMenuItem_Click);
             // 
@@ -264,7 +268,7 @@
             this.deleteContainerToolStripMenuItem.Name = "deleteContainerToolStripMenuItem";
             this.deleteContainerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.X)));
-            this.deleteContainerToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
+            this.deleteContainerToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
             this.deleteContainerToolStripMenuItem.Text = "Delete Container";
             this.deleteContainerToolStripMenuItem.Click += new System.EventHandler(this.deleteContainerToolStripMenuItem_Click);
             // 
@@ -274,7 +278,7 @@
             this.downloadFileToolStripMenuItem.Name = "downloadFileToolStripMenuItem";
             this.downloadFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.F)));
-            this.downloadFileToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
+            this.downloadFileToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
             this.downloadFileToolStripMenuItem.Text = "Download File";
             this.downloadFileToolStripMenuItem.Click += new System.EventHandler(this.downloadFileToolStripMenuItem_Click);
             // 
@@ -284,7 +288,7 @@
             this.dowToolStripMenuItem.Name = "dowToolStripMenuItem";
             this.dowToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.T)));
-            this.dowToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
+            this.dowToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
             this.dowToolStripMenuItem.Text = "Download File as Stream";
             this.dowToolStripMenuItem.Click += new System.EventHandler(this.dowToolStripMenuItem_Click);
             // 
@@ -294,9 +298,19 @@
             this.assignMetaToolStripMenuItem.Name = "assignMetaToolStripMenuItem";
             this.assignMetaToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.M)));
-            this.assignMetaToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
+            this.assignMetaToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
             this.assignMetaToolStripMenuItem.Text = "Assign Meta";
             this.assignMetaToolStripMenuItem.Click += new System.EventHandler(this.assignMetaToolStripMenuItem_Click);
+            // 
+            // uploadFileAsynchronouslyToolStripMenuItem
+            // 
+            this.uploadFileAsynchronouslyToolStripMenuItem.Enabled = false;
+            this.uploadFileAsynchronouslyToolStripMenuItem.Name = "uploadFileAsynchronouslyToolStripMenuItem";
+            this.uploadFileAsynchronouslyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+                        | System.Windows.Forms.Keys.A)));
+            this.uploadFileAsynchronouslyToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
+            this.uploadFileAsynchronouslyToolStripMenuItem.Text = "Upload File Asynchronously";
+            this.uploadFileAsynchronouslyToolStripMenuItem.Click += new System.EventHandler(this.uploadFileAsynchronouslyToolStripMenuItem_Click);
             // 
             // openFileDialog1
             // 
@@ -390,6 +404,16 @@
             this.lblUploading.Text = "Uploading File.  Please wait...";
             this.lblUploading.Visible = false;
             // 
+            // downloadFileAsynchronouslyToolStripMenuItem
+            // 
+            this.downloadFileAsynchronouslyToolStripMenuItem.Enabled = false;
+            this.downloadFileAsynchronouslyToolStripMenuItem.Name = "downloadFileAsynchronouslyToolStripMenuItem";
+            this.downloadFileAsynchronouslyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+                        | System.Windows.Forms.Keys.B)));
+            this.downloadFileAsynchronouslyToolStripMenuItem.Size = new System.Drawing.Size(298, 22);
+            this.downloadFileAsynchronouslyToolStripMenuItem.Text = "Download File Asynchronously";
+            this.downloadFileAsynchronouslyToolStripMenuItem.Click += new System.EventHandler(this.downloadFileAsynchronouslyToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -458,6 +482,8 @@
         private System.Windows.Forms.ToolStripMenuItem downloadAsStreamToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem assignMetadataToolStripMenuItem;
         private System.Windows.Forms.Label lblUploading;
+        private System.Windows.Forms.ToolStripMenuItem uploadFileAsynchronouslyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem downloadFileAsynchronouslyToolStripMenuItem;
     }
 }
 
