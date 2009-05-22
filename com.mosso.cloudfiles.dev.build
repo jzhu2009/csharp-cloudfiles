@@ -70,9 +70,9 @@
   </target>
 
   <target name="deploy">
-    <call target="deploy.bin" />
     <call target="deploy.docs" />
     <call target="deploy.src" />
+    <call target="deploy.bin" />
     <call target="deploy.package.master.zip" />
   </target>
 
