@@ -6,6 +6,7 @@ using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.exceptions;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using System.Threading;
 
 namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.PutStorageItemSpecs
 {
@@ -189,6 +190,101 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.PutStorageItemS
                 connection.DeleteContainer(Constants.CONTAINER_NAME);
             }
         }
+    }
+
+   
+    [TestFixture]
+    public class When_signing_up_for_progress_updates_uploading_a_file : TestBase
+    {
+        private bool operationCompleted;
+        private bool gotProgress;
+
+        [Test]
+        public void Should_successfully_receive_transfer_amounts()
+        {
+            operationCompleted = false;
+            gotProgress = false;
+
+            try
+            {
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                var progressCallback = new Connection.ProgressCallback(callback);
+                var operationCompleteCallback = new Connection.OperationCompleteCallback(operationComplete);
+
+                ((Connection) connection).OperationComplete += operationCompleteCallback;
+                ((Connection) connection).AddProgressWatcher(progressCallback);
+                connection.PutStorageItemAsync(Constants.CONTAINER_NAME, Constants.StorageItemName);
+
+                //Sleep to make sure we receive the message
+                Thread.Sleep(5000);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                //Make sure to always clean up
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
+            }
+        }
+
+        [Test]
+        public void Should_successfully_receive_transfer_amounts_when_passing_a_stream()
+        {
+            operationCompleted = false;
+            gotProgress = false;
+
+            try
+            {
+                var file = new FileInfo(Constants.StorageItemNamePdf);
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                var progressCallback = new Connection.ProgressCallback(callback);
+                var operationCompleteCallback = new Connection.OperationCompleteCallback(operationCompletePDF);
+
+                ((Connection)connection).OperationComplete += operationCompleteCallback;
+                ((Connection)connection).AddProgressWatcher(progressCallback);
+                connection.PutStorageItemAsync(Constants.CONTAINER_NAME, file.Open(FileMode.Open), file.Name);
+
+                //Sleep to make sure we receive the message
+                Thread.Sleep(3000);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+                //Make sure to always clean up
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNamePdf);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
+            }
+        }
+
+        [TearDown]
+        public void Teardown()
+        {
+            Assert.IsTrue(gotProgress);
+            Assert.IsTrue(operationCompleted);
+        }
+
+        private void operationCompletePDF()
+        {
+            connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemNamePdf);
+            connection.DeleteContainer(Constants.CONTAINER_NAME);
+            operationCompleted = true;
+        }
+
+        private void operationComplete()
+        {
+            connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+            connection.DeleteContainer(Constants.CONTAINER_NAME);
+            operationCompleted = true;
+        }
+
+        private void callback(int xfer)
+        {
+            if (xfer > 0)
+            {
+                gotProgress = true;
+            }
+        }
+
     }
 
 //    [TestFixture]

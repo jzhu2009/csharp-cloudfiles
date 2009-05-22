@@ -21,6 +21,8 @@ namespace com.mosso.cloudfiles.domain.request
     {
         private Stream stream;
 
+        public event Connection.ProgressCallback Progress;
+
         /// <summary>
         /// PutStorageItem constructor
         /// </summary>
@@ -160,6 +162,12 @@ namespace com.mosso.cloudfiles.domain.request
             while ((amt = stream.Read(buffer, 0, buffer.Length)) != 0)
             {
                 httpWebRequestFileStream.Write(buffer, 0, amt);
+
+                //Fire the progress event
+                if (Progress != null)
+                {
+                    Progress(amt);
+                }
             }
 
             stream.Close();

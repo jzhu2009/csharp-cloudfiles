@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using com.mosso.cloudfiles.domain;
 using com.mosso.cloudfiles.domain.request;
 using com.mosso.cloudfiles.exceptions;
@@ -150,6 +151,59 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetStorageItemS
             finally
             {
                 connection.DeleteContainer(Constants.CONTAINER_NAME);
+            }
+        }
+    }
+
+    [TestFixture]
+    public class When_getting_a_storage_item_asynchronously : TestBase
+    {
+        private bool operationCompleted;
+        private bool gotProgress;
+
+        [Test]
+        public void Should_receive_progress_events_when_the_transfer_is_successful()
+        {
+            try
+            {
+                var progressCallback = new Connection.ProgressCallback(callback);
+                var operationCompleteCallback = new Connection.OperationCompleteCallback(operationComplete);
+
+                ((Connection)connection).OperationComplete += operationCompleteCallback;
+                ((Connection)connection).AddProgressWatcher(progressCallback);
+
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                connection.PutStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.GetStorageItemAsync(Constants.CONTAINER_NAME, Constants.StorageItemName, Constants.StorageItemName);
+
+                Thread.Sleep(3000);
+            }
+            catch (Exception ex)
+            {
+                connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
+            }
+        }
+
+        [TearDown]
+        public void Teardown()
+        {
+            Assert.IsTrue(gotProgress);
+            Assert.IsTrue(operationCompleted);
+        }
+
+        private void operationComplete()
+        {
+            connection.DeleteStorageItem(Constants.CONTAINER_NAME, Constants.StorageItemName);
+            connection.DeleteContainer(Constants.CONTAINER_NAME);
+            operationCompleted = true;
+        }
+
+        private void callback(int xfer)
+        {
+            if (xfer > 0)
+            {
+                gotProgress = true;
             }
         }
     }
