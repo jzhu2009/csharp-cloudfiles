@@ -202,16 +202,16 @@ types are explicitly used in this example. The +var+ keyword could also be used 
 <b>Delete container</b>
 	connection.DeleteContainer("container name");
 	
-* Upload/Download files asychrononously while displaying a progress bar *
+<b>Upload/Download files asychrononously while displaying a progress bar</b>
 	
-	Create a new Windows form with your progress bar control. Using the code below as an example, create upload
-	and download methods in the code behind for the form that take whatever parameters you're using for the 
-	GetStorageItem and PutStorageItem call. 
-	
-	In your main form, when initiating the download/upload, create a new instance of your form and call the appropriate
-	method. 
-	
-	An example of uploading asynchronously:
+Create a new Windows form with your progress bar control. Using the code below as an example, create upload
+and download methods in the code behind for the form that take whatever parameters you're using for the 
+GetStorageItem and PutStorageItem call. 
+
+In your main form, when initiating the download/upload, create a new instance of your form and call the appropriate
+method. 
+
+An example of uploading asynchronously:
 	
 	var p = new ProgressDialog();
     p.StartFileTransfer(this, Connection, containerName, localFileName);
@@ -220,7 +220,7 @@ types are explicitly used in this example. The +var+ keyword could also be used 
     //Refresh the container
     RetrieveContainerItemList();
 	
-	Code below is an example of what would go in your progress bar form:
+Code below is an example of what would go in your progress bar form:
 	
 	public void StartFileTransfer(Form owner, Connection connection, string container, string filePath)
     {
@@ -291,7 +291,7 @@ types are explicitly used in this example. The +var+ keyword could also be used 
         ShowDialog(owner);
     }
 
-	See the Cloud Files Viewer demo for a more concrete example
+See the Cloud Files Viewer demo for a more concrete example
 	
 == Authors
 
