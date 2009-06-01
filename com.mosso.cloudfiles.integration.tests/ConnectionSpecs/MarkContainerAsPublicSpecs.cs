@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
@@ -14,9 +13,29 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.MarkContainerAs
             try
             {
                 connection.CreateContainer(Constants.CONTAINER_NAME);
-                Uri cdnUrl = connection.MarkContainerAsPublic(Constants.CONTAINER_NAME);
+                var cdnUrl = connection.MarkContainerAsPublic(Constants.CONTAINER_NAME);
                 Assert.That(cdnUrl, Is.Not.Null);
                 Assert.That(cdnUrl.ToString().Length, Is.GreaterThan(0));
+            }
+            finally
+            {
+                connection.MarkContainerAsPrivate(Constants.CONTAINER_NAME);
+                connection.DeleteContainer(Constants.CONTAINER_NAME);
+            }
+        }
+
+        [Test]
+        public void Should_be_able_to_get_the_cdn_uri_from_the_container_information()
+        {
+            try
+            {
+                connection.CreateContainer(Constants.CONTAINER_NAME);
+                var cdnUrl = connection.MarkContainerAsPublic(Constants.CONTAINER_NAME);
+                Assert.That(cdnUrl, Is.Not.Null);
+                Assert.That(cdnUrl.ToString().Length, Is.GreaterThan(0));
+
+                var containerInformation = connection.GetContainerInformation(Constants.CONTAINER_NAME);
+                Assert.That(containerInformation.CdnUri, Is.EqualTo(cdnUrl.AbsoluteUri));
             }
             finally
             {

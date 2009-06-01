@@ -13,19 +13,21 @@ namespace com.mosso.cloudfiles.integration.tests.ConnectionSpecs.GetContainerInf
         [Test]
         public void Should_return_container_information_when_the_container_exists()
         {
-            
+
+            string containerName = Guid.NewGuid().ToString();
             try
             {
-                connection.CreateContainer(Constants.CONTAINER_NAME);
-                Container containerInformation = connection.GetContainerInformation(Constants.CONTAINER_NAME);
+                connection.CreateContainer(containerName);
+                Container containerInformation = connection.GetContainerInformation(containerName);
 
-                Assert.That(containerInformation.Name, Is.EqualTo(Constants.CONTAINER_NAME));
+                Assert.That(containerInformation.Name, Is.EqualTo(containerName));
                 Assert.That(containerInformation.ByteCount, Is.EqualTo(0));
                 Assert.That(containerInformation.ObjectCount, Is.EqualTo(0));
+                Assert.That(containerInformation.CdnUri, Is.EqualTo(""));
             }
             finally
             {
-                connection.DeleteContainer(Constants.CONTAINER_NAME);
+                connection.DeleteContainer(containerName);
             }
         }
 

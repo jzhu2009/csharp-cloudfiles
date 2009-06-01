@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.Xml;
 using com.mosso.cloudfiles.domain;
@@ -547,6 +546,8 @@ namespace com.mosso.cloudfiles
                 var container = new Container(containerName);
                 container.ByteCount = long.Parse(getContainerInformationResponse.Headers[Constants.X_CONTAINER_BYTES_USED]);
                 container.ObjectCount = long.Parse(getContainerInformationResponse.Headers[Constants.X_CONTAINER_STORAGE_OBJECT_COUNT]);
+                container.CdnUri = getContainerCDNUri(container);
+
                 return container;
             }
             catch (WebException we)
@@ -558,6 +559,30 @@ namespace com.mosso.cloudfiles
                 var response = (HttpWebResponse)we.Response;
                 if (response != null && response.StatusCode == HttpStatusCode.NotFound)
                     throw new ContainerNotFoundException("The requested container does not exist");
+                if (response != null && response.StatusCode == HttpStatusCode.Unauthorized)
+                    throw new AuthenticationFailedException(we.Message);
+                throw;
+            }
+        }
+
+        private string getContainerCDNUri(Container container)
+        {
+            try
+            {
+                var public_container = GetPublicContainerInformation(container.Name);
+                return public_container == null ? "" : public_container.CdnUri;
+            }
+            catch (ContainerNotFoundException cnfe)
+            {
+                return "";
+            }
+            catch (WebException we)
+            {
+                Log.Error(this, "Error getting container CDN Uril from getContainerInformation for container '"
+                    + container.Name + "' for user "
+                    + UserCredentials.Username, we);
+
+                var response = (HttpWebResponse)we.Response;
                 if (response != null && response.StatusCode == HttpStatusCode.Unauthorized)
                     throw new AuthenticationFailedException(we.Message);
                 throw;

@@ -9,8 +9,6 @@ namespace com.mosso.cloudfiles.domain
     /// </summary>
     public class Container
     {
-        public string CdnUri { get; set; }
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -42,5 +40,10 @@ namespace com.mosso.cloudfiles.domain
         /// The maximum time (in seconds) content should be kept alive on the CDN before it checks for freshness.
         /// </summary>
         public int TTL { get; set; }
+
+        /// <summary>
+        /// The URI one can use to access objects in this container via the CDN. No time based URL stuff will be included with this URI
+        /// </summary>
+        public string CdnUri { get; set; }
     }
 }
