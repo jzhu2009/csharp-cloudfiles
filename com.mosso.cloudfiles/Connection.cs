@@ -84,10 +84,6 @@ namespace com.mosso.cloudfiles
             }
         }
         
-        public void foo()
-        {
-            
-        }
         private void Authenticate()
         {
             Log.Info(this, "Authenticating user " + UserCredentials.Username);

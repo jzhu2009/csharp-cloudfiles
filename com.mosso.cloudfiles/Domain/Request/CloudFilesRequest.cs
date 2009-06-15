@@ -4,8 +4,6 @@
 
 using System;
 using System.Net;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using com.mosso.cloudfiles.utils;
 
 namespace com.mosso.cloudfiles.domain.request
@@ -55,11 +53,7 @@ namespace com.mosso.cloudfiles.domain.request
         /// <returns>a HttpWebRequest object that has all the information to make a request against CloudFiles</returns>
         public HttpWebRequest GetRequest()
         {
-            if (request.Uri.Scheme.ToLower().Equals("https"))
-            {
-                ServicePointManager.ServerCertificateValidationCallback = OnCertificateValidation;
-            }
-            HttpWebRequest httpWebRequest = (HttpWebRequest) WebRequest.Create(request.Uri);
+            var httpWebRequest = (HttpWebRequest) WebRequest.Create(request.Uri);
             if (request.Headers != null) httpWebRequest.Headers.Add(request.Headers);
 
             httpWebRequest.Method = request.Method;
@@ -77,7 +71,7 @@ namespace com.mosso.cloudfiles.domain.request
         private void HandleRangeHeader(HttpWebRequest webrequest)
         {
             if (!(request is IRangedRequest)) return;
-            IRangedRequest rangedRequest = (IRangedRequest) request;
+            var rangedRequest = (IRangedRequest) request;
             if (rangedRequest.RangeFrom != 0 && rangedRequest.RangeTo == 0)
                 webrequest.AddRange("bytes", rangedRequest.RangeFrom);
             else if (rangedRequest.RangeFrom == 0 && rangedRequest.RangeTo != 0)
@@ -96,7 +90,7 @@ namespace com.mosso.cloudfiles.domain.request
         {
             if (proxyCredentials == null) return;
             
-            WebProxy loProxy = new WebProxy(proxyCredentials.ProxyAddress, true);
+            var loProxy = new WebProxy(proxyCredentials.ProxyAddress, true);
 
             if (proxyCredentials.ProxyUsername.Length > 0)
                 loProxy.Credentials = new NetworkCredential(proxyCredentials.ProxyUsername, proxyCredentials.ProxyPassword, proxyCredentials.ProxyDomain);
@@ -107,7 +101,7 @@ namespace com.mosso.cloudfiles.domain.request
         {
             if (!(request is IRequestWithContentBody)) return;
 
-            IRequestWithContentBody requestWithContentBody = (IRequestWithContentBody) request;
+            var requestWithContentBody = (IRequestWithContentBody) request;
             httpWebRequest.ContentLength = requestWithContentBody.ContentLength;
             httpWebRequest.AllowWriteStreamBuffering = false;
             if(httpWebRequest.ContentLength < 1)
@@ -119,19 +113,6 @@ namespace com.mosso.cloudfiles.domain.request
 
             var stream = httpWebRequest.GetRequestStream();
             requestWithContentBody.ReadFileIntoRequest(stream);
-        }
-
-        /// <summary>
-        /// OnCertificateValidation
-        /// </summary>
-        /// <param name="sender">the caller of this callback</param>
-        /// <param name="certificate">the X509 certificate instance</param>
-        /// <param name="chain">the security chain</param>
-        /// <param name="sslPolicyErrors">and errors that occurred duing the ssl process</param>
-        /// <returns>true if no ssl policy errors, false if ssl policy errors</returns>
-        private static bool OnCertificateValidation(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
-        {
-            return (sslPolicyErrors == SslPolicyErrors.None);
         }
     }
 }
