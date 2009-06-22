@@ -1,6 +1,6 @@
 = History
 
-== v1.3.2 (2009-06-15)
+== v1.3.3 (2009-06-15)
 === New Features
 === Bugfixes
  * remove SSL Certification validation from CloudFilesRequest due to it not being
