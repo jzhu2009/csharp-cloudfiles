@@ -34,7 +34,7 @@ end
 desc "Prepares the working directory for a new build"
 task :clean do
   FileUtils.rm_rf CLOUDFILES_BUILD_DIR if File.exists? CLOUDFILES_BUILD_DIR
-	Dir.mkdir CLOUDFILES_BUILD_DIR
+	FileUtils.mkdir_p CLOUDFILES_BUILD_DIR
   Dir.mkdir BUILD_DIR
   Dir.mkdir BUILD_DOCS_DIR
   Dir.mkdir TEST_REPORTS_DIR
@@ -89,7 +89,7 @@ end
 ################
 
 desc "Creates the downloadable zip files"
-task :create_zips => [:clear_dist, :create_binary_zip, :create_source_zip, :create_doc_zip]
+task :create_zips => [:clear_dist, :create_binary_zip, :create_source_zip, :create_doc_zip, :create_master_zip]
 
 desc "Clear built zips"
 task :clear_dist do
@@ -101,14 +101,14 @@ desc "Create a binary zip"
 task :create_binary_zip do
   puts "Creating binary zip"
   Dir.mkdir DEPLOY_BIN_DIR unless File.exists? DEPLOY_BIN_DIR
-  create_zip("#{DEPLOY_BIN_DIR}/#{ZIP_FILE_PREFIX}-bin-#{RELEASE_BUILD_NUMBER}.zip", CONFIG_DIR + "/" ,  /UnitTests|IntegrationTests/)
+  create_zip("#{DEPLOY_BIN_DIR}/#{ZIP_FILE_PREFIX}-bin-#{RELEASE_BUILD_NUMBER}.zip", CONFIG_DIR ,  /UnitTests|IntegrationTests/)
 end
 
 desc "Creates a source zip"
 task :create_source_zip do
   puts "Creating source zip"
   Dir.mkdir DEPLOY_SRC_DIR unless File.exists? DEPLOY_SRC_DIR
-  create_zip("#{DEPLOY_SRC_DIR}/#{ZIP_FILE_PREFIX}-src-#{RELEASE_BUILD_NUMBER}.zip", Dir.pwd + "/", /.gitignore|.git|build|dist|results|_ReSharper|bin|obj|.user|.suo|.resharper|.cache/)
+  create_zip("#{DEPLOY_SRC_DIR}/#{ZIP_FILE_PREFIX}-src-#{RELEASE_BUILD_NUMBER}.zip", Dir.pwd, /.gitignore|.git|build|dist|results|_ReSharper|bin|obj|.user|.suo|.resharper|.cache|Credentials.config/)
 end
 
 desc "Builds the API documentation and puts it in 'output'"
@@ -125,7 +125,10 @@ task :create_doc_zip => :build_docs do
   FileUtils.rm_r('output') if File.exists? 'output'
 end
 
-#def get_version
-#	return ENV['BUILD_NUMBER'].to_s unless ENV['BUILD_NUMBER'].nil?
-#	return "0.0.1"
-#end
+desc "Create zip of binary, source, and doc zip files"
+task :create_master_zip do
+  puts "Creating master zip"
+  create_zip("#{DEPLOY_DIR}/#{ZIP_FILE_PREFIX}-#{RELEASE_BUILD_NUMBER}.zip", DEPLOY_BIN_DIR)
+  create_zip("#{DEPLOY_DIR}/#{ZIP_FILE_PREFIX}-#{RELEASE_BUILD_NUMBER}.zip", DEPLOY_SRC_DIR)
+  create_zip("#{DEPLOY_DIR}/#{ZIP_FILE_PREFIX}-#{RELEASE_BUILD_NUMBER}.zip", DEPLOY_DOCS_DIR)
+end

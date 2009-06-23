@@ -14,15 +14,6 @@ class NUnitRunner
 		@resultsDir = paths.fetch(:results, 'results')
 		@compilePlatform = paths.fetch(:platform, 'x86')
 		@compileTarget = paths.fetch(:compilemode, 'debug')
-		
-		#if ENV["teamcity.dotnet.nunitlauncher"] # check if we are running in TeamCity
-			# We are not using the TeamCity nunit launcher. We use NUnit with the TeamCity NUnit Addin which needs tO be copied to our NUnit addins folder
-			# http://blogs.jetbrains.com/teamcity/2008/07/28/unfolding-teamcity-addin-for-nunit-secrets/
-			# The teamcity.dotnet.nunitaddin environment variable is not available until TeamCity 4.0, so we hardcode it for now
-			#@teamCityAddinPath = ENV["teamcity.dotnet.nunitaddin"] ? ENV["teamcity.dotnet.nunitaddin"] : 'c:/TeamCity/buildAgent/plugins/dotnetPlugin/bin/JetBrains.TeamCity.NUnitAddin-NUnit'
-			#cp @teamCityAddinPath + '-2.4.7.dll', 'tools/nunit/addins'
-		#end
-	
 		@nunitExe = File.join('lib', 'nunit', "nunit-console.exe").gsub('/','\\') + ' /nothread'
 	end
 	
@@ -96,14 +87,14 @@ class IntegrationTestsCredentialsFilesBuilder
 end
 
 def create_zip(filename, root, excludes=/^$/)
-  File.delete(filename) if File.exists? filename
+  root = root + "/" if root[root.length - 1].chr != "/"
   Zip::ZipFile.open(filename, Zip::ZipFile::CREATE) do |zip|
     Find.find(root) do |path|
-	  next if path =~ excludes
+      next if path =~ excludes
 	  
-	  zip_path = path.gsub(root, '')
-	  zip.add(zip_path, path)
-	end
+      zip_path = path.gsub(root, '')
+      zip.add(zip_path, path)
+    end
   end
 end
 

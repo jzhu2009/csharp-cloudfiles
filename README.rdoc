@@ -56,12 +56,16 @@ Currently the log is going to log/com.mosso.cloudfiles.log, where you have the d
 
 Please reference the {log4net documentation}[http://logging.apache.org/log4net/release/config-examples.html] on how to edit that config file.
 
-== Integration Testing
+== Testing
+
+Running the tests requires Ruby and Rake to be installed.  We suggest you use the 
+{One-Click Ruby Installer}[http://rubyforge.org/projects/rubyinstaller/].  Once installed you need to create
+your integration tests credentials config file.
 
 Run "rake create_credentials_config" from the project solution directory.  This will create a Credentials.config file in the
 com.mosso.cloudfiles.integration.tests project folder:
 
-	<?xml version="1.0" encoding="utf-8"?>
+  <?xml version="1.0" encoding="utf-8"?>
   <credentials>
     <username>PUT USERNAME HERE</username>
     <api_key>PUT API KEY HERE</api_key>
@@ -69,9 +73,7 @@ com.mosso.cloudfiles.integration.tests project folder:
 
 Just replace the placeholder text.  This file *is not* under source control.  It is ignored by the .gitignore file.
 
-== Unit Testing
-
-This project is still currently in progress and has some working unit tests.
+The unit tests are present but still being worked on.
 
 == Forums
 

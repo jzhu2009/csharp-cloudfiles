@@ -5,11 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.mosso.cloudfiles.integr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{1820EC64-F253-4FD1-A92C-F6747D239024}"
 	ProjectSection(SolutionItems) = preProject
-		build.bat = build.bat
-		com.mosso.cloudfiles.build = com.mosso.cloudfiles.build
-		com.mosso.cloudfiles.dev.build = com.mosso.cloudfiles.dev.build
+		BuildUtils.rb = BuildUtils.rb
 		History.rdoc = History.rdoc
-		properties.include = properties.include
+		Properties.rb = Properties.rb
+		rakefile.rb = rakefile.rb
 		README.rdoc = README.rdoc
 	EndProjectSection
 EndProject
