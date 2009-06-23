@@ -1,5 +1,12 @@
 = History
 
+== v1.3.4 (2009-06-22)
+=== New Features
+ * converted build process from NAnt to Rake
+ * made integration tests depedent on Credentials.config file
+=== Bugfixes
+=== Removed Features
+
 == v1.3.3 (2009-06-15)
 === New Features
 === Bugfixes
