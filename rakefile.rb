@@ -72,6 +72,12 @@ task :unit_test => :compile do
   runner.executeTests ['com.mosso.cloudfiles.unit.tests']  
 end
 
+desc "Copies build server credential file to correct location"
+task :copy_build_creds do
+  puts "moving file from #{ENV['CRED_FILE_LOC']} to #{INTEGRATION_TESTS_CONFIG_FILE}"
+  File.move(ENV['CRED_FILE_LOC'], INTEGRATION_TESTS_CONFIG_FILE)
+end
+
 desc "Runs integration tests"
 task :integration_test => :compile do
   if !File.exists?(INTEGRATION_TESTS_CONFIG_FILE)
