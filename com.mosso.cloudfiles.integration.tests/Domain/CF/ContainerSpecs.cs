@@ -45,7 +45,7 @@ namespace com.mosso.cloudfiles.integration.tests.Domain.CF.ContainerSpecs
         {
             container.MarkAsPublic();
 
-            Assert.That(container.PublicUrl.ToString().Contains("http://cdn.cloudfiles.mosso.com/"), Is.True);
+            Assert.That(container.PublicUrl.ToString().Contains("cdn.cloudfiles.rackspacecloud.com/"), Is.True);
         }
     }
 

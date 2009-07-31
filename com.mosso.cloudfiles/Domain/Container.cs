@@ -44,6 +44,6 @@ namespace com.mosso.cloudfiles.domain
         /// <summary>
         /// The URI one can use to access objects in this container via the CDN. No time based URL stuff will be included with this URI
         /// </summary>
-        public string CdnUri { get; set; }
+        public string CdnUri { get;  set; }
     }
 }

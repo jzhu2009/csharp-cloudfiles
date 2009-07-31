@@ -56,6 +56,7 @@ namespace com.mosso.cloudfiles.domain.request
             Method = "PUT";
 
             Uri = new Uri(cdnManagementUrl + "/" + containerName.Encode());
+            Headers.Add(Constants.X_CDN_ENABLED, "true".Capitalize());
             if (timeToLiveInSeconds > -1){Headers.Add(Constants.X_CDN_TTL, timeToLiveInSeconds.ToString());}
             AddAuthTokenToHeaders(authToken);
         }

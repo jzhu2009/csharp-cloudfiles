@@ -542,8 +542,10 @@ namespace com.mosso.cloudfiles
                 var container = new Container(containerName);
                 container.ByteCount = long.Parse(getContainerInformationResponse.Headers[Constants.X_CONTAINER_BYTES_USED]);
                 container.ObjectCount = long.Parse(getContainerInformationResponse.Headers[Constants.X_CONTAINER_STORAGE_OBJECT_COUNT]);
-                container.CdnUri = getContainerCDNUri(container);
-
+                var url  = getContainerCDNUri(container) ;
+                if(!string.IsNullOrEmpty(url))
+                    url += "/";
+                container.CdnUri = url;
                 return container;
             }
             catch (WebException we)
