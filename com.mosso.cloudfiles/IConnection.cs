@@ -66,5 +66,16 @@ namespace com.mosso.cloudfiles
         string CdnManagementUrl { get; }
         string AuthToken { get; }
         UserCredentials UserCredentials { get; }
+
+        /// <summary>
+        /// Adds logging for access to your public containers.
+        /// </summary>
+        /// <example>
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// connection.SetLoggingOnPublicContainer("container name")
+        /// </example>
+        /// <param name="publiccontainer">must be an already existig public container</param>
+        void SetLoggingOnPublicContainer(string publiccontainer, bool loggingenabled);
     }
 }

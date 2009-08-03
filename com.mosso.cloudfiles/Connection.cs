@@ -1847,5 +1847,46 @@ namespace com.mosso.cloudfiles
                 throw;
             }
         }
+        /// <summary>
+        /// Adds logging for access to your public containers.
+        /// </summary>
+        /// <example>
+        /// UserCredentials userCredentials = new UserCredentials("username", "api key");
+        /// IConnection connection = new Connection(userCredentials);
+        /// connection.SetLoggingOnPublicContainer("container name")
+        /// </example>
+        /// <param name="publiccontainer">must be an already existig public container</param>
+        public void SetLoggingOnPublicContainer(string publiccontainer, bool loggingenabled)
+        {
+            if (string.IsNullOrEmpty(publiccontainer))
+                throw new ArgumentNullException();
+
+            Log.Info(this, "Adding logging to container named "
+                    + publiccontainer + " for user "
+                    + UserCredentials.Username);
+            try
+            {
+     
+            var request = new SetLoggingToContainerRequest(publiccontainer,AuthToken, CdnManagementUrl , loggingenabled );
+            new ResponseFactory<CloudFilesResponse>().Create(new CloudFilesRequest(request));
+            }
+           catch(WebException we)
+            {
+                Log.Error(this, "Error setting logging on container named "
+                    + publiccontainer  +  " for user "
+                    + UserCredentials.Username, we);
+
+                var response = (HttpWebResponse)we.Response;
+                if (response != null && response.StatusCode == HttpStatusCode.Unauthorized)
+                    throw new UnauthorizedAccessException("Your access credentials are invalid or have expired. ");
+                if (response != null && response.StatusCode == HttpStatusCode.NotFound)
+                    throw new PublicContainerNotFoundException("The specified container does not exist.");
+                throw;
+            }
+                
+       
+           
+
+        }
     }
 }
